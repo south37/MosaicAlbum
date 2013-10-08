@@ -1,21 +1,21 @@
 {% extends 'layout.html.twig' %}
 
 {% block contents %}
-    <!-- Main hero unit for a primary marketing message or call to action -->
-    <div class="hero-unit">
-        <h1>GroupWorkBase の基礎</h1>
-        <p>About GroupWorkBase.</p>
-    </div>
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+  <h1>GroupWorkBase の基礎</h1>
+  <p>About GroupWorkBase.</p>
+</div>
 
-    <p id="document">
-        {{ markdown|raw }}
-    </p>
+<p id="document">
+{{ markdown|raw }}
+</p>
 
-    <!-- Example row of columns -->
+<!-- Example row of columns -->
 
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{ asset('/js/markdown.js') }}"></script>
-    <script src="{{ asset('/js/markdown.app.js') }}"></script>
+<script src="{{ asset('/js/markdown.js') }}"></script>
+<script src="{{ asset('/js/markdown.app.js') }}"></script>
 {% endblock %}

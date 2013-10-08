@@ -1,41 +1,41 @@
 {% extends 'layout.html.twig' %}
 
 {% block contents %}
-    {% include 'error.html.twig' with {errors: errors} %}
+{% include 'error.html.twig' with {errors: errors} %}
 
-    <div class="row">
-        <div class="span6 offset3">
-            <form action="{{ urlFor('user_register_post') }}" method="post" class="form-horizontal well">
-                    <div class="control-group">
-                        <label class="control-label" for="name">ユーザー名</label>
-                        <div class="controls">
-                            <input type="text" id="user_name" name="name" class="span3" value="{{ input.name }}" />
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label for="email"">メールアドレス</label>
-                        <div class="controls">
-                            <input type="text" id="email" name="email" class="span3" value="{{ input.email }}" />
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="password">パスワード</label>
-                        <div class="controls">
-                            <input type="password" id="password" name="password" class="span3" />
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="birthday">誕生日</label>
-                        <div class="controls">
-                            <input type="text" id="birthday" name="birthday" class="span3" value="{{ input.birthday }}" />
-                            <span class="help-inline">yyyy-mm-dd形式</span>
-                        </div>
-                    </div>
-
-                <div class="controls">
-                    <button type="submit" class="btn btn-primary">新規登録</button>
-                </div>
-            </form>
+<div class="row">
+  <div class="span6 offset3">
+    <form action="{{ urlFor('user_register_post') }}" method="post" class="form-horizontal well">
+      <div class="control-group">
+        <label class="control-label" for="name">ユーザー名</label>
+        <div class="controls">
+          <input type="text" id="user_name" name="name" class="span3" value="{{ input.name }}" />
         </div>
-    </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label for="email"">メールアドレス</label>
+        <div class="controls">
+          <input type="text" id="email" name="email" class="span3" value="{{ input.email }}" />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="password">パスワード</label>
+        <div class="controls">
+          <input type="password" id="password" name="password" class="span3" />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="birthday">誕生日</label>
+        <div class="controls">
+          <input type="text" id="birthday" name="birthday" class="span3" value="{{ input.birthday }}" />
+          <span class="help-inline">yyyy-mm-dd形式</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button type="submit" class="btn btn-primary">新規登録</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

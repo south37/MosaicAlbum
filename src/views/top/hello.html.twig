@@ -1,53 +1,53 @@
 {% extends 'layout.html.twig' %}
 
 {% block contents %}
-    <h2>Hello! {{ name }}!</h2>
+<h2>Hello! {{ name }}!</h2>
 
-    <h3>コントローラーのコード</h3>
-    <pre>
+<h3>コントローラーのコード</h3>
+<pre>
         {{ phpcode|raw }}
     </pre>
 
-    <h3>このコードのデバッグトレース表示 (下から順番に処理されています)</h3>
-    <pre>
+<h3>このコードのデバッグトレース表示 (下から順番に処理されています)</h3>
+<pre>
         {{ debug() }}
     </pre>
 
-    <h3>jQuery と underscore.js で おみくじ</h3>
-    <div id="omikuji"></div>
+<h3>jQuery と underscore.js で おみくじ</h3>
+<div id="omikuji"></div>
 
 
 {% endblock %}
 
 {% block javascript %}
-    <script>
-        // http://underscorejs.org/
-        (function(){
-            "use strict";
+<script>
+  // http://underscorejs.org/
+  (function(){
+    "use strict";
 
-            var cards = [
-                '小吉',
-                '大吉',
-                '中吉',
-                '末吉',
-                '凶'
-            ];
+    var cards = [
+    '小吉',
+    '大吉',
+    '中吉',
+    '末吉',
+    '凶'
+    ];
 
-            // 凶が出ないようにする処理を filter で書くと...
-            var luckyCards = _.filter(cards, function(card){
-                return card !== '凶';
-            });
+    // 凶が出ないようにする処理を filter で書くと...
+    var luckyCards = _.filter(cards, function(card){
+      return card !== '凶';
+    });
 
-            // カードを猫化する処理を map で書くと...
-            var luckyNyanCards = _.map(luckyCards, function(card){
-                return card + ' だにゃん';
-            });
+    // カードを猫化する処理を map で書くと...
+    var luckyNyanCards = _.map(luckyCards, function(card){
+      return card + ' だにゃん';
+    });
 
-            // おみくじを引く処理(シャッフルして1つを引く)を chain で書くと...
-            var result = _.chain(luckyNyanCards).shuffle().first().value();
+    // おみくじを引く処理(シャッフルして1つを引く)を chain で書くと...
+    var result = _.chain(luckyNyanCards).shuffle().first().value();
 
-            // 結果表示
-            $('div#omikuji').html(result);
-        })();
-    </script>
+    // 結果表示
+    $('div#omikuji').html(result);
+  })();
+</script>
 {% endblock %}

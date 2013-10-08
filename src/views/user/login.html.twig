@@ -2,28 +2,28 @@
 {% extends 'layout.html.twig' %}
 
 {% block contents %}
-    {% include 'error.html.twig' with {errors: errors} %}
+{% include 'error.html.twig' with {errors: errors} %}
 
-    <div class="row">
-        <div class="span6 offset3">
-            <form action="{{ urlFor('user_login') }}" method="post" class="form-horizontal well">
-                    <div class="control-group">
-                        <label class="control-label" for="email">メールアドレス</label>
-                        <div class="controls">
-                            <input id="user_name" name="email" type="text" class="span3" value="{{ input.email }}" />
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="password">パスワード</label>
-                        <div class="controls">
-                            <input id="password" name="password" type="password" class="span3" />
-                        </div>
-                    </div>
-                <div class="controls">
-                    <button id="login" type="submit" class="btn btn-primary">ログイン</button>
-                    新規登録は<a href="{{ urlFor('user_register') }}">こちら</a>
-                </div>
-            </form>
+<div class="row">
+  <div class="span6 offset3">
+    <form action="{{ urlFor('user_login') }}" method="post" class="form-horizontal well">
+      <div class="control-group">
+        <label class="control-label" for="email">メールアドレス</label>
+        <div class="controls">
+          <input id="user_name" name="email" type="text" class="span3" value="{{ input.email }}" />
         </div>
-    </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="password">パスワード</label>
+        <div class="controls">
+          <input id="password" name="password" type="password" class="span3" />
+        </div>
+      </div>
+      <div class="controls">
+        <button id="login" type="submit" class="btn btn-primary">ログイン</button>
+        新規登録は<a href="{{ urlFor('user_register') }}">こちら</a>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
