@@ -20,7 +20,7 @@ use Slim\Slim;
     require  __DIR__ . '/../src/app/master/member_select.php';
     require  __DIR__ . '/../src/app/master/album_select_master.php';
     require  __DIR__ . '/../src/app/guest/start_guest.php';
-    require  __DIR__ . '/../src/app/guest/album_selec_guest.php';
+    require  __DIR__ . '/../src/app/guest/album_select_guest.php';
 }
 
 アプリケーションの実行: {
