@@ -14,9 +14,13 @@ use Slim\Slim;
     require  __DIR__ . '/../src/app/welcome.php';
     require  __DIR__ . '/../src/app/document.php';
     require  __DIR__ . '/../src/app/user.php';
-    require  __DIR__ . '/../src/app/mosaic/mosaic_regist.php';
-    require  __DIR__ . '/../src/app/mosaic/mosaic_album.php';
-    require  __DIR__ . '/../src/app/mosaic/mosaic_viewer.php';
+    require  __DIR__ . '/../src/app/common/mosaic_viewer.php';
+    require  __DIR__ . '/../src/app/common/album_viewer.php';
+    require  __DIR__ . '/../src/app/master/start_master.php';
+    require  __DIR__ . '/../src/app/master/member_select.php';
+    require  __DIR__ . '/../src/app/master/album_select_master.php';
+    require  __DIR__ . '/../src/app/guest/start_guest.php';
+    require  __DIR__ . '/../src/app/guest/album_selec_guest.php';
 }
 
 アプリケーションの実行: {
