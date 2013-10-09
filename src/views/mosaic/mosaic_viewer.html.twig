@@ -7,4 +7,10 @@
   <p>This is a demonstration page with GroupWorkBase.</p>
   <p><a href="{{ urlFor('doc_top') }}" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 </div>
+
+<canvas id ="cvs1" width="150" height="150"></canvas>
 {% endblock %}
+
+{% block javascript%}
+<script type="text/javascript" src="{{ asset('/js/mosaic/canvastest.js') }}"></script>
+{% endblock%}
