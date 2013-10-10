@@ -42,6 +42,11 @@ $container['session'] = $container->share(function() {
         return new \Vg\Session();
     });
 
+// FBHelper
+$container['FBHelper'] = $container->share(function(){
+        return new \Vg\Repository\FBHelperRepository();
+    });
+
 // ユーザーリポジトリ
 $container['repository.user'] = $container->share(function($c){
         return new \Vg\Repository\UserRepository($c['db']);

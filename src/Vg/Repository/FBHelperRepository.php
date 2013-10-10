@@ -1,16 +1,14 @@
 <?php
 require_once(dirname(__FILE__).'facebook-php-sdk/src/facebook.php')
 
-namespace Vg\Model;
+namespace Vg\Repository;
 
-use Vg\Model\Stretcher;
-
-class FBHelper
+class FBHelperRepository
 {
     const APP_ID     = '344617158898614';
     const APP_SECRET = '6dc8ac871858b34798bc2488200e503d';
     
-    private facebook;
+    private $facebook;
 
     public function __construct()
     {
@@ -97,7 +95,7 @@ class FBHelper
             $friend = [
                 'id'            => $fbFriend['id'],
                 'name'          => $fbFriend['name'],
-                'iconImagePath' => 'https://graph.facebook.com/'.$me['id'].'/picture',
+                'iconImagePath' => 'https://graph.facebook.com/'.$fbFriend['id'].'/picture',
             ];
             array_push($friends, $friend);
         }
