@@ -8,7 +8,7 @@
 }
 
 ゴールIDをもとにアクセスされたときの処理:{
-  $app->get('/common/mosaic_viewer/:goalID', function($goalID) use ($app){
+  $app->get('/common/mosaic_viewer/:goalId', function($goalId) use ($app){
 
     # 1:init
     #リポジトリの準備
@@ -33,7 +33,7 @@
 
     # 4:render
     #画面レンダリング
-    $app->render('common/mosaic_viewer.html.twig',['goalId' => $goalID]);
+    $app->render('common/mosaic_viewer.html.twig',['goalId' => $goalId]);
   })
     ->name('mosaic_viewer')
     ;
