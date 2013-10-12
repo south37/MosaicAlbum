@@ -7,8 +7,6 @@ $ ->#jquery使えるようにする
     circle.y = 100
     stage.addChild circle
     stage.addChild makeSquare(300,200)
-    #stage.addChild loadBitmapImg("/img/figure2_png/figure001.png",300,200)
-    
     
     #preloader
     path = "/img/miku.jpg"
