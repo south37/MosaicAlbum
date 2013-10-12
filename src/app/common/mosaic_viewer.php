@@ -10,6 +10,11 @@
 ゴールIDをもとにアクセスされたときの処理:{
   $app->get('/common/mosaic_viewer/:goalID', function($goalID) use ($app){
 
+    # 1:init
+    #リポジトリの準備
+    
+
+    # 2:user
     #セキュリティ処理
 
 
@@ -19,12 +24,14 @@
     #参加ユーザ：FBアイコンパス取得
 
 
+    # 3:mosaic
     #モザイク画像取得
 
 
     #モザイクピースのリストを取得
 
 
+    # 4:render
     #画面レンダリング
     $app->render('common/mosaic_viewer.html.twig',['goalId' => $goalID]);
   })
