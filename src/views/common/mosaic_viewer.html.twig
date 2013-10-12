@@ -1,15 +1,20 @@
 {% extends 'layout.html.twig' %}
 
+
+
 {% block contents %}
-<!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
   <h1>Mosaic_viewer</h1>
   <p>goal id {{goalId}}</p>
-  <p><a href="{{ urlFor('doc_top') }}" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 </div>
 
-<canvas id ="cvs1" width="500" height="500"></canvas>
+<div class="text-center">
+  <canvas id ="cvs1" width="800" height="600"></canvas>
+</div>
 {% endblock %}
+
+
+
 
 {% block javascript%}
 <!--<script type="text/javascript" src="{{ asset('/js/mosaic/canvastest.js') }}"></script>-->
