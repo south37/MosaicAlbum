@@ -10,23 +10,34 @@ $(function() {
     circle.x = 100;
     circle.y = 100;
     stage.addChild(circle);
-    stage.addChild(makeSquare(300, 100));
+    stage.addChild(makeSquare(300, 200));
     path = "/img/miku.jpg";
     queue = new createjs.LoadQueue(true);
     queue.addEventListener("complete", function() {
-      var btm;
+      var btm, size;
       console.log("complete!");
       btm = new createjs.Bitmap(queue.getResult("image"));
       btm.x = 300;
+      size = 200;
+      btm.scaleX = size / btm.image.width;
+      btm.scaleY = size / btm.image.height;
+      console.log(btm.scaleX);
       stage.addChild(btm);
-      return stage.update();
+      stage.update();
+      return createjs.Tween.get(btm).to({
+        x: 0,
+        y: 300
+      }, 3000, createjs.Ease.bounceOut).call(function() {
+        return console.log("fin tween");
+      });
     });
     queue.loadFile({
       id: "image",
       src: path
     });
     queue.load();
-    return stage.update();
+    stage.update();
+    return createjs.Ticker.addEventListener("tick", stage);
   });
   makeSquare = function(x, y) {
     var square;
