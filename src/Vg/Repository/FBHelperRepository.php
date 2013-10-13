@@ -5,8 +5,8 @@ namespace Vg\Repository;
 
 class FBHelperRepository
 {
-    const APP_ID     = '344617158898614';
-    const APP_SECRET = '6dc8ac871858b34798bc2488200e503d';
+    const APP_ID     = '638792116141666';
+    const APP_SECRET = '3fd441f744cca9929774227d058690e2';
     
     private $facebook;
 
@@ -21,7 +21,7 @@ class FBHelperRepository
     public function getUserId()
     {
         $userId = $this->facebook->getUser();
-
+    
         if ($userId) {
             try {
                 // Proceed knowing you have a logged in user who's authenticated.
@@ -31,7 +31,7 @@ class FBHelperRepository
                 $userId = 0;
             }
         }
-
+        
         return $userId;
     }
 
@@ -62,7 +62,7 @@ class FBHelperRepository
     public function getAlbums()
     {
         $fbAlbums = $this->facebook->api('/me/albums', 'GET')['data'];
-       
+        
         $albums = [];
         foreach($fbAlbums as $fbAlbum) { 
             $r = $this->facebook->api('/'.$fbAlbum['id'].'/picture?redirect=false', 'GET');
@@ -75,14 +75,14 @@ class FBHelperRepository
             ];
             array_push($albums, $album);
         }
-      
+        
         return $albums;
     }
 
     public function getImagesInAlbum($albumId)
     {
         $fbImages = $this->facebook->api('/'.$albumId.'/photos', 'GET')['data'];
-      
+    
         $images = [];
         foreach($fbImages as $fbImage) {
             $image = [
@@ -91,14 +91,14 @@ class FBHelperRepository
             ];
             array_push($images, $image);
         }
-     
+   
         return $images;
     }
 
     public function getFriends()
     {
         $fbFriends = $this->facebook->api('/me/friends');
-    
+  
         $friends = [];
         foreach($fbFriends as $fbFriend) {
             $friend = [
@@ -108,7 +108,22 @@ class FBHelperRepository
             ];
             array_push($friends, $friend);
         }
-   
+ 
         return $friends;
+    }
+
+    public function notify($friendId)
+    {
+        $data = [
+            'href'         => '//mosaicalbum.com/guest/start_guest',
+            'access_token' => $this->facebook->getAccessToken(),
+            'template'     => 'アルバムの作成に招待されました'
+        ];
+
+        try {
+            $this->facebook->api("/".$to_userId."/notifications", 'POST', $data);
+        } catch (FacebookApiException $e) {
+            error_log($e);
+        }
     }
 }
