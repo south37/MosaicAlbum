@@ -21,6 +21,7 @@ class FBHelperRepository
     public function getUserId()
     {
         $userId = $this->facebook->getUser();
+
         if ($userId) {
             try {
                 // Proceed knowing you have a logged in user who's authenticated.
@@ -30,6 +31,7 @@ class FBHelperRepository
                 $userId = 0;
             }
         }
+
         return $userId;
     }
 
@@ -37,13 +39,15 @@ class FBHelperRepository
     {
         $scope = 'user_photos,frinends_photos';
         $loginUrl = $this->facebook->getLoginUrl(['scope' => $scope]);
+        
         return $loginUrl;
     }
 
     public function getUserProfile()
     {
-        $me = $this->facebook->api('/me?locale=ja_JP');
         $this->facebook->setExtendedAccessToken();
+        
+        $me = $this->facebook->api('/me?locale=ja_JP');
         
         $userProfile = [
             'fb_user_id'  => $me['id'],
@@ -51,12 +55,14 @@ class FBHelperRepository
             'name'        => $me['name'],
             'fb_icon_url' => 'https://graph.facebook.com/'.$me['id'].'/picture',
         ]
+       
         return $userProfile;
     }
 
     public function getAlbums()
     {
         $fbAlbums = $this->facebook->api('/me/albums', 'GET')['data'];
+       
         $albums = [];
         foreach($fbAlbums as $fbAlbum) { 
             $r = $this->facebook->api('/'.$fbAlbum['id'].'/picture?redirect=false', 'GET');
@@ -67,15 +73,16 @@ class FBHelperRepository
                 'name'          => $fbAlbum['name'],
                 'thumbnailPath' => $thumbnailPath,
             ];
-
             array_push($albums, $album);
         }
+      
         return $albums;
     }
 
     public function getImagesInAlbum($albumId)
     {
         $fbImages = $this->facebook->api('/'.$albumId.'/photos', 'GET')['data'];
+      
         $images = [];
         foreach($fbImages as $fbImage) {
             $image = [
@@ -84,12 +91,14 @@ class FBHelperRepository
             ];
             array_push($images, $image);
         }
+     
         return $images;
     }
 
     public function getFriends()
     {
         $fbFriends = $this->facebook->api('/me/friends');
+    
         $friends = [];
         foreach($fbFriends as $fbFriend) {
             $friend = [
@@ -99,6 +108,7 @@ class FBHelperRepository
             ];
             array_push($friends, $friend);
         }
+   
         return $friends;
     }
 }
