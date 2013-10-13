@@ -38,3 +38,13 @@
     ->name('mosaic_viewer')
     ;
 }
+
+ajaxのてすと:{
+  $app->get('/common/mosaic_viewer_test/ajax', function() use ($app){
+    $res = ["hogehoge"=>"var","bar"=>"yes"];
+
+    echo json_encode($res);
+  })
+    ->name('ajaxtest')
+    ;
+}

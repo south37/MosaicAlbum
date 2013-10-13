@@ -52,7 +52,10 @@ $(function() {
     square.x = x;
     square.y = y;
     square.addEventListener("click", function(e) {
-      return console.log("image clicked");
+      console.log("image clicked");
+      return $.getJSON("/common/mosaic_viewer_test/ajax", function(data) {
+        return console.log(data);
+      });
     });
     return square;
   };

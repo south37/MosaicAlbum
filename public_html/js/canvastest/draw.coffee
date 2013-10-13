@@ -37,6 +37,7 @@ $ ->#jquery使えるようにする
 
     createjs.Ticker.addEventListener("tick",stage)
 
+
   makeSquare = (x=200,y=200) ->
     square = new createjs.Shape()
     square.graphics.beginFill("blue").drawRect(0,0,100,100)
@@ -44,6 +45,8 @@ $ ->#jquery使えるようにする
     square.y = y 
     square.addEventListener "click", (e)->
       console.log("image clicked")
+      $.getJSON "/common/mosaic_viewer_test/ajax", (data)->
+        console.log data
     return square
 
   loadBitmapImg = (path,x=300,y=200) ->
