@@ -136,7 +136,7 @@ class FBHelperRepository
         ];
 
         try {
-            $this->facebook->api("/".$to_userId."/notifications", 'POST', $data);
+            $this->facebook->api("/".$friendId."/notifications", 'POST', $data);
         } catch (FacebookApiException $e) {
             error_log($e);
         }
