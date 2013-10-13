@@ -5,8 +5,8 @@ namespace Vg\Repository;
 
 class FBHelperRepository
 {
-    const APP_ID     = '344617158898614';
-    const APP_SECRET = '6dc8ac871858b34798bc2488200e503d';
+    const APP_ID     = '638792116141666';
+    const APP_SECRET = '3fd441f744cca9929774227d058690e2';
     
     private $facebook;
 
