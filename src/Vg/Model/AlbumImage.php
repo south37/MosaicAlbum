@@ -1,14 +1,14 @@
 <?php
 namespace Vg\Model;
 
-class User
+class AlbumImage
 {
     public $id;
-    public $fb_user_id;
-    public $token;
-    public $name;
-    public $fb_icon_url;
-    public $mail_address;
+    public $album_id;
+    public $image_id;
+    public $x;
+    public $y;
+    public $is_used_mosaic;
 
     public function __construct()
     {
@@ -16,7 +16,7 @@ class User
 
     public function setProperties($data)
     {
-        foreach (array('id', 'fb_user_id', 'token', 'name', 'fb_icon_url', 'mail_address') as $property) {
+        foreach (array('id', 'album_id', 'image_id', 'x', 'y', 'is_used_mosaic') as $property) {
             $this->{$property} = (isset($data[$property]))? $data[$property]: "";
         }
     }
