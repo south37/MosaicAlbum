@@ -1,18 +1,24 @@
 {% extends 'layout.html.twig' %}
 
+
+
 {% block contents %}
-<!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
   <h1>Mosaic_viewer</h1>
-  <p>This is a demonstration page with GroupWorkBase.</p>
-  <p><a href="{{ urlFor('doc_top') }}" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+  <p>goal id {{goalId}}</p>
 </div>
 
-<canvas id ="cvs1" width="150" height="150"></canvas>
+<div class="text-center">
+  <canvas id ="cvs1" width="800" height="600"></canvas>
+</div>
 {% endblock %}
 
+
+
+
 {% block javascript%}
-<script type="text/javascript" src="{{ asset('/js/mosaic/canvastest.js') }}"></script>
+<!--<script type="text/javascript" src="{{ asset('/js/mosaic/canvastest.js') }}"></script>-->
+<script type="text/javascript" src="{{ asset('/js/canvastest/draw.js') }}"></script>
 <script type="x-shader/x-vertex" src="{{ asset('/shader/test.vert') }}"></script>
 <script type="x-shader/x-fragment" src="{{ asset('/shader/test.frag') }}"></script>
 {% endblock%}
