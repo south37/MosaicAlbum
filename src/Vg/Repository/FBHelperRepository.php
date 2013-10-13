@@ -45,9 +45,12 @@ class FBHelperRepository
 
     public function getUserProfile()
     {
-        $this->facebook->setExtendedAccessToken();
-        
-        $me = $this->facebook->api('/me?locale=ja_JP');
+        try {
+            $this->facebook->setExtendedAccessToken();
+            $me = $this->facebook->api('/me?locale=ja_JP');
+        } catch (FacebookApiException $e) {
+            return [];
+        }
         
         $userProfile = [
             'fb_user_id'  => $me['id'],
@@ -61,7 +64,11 @@ class FBHelperRepository
 
     public function getAlbums()
     {
-        $fbAlbums = $this->facebook->api('/me/albums', 'GET')['data'];
+        try {
+            $fbAlbums = $this->facebook->api('/me/albums', 'GET')['data'];
+        } catch (FacebookApiException $e) {
+            return [];
+        }
         
         $albums = [];
         foreach($fbAlbums as $fbAlbum) { 
@@ -81,7 +88,11 @@ class FBHelperRepository
 
     public function getImagesInAlbum($albumId)
     {
-        $fbImages = $this->facebook->api('/'.$albumId.'/photos', 'GET')['data'];
+        try {
+            $fbImages = $this->facebook->api('/'.$albumId.'/photos', 'GET')['data'];
+        } catch (FacebookApiException $e) {
+            return [];
+        }
     
         $images = [];
         foreach($fbImages as $fbImage) {
@@ -97,7 +108,11 @@ class FBHelperRepository
 
     public function getFriends()
     {
-        $fbFriends = $this->facebook->api('/me/friends');
+        try {
+            $fbFriends = $this->facebook->api('/me/friends');
+        } catch (FacebookApiException $e) {
+            return [];
+        }
   
         $friends = [];
         foreach($fbFriends as $fbFriend) {
