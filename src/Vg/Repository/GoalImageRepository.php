@@ -13,7 +13,7 @@ class GoalImageRepository
     }
 
     /**
-     * 新規登録
+     * 新規登録　縦・横とも、分割数100にしてます。
      * @param  $fbGoalImageId
      * @return $goalImageId 
      */
@@ -21,9 +21,13 @@ class GoalImageRepository
     {
         $sql = "INSERT INTO goal_image
                 SET fb_goal_image_id = :fbGoalImageId,
+                    tate_division = :tateDivision,
+                    yoko_division = :yokoDivision,
                     is_make_mosaic = :isMakeMosaic";
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':fbGoalImageId', $fbGoalImageId, \PDO::PARAM_INT);
+        $sth->bindValue(':tateDivision', 100, \PDO::PARAM_INT);
+        $sth->bindValue(':yokoDivision', 100, \PDO::PARAM_INT);
         $sth->bindValue(':isMaleMosaic', FALSE, \PDO::PARAM_BOOL);
         $sth->execute();
         // insertされたカラムのIDを取得する
