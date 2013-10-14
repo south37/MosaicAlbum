@@ -83,7 +83,7 @@ class UserRepository
         $fbIconUrls = [];
         while($data = $sth->fetch(\PDO::FETCH_ASSOC))
         {
-            array_push($fbIconUrls, $data['fb_icon_url'])
+            array_push($fbIconUrls, $data['fb_icon_url']);
         }
         return $fbIconUrls;
     }
