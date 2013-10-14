@@ -12,8 +12,9 @@
 
     # 1:init
     #リポジトリの準備
-    $FBRepository = $container['FBHelper'];
-    echo $FBRepository->getUserId();
+    $FBRep = $container['FBHelper'];
+    echo $FBRep->getUserId();
+  
 
     # 2:user
     # opt:セキュリティ処理

@@ -13,7 +13,9 @@ $app->get('/guest/album_select_guest/create', function() use ($app, $container){
 
   # 1init
   # repository準備
-
+  $GoalImageRepo;
+  $AlbumRep;
+  $AlbumImageRep;
 
   # 2:prepare target & src
   # ゴールイメージ取得
