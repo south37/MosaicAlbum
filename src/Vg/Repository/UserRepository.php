@@ -77,9 +77,9 @@ class UserRepository
      */
     public function findByFbId($fbUserId)
     {
-        $sql = "SELECT * FROM user WHERE fb_user_id = :fb_user_id";
+        $sql = "SELECT * FROM user WHERE fb_user_id = :fbUserId";
         $sth = $this->db->prepare($sql);
-        $sth->bindValue(':fb_user_id', $fbUserId, \PDO::PARAM_INT);
+        $sth->bindValue(':fbUserId', $fbUserId, \PDO::PARAM_STR);
         $sth->execute();
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
         $user = new User();
