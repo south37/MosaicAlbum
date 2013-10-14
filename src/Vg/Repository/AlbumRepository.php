@@ -61,7 +61,7 @@ class AlbumRepository
         $albumIds = [];
         while($data = $sth->fetch(\PDO::FETCH_ASSOC))
         {
-            array_push($albumIds, $data['id'])
+            array_push($albumIds, $data['id']);
         }
         return $albumIds;
     }
@@ -80,7 +80,7 @@ class AlbumRepository
         $userIds = [];
         while($data = $sth->fetch(\PDO::FETCH_ASSOC))
         {
-            array_push($userIds, $data['user_id'])
+            array_push($userIds, $data['user_id']);
         }
         return $userIds;
     }
