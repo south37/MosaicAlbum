@@ -2,14 +2,15 @@
 //parameter無しのget
 $app->get('/master/start_master', function() use ($app, $container) {
     $FBHelper = $container['FBHelper'];
-    
+
     $userId = $FBHelper->getUserId();
 
     if (!$userId) {
-        $loginUrl = $FBHelper->getLoginUrl();
+        $isLogin = false;
 
     } else {
-        var_dump($userId);
+        $isLogin = true;
+
         $user = $container['repository.user']->findByFbId($userId);
 
         if ($user->id == '') {
@@ -23,12 +24,9 @@ $app->get('/master/start_master', function() use ($app, $container) {
             } catch (Exception $e) {
                 $app->halt(500, $e->getMessage());
             }
-            
-            $user = $container['repository.user']->findByFbId($userId);
         }
     }
-  $app->render('master/start_master.html.twig');
+  $app->render('master/start_master.html.twig', ['isLogin' => $isLogin]);
 })
   ->name('start_master')
   ;
-

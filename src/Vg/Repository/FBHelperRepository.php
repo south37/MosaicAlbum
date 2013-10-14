@@ -9,7 +9,7 @@ class FBHelperRepository
     const APP_ID     = '638792116141666';
     const APP_SECRET = '3fd441f744cca9929774227d058690e2';
     
-    private $facebook;
+    public $facebook;
     private $userId;
 
     public function __construct()
