@@ -13,13 +13,23 @@
       window.fbAsyncInit = function() {
         // init the FB JS SDK
         FB.init({
-          appId      : '638792116141666',
+          appId      : '638792116141666',                           // App ID from the app dashboard
           channelUrl : '//dev.mosaicalbum.com/master/start_master', // Channel file for x-domain comms
-          status     : true,                                         // Check Facebook Login status
+          status     : true,                                        // Check Facebook Login status
           cookie     : true,
-          xfbml      : true                                          // Look for social plugins on the page
+          xfbml      : true                                         // Look for social plugins on the page
         });
-      } 
+  
+        // Additional initialization code such as adding Event Listeners goes here
+        FB.Event.subscribe('auth.authResponseChange', function(response) {
+          if (response.status === 'connected') {
+          } else if (response.status === 'not_authorized') {
+            FB.login();
+          } else {
+            FB.login();
+          }
+        });
+      };
 
       // Load the SDK asynchronously
       (function(d, s, id){
@@ -35,16 +45,15 @@
           method:  'apprequests', 
           message: '「MosaicAlbum」は友達とモザイクアルバムを作るfacebookアプリです。', 
           title :  '「MosaicAlbum」に友達を誘おう'
-        }, requestCallback);
-      }
-
-      function requestCallback(response) {
-        for (var key in response) {
-          console.log(key);
-          console.log(response[key]);
-        }
+        }, function(response) {
+          for (var key in response) {
+            console.log(key);
+            console.log(response[key]);
+          }
+        });
       }
     </script>
 
+    <fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button> 
     <a herf="javascript:;" onclick="invite()">友達を招待する</a>
 {% endblock %}

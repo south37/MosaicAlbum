@@ -23,15 +23,15 @@ class FBHelperRepository
     {
         $userId = $this->facebook->getUser();
     
-        if ($userId) {
-            try {
-                // Proceed knowing you have a logged in user who's authenticated.
-                $this->facebook->api('/me');
-            } catch (FacebookApiException $e) {
-                $userId = 0;
-            }
-        }
-        
+//        if ($userId) {
+//            try {
+//                // Proceed knowing you have a logged in user who's authenticated.
+//                $this->facebook->api('/me');
+//            } catch (FacebookApiException $e) {
+//                $userId = 0;
+//            }
+//        }
+//        
         return $userId;
     }
 
