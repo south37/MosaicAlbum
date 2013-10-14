@@ -8,48 +8,53 @@ $app->get('/guest/album_select_guest', function() use ($app) {
   ->name('album_select_guest')
   ;
 
-$app->get('/guest/album_select_guest/create', function() use ($app, $container){
 
-  # 1init
-  # repository準備
-  $goalImageID = '1';
-  $goalImageID = $container['session']->get('goalImageID');
+CreateMosaic:{
+  $app->get('/guest/album_select_guest/create', function() use ($app, $container){
 
-  $GoalImageRepo = $container['repository.goalImage'];
-  $AlbumRep = $container['repository.album'];
-  $AlbumImageRep = $container['repository.albumImage'];
+    # 1init
+    # repository準備
+    $goalImageId = '1';
+    $goalImageId = $container['session']->get('goalImageId');
 
-  # 2:prepare target & src
-  # ゴールイメージ取得
-  $goalImagePath = $GoalImageRepo->getMosaicImg($goalImageID);
+    $GoalImageRep = $container['repository.goalImage'];
+    $AlbumRep = $container['repository.album'];
+    $AlbumImageRep = $container['repository.albumImage'];
 
-  # アルバムid取得
-
-
-  # 各アルバムの写真を取得
+    # 2:prepare target & src
+    # ゴールイメージ取得
+    $goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
+    #TODO:oathから画像をどう取るのか？
 
 
-  # 3.process
-  # だっちにtarget/srcListなげる
+    # アルバムid取得
+    $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
 
-  $app->redirect($app->urlFor('create_notif'));
+    # 各アルバムの写真を取得
+    #TODO:albumIDからimagepathがないよ
 
-})
-  ->name('create_mosaic')
-  ;
+    # 3.process
+    # だっちにtarget/srcListなげる
 
-$app->get('/guest/album_select_guest/notif',function() use ($app, $container){
-  print "notif dayo";
-  # opt:goalImgが生成されているかチェック
+    $app->redirect($app->urlFor('create_notif'));
+
+  })
+    ->name('create_mosaic')
+    ;
+
+  $app->get('/guest/album_select_guest/notif',function() use ($app, $container){
+    print "notif dayo";
+    # opt:goalImgが生成されているかチェック
 
 
-  # FBヘルパー使ってお知らせ
+    # FBヘルパー使ってお知らせ
 
-  
-  # モザイクビューワ画面にリダイレクト
-  $id = 1234;
-  $link = '/common/mosaic_viewer/'."$id"; // きもい
-  $app->redirect($link);
-})
-  ->name('create_notif')
-  ;
+
+    # モザイクビューワ画面にリダイレクト
+    $id = 1234;
+    $link = '/common/mosaic_viewer/'."$id"; // きもい
+    $app->redirect($link);
+  })
+    ->name('create_notif')
+    ;
+}
