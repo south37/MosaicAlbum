@@ -9,17 +9,17 @@ $app->get('/guest/album_select_guest', function() use ($app) {
   ;
 
 $app->get('/guest/album_select_guest/create', function() use ($app, $container){
-  print "create!:";
 
   # 1init
   # repository準備
-  $GoalImageRepo;
-  $AlbumRep;
-  $AlbumImageRep;
+  $goalImageID = '1';
+  $GoalImageRepo = $container['repository.goalImage'];
+  $AlbumRep = $container['repository.album'];
+  $AlbumImageRep = $container['repository.albumImage'];
 
   # 2:prepare target & src
   # ゴールイメージ取得
-
+  $GoalImageRepo->getMosaicImg();
 
   # アルバムid取得
 
