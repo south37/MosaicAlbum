@@ -20,15 +20,15 @@
           xfbml      : true                                         // Look for social plugins on the page
         });
   
-        // Additional initialization code such as adding Event Listeners goes here
-        FB.Event.subscribe('auth.authResponseChange', function(response) {
-          if (response.status === 'connected') {
-          } else if (response.status === 'not_authorized') {
-            FB.login();
-          } else {
-            FB.login();
-          }
-        });
+//        // Additional initialization code such as adding Event Listeners goes here
+//        FB.Event.subscribe('auth.authResponseChange', function(response) {
+//          if (response.status === 'connected') {
+//          } else if (response.status === 'not_authorized') {
+//            FB.login();
+//          } else {
+//            FB.login();
+//          }
+//        });
       };
 
       // Load the SDK asynchronously
@@ -52,8 +52,14 @@
           }
         });
       }
-    </script>
 
+//      function logout() {
+//        FB.logout();
+//      }
+    </script>
+<!--
     <fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button> 
+    <a herf="javascript:;" onclick="logout()">ログアウトする</a>
+-->
     <a herf="javascript:;" onclick="invite()">友達を招待する</a>
 {% endblock %}
