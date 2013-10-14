@@ -21,7 +21,7 @@ class ImageRepository
     {
         $sql = "INSERT INTO image SET fb_image_id = :fbImageId";
         $sth = $this->db->prepare($sql);
-        $sth->bindValue(':fbImageId', $fbImageId, \PDO::PARAM_INT);
+        $sth->bindValue(':fbImageId', $fbImageId, \PDO::PARAM_STR);
         $sth->execute();
         // insertされたカラムのIDを取得する
         $imageId = $this->getLatestId();

@@ -25,7 +25,7 @@ class GoalImageRepository
                     yoko_division = :yokoDivision,
                     is_make_mosaic = :isMakeMosaic";
         $sth = $this->db->prepare($sql);
-        $sth->bindValue(':fbGoalImageId', $fbGoalImageId, \PDO::PARAM_INT);
+        $sth->bindValue(':fbGoalImageId', $fbGoalImageId, \PDO::PARAM_STR);
         $sth->bindValue(':tateDivision', 100, \PDO::PARAM_INT);
         $sth->bindValue(':yokoDivision', 100, \PDO::PARAM_INT);
         $sth->bindValue(':isMaleMosaic', FALSE, \PDO::PARAM_BOOL);
