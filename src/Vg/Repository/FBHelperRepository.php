@@ -10,6 +10,7 @@ class FBHelperRepository
     const APP_SECRET = '3fd441f744cca9929774227d058690e2';
     
     private $facebook;
+    private $userId;
 
     public function __construct()
     {
@@ -17,22 +18,13 @@ class FBHelperRepository
             'appId'  => self::APP_ID,
             'secret' => self::APP_SECRET,
         ]);
+
+        $this->userId = $this->facebook->getUser();
     }
 
     public function getUserId()
     {
-        $userId = $this->facebook->getUser();
-    
-//        if ($userId) {
-//            try {
-//                // Proceed knowing you have a logged in user who's authenticated.
-//                $this->facebook->api('/me');
-//            } catch (FacebookApiException $e) {
-//                $userId = 0;
-//            }
-//        }
-//        
-        return $userId;
+        return $this->userId;
     }
 
     public function getLoginUrl()
@@ -47,7 +39,7 @@ class FBHelperRepository
     {
         try {
             $this->facebook->setExtendedAccessToken();
-            $me = $this->facebook->api('/me?locale=ja_JP');
+            $me = $this->facebook->api('/'.$this->userId.'?locale=ja_JP');
         } catch (FacebookApiException $e) {
             return [];
         }
@@ -65,7 +57,7 @@ class FBHelperRepository
     public function getAlbums()
     {
         try {
-            $fbAlbums = $this->facebook->api('/me/albums', 'GET')['data'];
+            $fbAlbums = $this->facebook->api('/'.$this->userId.'/albums', 'GET')['data'];
         } catch (FacebookApiException $e) {
             return [];
         }
@@ -109,7 +101,7 @@ class FBHelperRepository
     public function getFriends()
     {
         try {
-            $fbFriends = $this->facebook->api('/me/friends');
+            $fbFriends = $this->facebook->api('/'.$this->userId.'/friends');
         } catch (FacebookApiException $e) {
             return [];
         }
