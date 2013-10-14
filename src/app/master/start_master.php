@@ -9,7 +9,7 @@ $app->get('/master/start_master', function() use ($app, $container) {
         $loginUrl = $FBHelper->getLoginUrl();
 
     } else {
-        $user = $container['user.repository']->findById($userId);
+        $user = $container['repository.user']->findById($userId);
 
         if (!$user) {
             $userProfile = $FBHelper->getUserProfile();
