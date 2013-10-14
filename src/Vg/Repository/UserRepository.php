@@ -26,7 +26,7 @@ class UserRepository
                     fb_icon_url = :fbIconUrl,
                     mail_address = :mailAddress";
         $sth = $this->db->prepare($sql);
-        $sth->bindValue(':fbUserId', $user->fb_user_id, \PDO::PARAM_INT);
+        $sth->bindValue(':fbUserId', $user->fb_user_id, \PDO::PARAM_STR);
         $sth->bindValue(':token', $user->token, \PDO::PARAM_STR);
         $sth->bindValue(':name', $user->name, \PDO::PARAM_STR);
         $sth->bindValue(':fbIconUrl', $user->fb_icon_url, \PDO::PARAM_STR);
@@ -34,6 +34,7 @@ class UserRepository
         $sth->execute();
         // insertされたカラムのIDを取得する
         $userId = $this->getLatestId();
+        echo($userId);
         return $userId;
     }
 
