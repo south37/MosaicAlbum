@@ -47,6 +47,31 @@ $container['FBHelper'] = $container->share(function(){
         return new \Vg\Repository\FBHelperRepository();
     });
 
+// ゴールイメージリポジトリ
+$container['repository.goalImage'] = $container->share(function($c){
+        return new \Vg\Repository\GoalImageRepository($c['db']);
+    });
+
+// アルバムリポジトリ
+$container['repository.album'] = $container->share(function($c){
+        return new \Vg\Repository\AlbumRepository($c['db']);
+    });
+
+// アルバムイメージリポジトリ
+$container['repository.albumImage'] = $container->share(function($c){
+        return new \Vg\Repository\AlbumImageRepository($c['db']);
+    });
+
+// イメージリポジトリ
+$container['repository.image'] = $container->share(function($c){
+        return new \Vg\Repository\ImageRepository($c['db']);
+    });
+
+// モザイクピースリポジトリ
+$container['repository.mosaicPiece'] = $container->share(function($c){
+        return new \Vg\Repository\MosaicPieceRepository($c['db']);
+    });
+
 // ユーザーリポジトリ
 $container['repository.user'] = $container->share(function($c){
         return new \Vg\Repository\UserRepository($c['db']);
