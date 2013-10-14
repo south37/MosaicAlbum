@@ -34,6 +34,7 @@ class UserRepository
         $sth->execute();
         // insertされたカラムのIDを取得する
         $userId = $this->getLatestId();
+        echo($userId);
         return $userId;
     }
 
