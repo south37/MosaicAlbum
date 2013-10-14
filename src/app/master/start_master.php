@@ -10,9 +10,23 @@ $app->get('/master/start_master', function() use ($app, $container) {
 
     } else {
         $user = $container['repository.user']->findById($userId);
+        var_dump($user);
 
-        if (!$user) {
+        if ($user->id == '') {
             $userProfile = $FBHelper->getUserProfile();
+
+            $user = new \Vg\Model\User();
+            $user->setProperties($userProfile);
+            var_dump($user);
+
+            try {
+                $container['repository.user']->insert($user);
+            } catch (Exception $e) {
+                $app->halt(500, $e->getMessage());
+            }
+            
+            $user = $container['repository.user']->findById($userId);
+            var_dump($user);
         }
     }
   $app->render('master/start_master.html.twig');
