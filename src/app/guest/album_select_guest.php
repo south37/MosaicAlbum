@@ -8,7 +8,7 @@ $app->get('/guest/album_select_guest', function() use ($app) {
   ->name('album_select_guest')
   ;
 
-$app->get('/guest/album_select_guest/create', function() use ($app){
+$app->get('/guest/album_select_guest/create', function() use ($app, $container){
   print "create!:";
 
   # 1init
@@ -34,7 +34,7 @@ $app->get('/guest/album_select_guest/create', function() use ($app){
   ->name('create_mosaic')
   ;
 
-$app->get('/guest/album_select_guest/notif',function() use ($app){
+$app->get('/guest/album_select_guest/notif',function() use ($app, $container){
   print "notif dayo";
   # opt:goalImgが生成されているかチェック
 
