@@ -14,8 +14,8 @@ CreateMosaic:{
 
     # 1init
     # repository準備
-    $goalImageId = '1';
     $goalImageId = $container['session']->get('goalImageId');
+    $goalImageId = '1';
 
     $GoalImageRep = $container['repository.goalImage'];
     $AlbumRep = $container['repository.album'];
@@ -34,27 +34,35 @@ CreateMosaic:{
     #TODO:albumIDからimagepathがないよ
 
     # 3.process
-    # だっちにtarget/srcListなげる
+    # だっちプログラムにtarget/srcListなげる
+    createMosaic();
 
-    $app->redirect($app->urlFor('create_notif'));
+    # 4.notification
+    # モザイク作成されたことをお知らせする
+    createNotif($container);
 
+    $link = '/common/mosaic_viewer/'.$goalImageId;
+    //$app->redirect($link);
+
+    echo "hoge\n";
   })
     ->name('create_mosaic')
     ;
 
-  $app->get('/guest/album_select_guest/notif',function() use ($app, $container){
-    print "notif dayo";
+
+
+
+
+  function createMosaic(){
+    # だっちのプログラムはここに移植
+  }
+
+  function createNotif($container){
+    # mosaic作ったことをみんなにおしらせ
+   
     # opt:goalImgが生成されているかチェック
 
 
-    # FBヘルパー使ってお知らせ
-
-
-    # モザイクビューワ画面にリダイレクト
-    $id = 1234;
-    $link = '/common/mosaic_viewer/'."$id"; // きもい
-    $app->redirect($link);
-  })
-    ->name('create_notif')
-    ;
+    # FBヘルパー使ってお知らせ#
+  }
 }
