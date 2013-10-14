@@ -13,13 +13,15 @@ $app->get('/guest/album_select_guest/create', function() use ($app, $container){
   # 1init
   # repository準備
   $goalImageID = '1';
+  $goalImageID = $container['session']->get('goalImageID');
+
   $GoalImageRepo = $container['repository.goalImage'];
   $AlbumRep = $container['repository.album'];
   $AlbumImageRep = $container['repository.albumImage'];
 
   # 2:prepare target & src
   # ゴールイメージ取得
-  $GoalImageRepo->getMosaicImg();
+  $goalImagePath = $GoalImageRepo->getMosaicImg($goalImageID);
 
   # アルバムid取得
 
