@@ -1,7 +1,8 @@
 <?php
-require_once(dirname(__FILE__).'facebook-php-sdk/src/facebook.php')
-
 namespace Vg\Repository;
+
+require_once(dirname(__FILE__).'/facebook-php-sdk/src/facebook.php');
+use Facebook;
 
 class FBHelperRepository
 {
@@ -13,8 +14,8 @@ class FBHelperRepository
     public function __construct()
     {
         $this->facebook = new Facebook([
-            'appId'  => APP_ID,
-            'secret' => APP_SECRET,
+            'appId'  => self::APP_ID,
+            'secret' => self::APP_SECRET,
         ]);
     }
 
@@ -57,7 +58,7 @@ class FBHelperRepository
             'token'       => $this->facebook->getAccessToken(),
             'name'        => $me['name'],
             'fb_icon_url' => 'https://graph.facebook.com/'.$me['id'].'/picture',
-        ]
+        ];
        
         return $userProfile;
     }
@@ -76,7 +77,7 @@ class FBHelperRepository
             $thumbnailPath = $r['data']['url'];
 
             $album = [
-                'id'            => $fbAlbum['id']
+                'id'            => $fbAlbum['id'],
                 'name'          => $fbAlbum['name'],
                 'thumbnailPath' => $thumbnailPath,
             ];
