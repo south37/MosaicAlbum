@@ -6,10 +6,10 @@ $app->get('/master/start_master', function() use ($app, $container) {
     $userId = $FBHelper->getUserId();
 
     if (!$userId) {
-        $isLogin = false;
+        $loginUrl = $FBHelper->getLoginUrl();
 
     } else {
-        $isLogin = true;
+        $loginUrl = '';
 
         $user = $container['repository.user']->findByFbId($userId);
 
@@ -26,7 +26,8 @@ $app->get('/master/start_master', function() use ($app, $container) {
             }
         }
     }
-  $app->render('master/start_master.html.twig', ['isLogin' => $isLogin]);
+
+  $app->render('master/start_master.html.twig', ['loginUrl' => $loginUrl]);
 })
   ->name('start_master')
   ;
