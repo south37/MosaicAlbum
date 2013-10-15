@@ -29,7 +29,7 @@ class FBHelperRepository
 
     public function getLoginUrl()
     {
-        $scope = 'user_photos,frinends_photos';
+        $scope = 'user_photos,friends_photos';
         $loginUrl = $this->facebook->getLoginUrl(['scope' => $scope]);
         
         return $loginUrl;
@@ -38,14 +38,14 @@ class FBHelperRepository
     public function getUserProfile()
     {
         try {
-            $this->facebook->setExtendedAccessToken();
-            $me = $this->facebook->api('/'.$this->userId.'?locale=ja_JP');
+//            $this->facebook->setExtendedAccessToken();
+            $me = $this->facebook->api('/'.$this->userId.'?fields=id,name?locale=ja_JP');
         } catch (FacebookApiException $e) {
             return [];
         }
         
         $userProfile = [
-            'fb_user_id'  => $me['id'],
+            'fb_user_id'  => $this->userId,
             'token'       => $this->facebook->getAccessToken(),
             'name'        => $me['name'],
             'fb_icon_url' => 'https://graph.facebook.com/'.$me['id'].'/picture',
@@ -57,15 +57,20 @@ class FBHelperRepository
     public function getAlbums()
     {
         try {
-            $fbAlbums = $this->facebook->api('/'.$this->userId.'/albums', 'GET')['data'];
+            $fbAlbums = $this->facebook->api('/'.$this->userId.'/albums')['data'];
+
         } catch (FacebookApiException $e) {
             return [];
         }
-        
+
         $albums = [];
-        foreach($fbAlbums as $fbAlbum) { 
-            $r = $this->facebook->api('/'.$fbAlbum['id'].'/picture?redirect=false', 'GET');
-            $thumbnailPath = $r['data']['url'];
+        foreach($fbAlbums as $fbAlbum) {
+            if (array_key_exists('cover_photo', $fbAlbum)) {
+                $r = $this->facebook->api('/'.$fbAlbum['cover_photo'], 'GET');
+                $thumbnailPath = $r['picture'];
+            } else {
+                $thumbnailPath = '';
+            }
 
             $album = [
                 'id'            => $fbAlbum['id'],
@@ -85,12 +90,12 @@ class FBHelperRepository
         } catch (FacebookApiException $e) {
             return [];
         }
-    
+
         $images = [];
         foreach($fbImages as $fbImage) {
             $image = [
                 'id'        => $fbImage['id'],
-                'imagePath' => $fbImage['picture'],
+                'imagePath' => $fbImage['source'],
             ];
             array_push($images, $image);
         }
@@ -101,11 +106,11 @@ class FBHelperRepository
     public function getFriends()
     {
         try {
-            $fbFriends = $this->facebook->api('/'.$this->userId.'/friends');
+            $fbFriends = $this->facebook->api('/'.$this->userId.'/friends')['data'];
         } catch (FacebookApiException $e) {
             return [];
         }
-  
+
         $friends = [];
         foreach($fbFriends as $fbFriend) {
             $friend = [
@@ -119,18 +124,19 @@ class FBHelperRepository
         return $friends;
     }
 
-    public function notify($friendId)
-    {
-        $data = [
-            'href'         => '//mosaicalbum.com/guest/start_guest',
-            'access_token' => $this->facebook->getAccessToken(),
-            'template'     => 'アルバムの作成に招待されました'
-        ];
-
-        try {
-            $this->facebook->api("/".$friendId."/notifications", 'POST', $data);
-        } catch (FacebookApiException $e) {
-            error_log($e);
-        }
-    }
-}
+      // facebook 埋め込みのページでないと通知は出来ない模様
+//    public function notify($friendId)
+//    {
+//        $data = [
+//            'href'         => '//mosaicalbum.com/guest/start_guest',
+//            'access_token' => $this->facebook->getAccessToken(),
+//            'template'     => 'アルバムの作成に招待されました'
+//        ];
+//
+//        try {
+//            $this->facebook->api("/".$friendId."/notifications", 'POST', $data);
+//        } catch (FacebookApiException $e) {
+//            error_log($e);
+//        }
+//    }
+//}
