@@ -1,4 +1,11 @@
 <?php
+
+ini_set('default_charset', 'UTF-8');
+include('../mosaic/CreateMosaic.php');
+include('../mosaic/Image.php');
+include('../mosaic/gd_bmp_util.php');
+
+
 //parameter無しのget
 $app->get('/guest/album_select_guest', function() use ($app) {
 
@@ -55,6 +62,7 @@ CreateMosaic:{
 
   function createMosaic(){
     # だっちのプログラムはここに移植
+    
   }
 
   function createNotif($container){
