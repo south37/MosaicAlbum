@@ -9,29 +9,28 @@ window.fbAsyncInit = function() {
   });
 
   // Additional initialization code such as adding Event Listeners goes here
-  FB.Event.subscribe('auth.authResponseChange', function(response) {
-    if (response.status === 'connected') {
-    } else if (response.status === 'not_authorized') {
-      appLogin();
-    } else {
-      appLogin();
-    }
-  });
+//  FB.Event.subscribe('auth.authResponseChange', function(response) {
+//    if (response.status === 'connected') {
+//    } else if (response.status === 'not_authorized') {
+//      appLogin();
+//    } else {
+//      appLogin();
+//    }
+//  });
 };
 
 // Load the SDK asynchronously
 (function(d, s, id){
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
+  var head = d.getElementsByTagName("head")[0] || d.documentElement;
+  var js = d.createElement(s); js.id = id;
   js.src = "//connect.facebook.net/en_US/all.js";
-  fjs.parentNode.insertBefore(js, fjs);
+  head.appendChild(js);
 }(document, 'script', 'facebook-jssdk'));
 
-function appLogin() {
-  FB.login(function(response) {
-  }, {scope: 'user_photos,friends_photos'});
-}
+//function appLogin() {
+//  FB.login(function(response) {
+//  }, {scope: 'user_photos,friends_photos'});
+//}
 
 function invite() {
   FB.ui({

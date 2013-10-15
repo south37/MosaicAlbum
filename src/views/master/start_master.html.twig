@@ -11,4 +11,10 @@
     {% if loginUrl != '' %}
     <a href="{{ loginUrl }}">ログイン</a>
     {% endif %}
+    
+    <a herf="javascript:;" onclick="invite()">友達を招待する</a>
 {% endblock %}
+
+{% block javascript%}
+<script type="text/javascript" src="{{ asset('/js/facebook.js') }}"></script>
+{% endblock%}
