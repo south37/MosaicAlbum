@@ -25,7 +25,7 @@ class AlbumRepository
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':userId', $album->user_id, \PDO::PARAM_INT);
         $sth->bindValue(':sessionId', $album->session_id, \PDO::PARAM_INT);
-        $sth->bindValue(':fbAlbumId', $album->fb_album_id, \PDO::PARAM_INT);
+        $sth->bindValue(':fbAlbumId', $album->fb_album_id, \PDO::PARAM_STR);
         $sth->execute();
         // insertされたカラムのIDを取得する
         $albumId = $this->getLatestId();
@@ -61,7 +61,7 @@ class AlbumRepository
         $albumIds = [];
         while($data = $sth->fetch(\PDO::FETCH_ASSOC))
         {
-            array_push($albumIds, $data['id'])
+            array_push($albumIds, $data['id']);
         }
         return $albumIds;
     }
@@ -80,7 +80,7 @@ class AlbumRepository
         $userIds = [];
         while($data = $sth->fetch(\PDO::FETCH_ASSOC))
         {
-            array_push($userIds, $data['user_id'])
+            array_push($userIds, $data['user_id']);
         }
         return $userIds;
     }
