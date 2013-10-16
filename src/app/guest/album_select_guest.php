@@ -34,7 +34,7 @@ CreateMosaic:{
     $goalImageUrl = $GoalImageRep->getMosaicImg($goalImageId);
 
     #TODO:pathから画像をどう取るのか？:helperに処理追加
-    $goalImagePath = '/img/goal_img/shake_hand.jpg'; //使い終わったらけす．
+    $goalImagePath = 'img/goal_img/miku.jpg'; //使い終わったらけす．
 
     # アルバムid取得
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
@@ -49,12 +49,31 @@ CreateMosaic:{
     var_dump($albumImageUrlList);
 
     #TODO:pathから画像をどう取るのか？:helperに処理追加
-    $albumImagePathList = [['/img/tmp/hoge'],['/img/tmp/huga']];
+    $albumImagePathList = [['img/tmp/hoge'],['img/tmp/huga']];
+    $albumImagePathList = [
+      'img/resource_img/ism/figure001.png',
+      'img/resource_img/ism/figure002.png',
+      'img/resource_img/ism/figure003.png',
+      'img/resource_img/ism/figure004.png',
+      'img/resource_img/ism/figure005.png',
+      'img/resource_img/ism/figure006.png',
+      'img/resource_img/ism/figure007.png',
+      'img/resource_img/ism/figure008.png',
+      'img/resource_img/ism/figure009.png',
+      'img/resource_img/ism/miku.jpg',
+
+      ]; //[debug]
 
     # 3.process
     # だっちプログラムにtarget/srcListなげる
+
+
+    // [debug]
     
-    //createMosaic($goalImageId,$goalImagePath,$albumImagePathList,$albumIdList);
+
+
+
+    createMosaic($goalImageId,$goalImagePath,$albumImagePathList,$albumIdList);
 
     # 4.notification
     # モザイク作成されたことをお知らせする
@@ -69,7 +88,7 @@ CreateMosaic:{
 
   function createMosaic($goalImageId,$goalImagePath,$albumImagePathList,$albumIdList){
     # だっちのプログラムはここに移植
-    $saveFilePath = '/img/mosaic_img/'.'mosaic'.$goalImageId.'.png';
+    $saveFilePath = 'img/mosaic_img/'.'mosaic'.$goalImageId.'.png';
 
     # モザイク処理設定
     $splitX = 80;
@@ -86,7 +105,7 @@ CreateMosaic:{
     $fbImageIdList = [];
     $albumIdList = [];
 
-    $fbGoalImageId = 1; //何に使うのこれ
+    $fbGoalImageId = 1; //何に使うのこれ:DBに保存する．
 
     ########
     # 処理 #
@@ -103,6 +122,7 @@ CreateMosaic:{
     $corrTwoDimension = $createMosaic->execMakeMosaicImage($saveFilePath,$goalImageId,$fbGoalImageId);
 
     # TODO:n番目の画像が，どのアルバムのものだったか，というリスト
+    # mgmgさんがきれいな配列をつくってくれます．
     $albumIdList = array_fill(0, count($corrTwoDimension), 0);
     $fbImageIdList = array_fill(0, count($corrTwoDimension), 0);
 

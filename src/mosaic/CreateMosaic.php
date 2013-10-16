@@ -120,7 +120,10 @@ class CreateMosaic
 			//$filePath = '../../public_html/img/resize_img/' . $imageDataBaseId . $image->extension;
 			// [DEBUG]	
 			$filePath = '../../public_html/img/resize_img/' . $i . $image->extension;
-			// imageテーブルへの挿入リクエスト
+      
+      //[debug by 123]
+      $filePath = 'img/resize_img/resize_'.$i.$image->extension;
+      // imageテーブルへの挿入リクエスト
 			//$imageDataBaseId = $repository->insert($input);
 			// [DEBUG]
 			$imageDataBaseId = 1;
