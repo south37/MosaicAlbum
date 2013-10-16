@@ -139,4 +139,18 @@ class FBHelperRepository
 //            error_log($e);
 //        }
 //    }
+
+    public function downloadImage($imagePath) {
+        $image = file_get_contents($imagePath);
+        $savePath = '/img/resource_img/'.basename($imagePath);
+
+        file_put_contents($savePath, $image);
+
+        return $savePath;
+    }
+
+    public function deleteImage($imagePath) {
+        unlink($imagePath);
+    }
+
 }
