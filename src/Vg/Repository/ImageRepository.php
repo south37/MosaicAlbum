@@ -58,4 +58,22 @@ class ImageRepository
         $sth->execute();
         return $imageId;
     }
+
+    /**
+     * イメージIDで対応するFacebookイメージIDを検索する
+     * @param  imageId[]
+     * @return imageId2fbImageId
+     */
+    public function getFbImageIdList($imageIds)
+    {
+        foreach ($imageIds as $imageId) {
+            $sql = "SELECT * FROM image WHERE id = :imageId";
+            $sth = $this->db->prepare($sql);
+            $sth->bindValue(':imageId', $imageId, \PDO::PARAM_INT);
+            $sth->execute();
+            $data = $sth->fetch(\PDO::FETCH_ASSOC);
+            $imageId2fbImageId[$imageId] = $data['fb_image_id'];
+        }
+        return $imageId2fbImageId;
+    }
 }

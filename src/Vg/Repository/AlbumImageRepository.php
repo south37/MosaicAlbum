@@ -54,4 +54,23 @@ class AlbumImageRepository
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
         return $data['id'];
     }
+
+    /**
+     * アルバムIDで関連するイメージIDを検索する
+     * @param  $albumId
+     * @return imageId[]
+     */
+    public function getImageIdList($albumId)
+    {
+        $sql = "SELECT * FROM album_image WHERE album_id = :albumId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':albumId', $albumId, \PDO::PARAM_INT);
+        $sth->execute();
+        $imageIds = [];
+        while($data = $sth->fetch(\PDO::FETCH_ASSOC))
+        {
+            array_push($imageIds, $data['image_id']);
+        }
+        return $imageIds;
+    }
 }

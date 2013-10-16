@@ -77,4 +77,9 @@ $container['repository.user'] = $container->share(function($c){
         return new \Vg\Repository\UserRepository($c['db']);
     });
 
+// ユーズドイメージリポジトリ
+$container['repository.usedImage'] = $container->share(function($c){
+        return new \Vg\Repository\UsedImageRepository($c['db']);
+    });
+
 return $container;
