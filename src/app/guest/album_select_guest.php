@@ -27,6 +27,7 @@ CreateMosaic:{
     $GoalImageRep = $container['repository.goalImage'];
     $AlbumRep = $container['repository.album'];
     $AlbumImageRep = $container['repository.albumImage'];
+    $FBHelper = $container['FBHelper'];
 
     # 2:prepare target & src
     # ゴールイメージ取得
@@ -38,10 +39,15 @@ CreateMosaic:{
     # アルバムid取得
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
     # 各アルバムの写真を取得
-    #TODO:albumIDからimagepathがないよ
+    $albumImageUrlList = []; 
+    foreach ($albumIdList as $albumId) {
+      $tmpAlbumImageUrlList = $FBHelper->getImagesInAlbum($albumId);
+      array_push($albumImageUrlList,$tmpAlbumImageUrlList);
+    }
 
-    $albumImageUrlList;
-    
+
+    var_dump($albumImageUrlList);
+
     #TODO:pathから画像をどう取るのか？:helperに処理追加
     $albumImagePathList = [['/img/tmp/hoge'],['/img/tmp/huga']];
 
