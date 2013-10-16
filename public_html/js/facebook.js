@@ -45,6 +45,16 @@ function invite() {
   });
 }
 
+function sendMessage() {
+  FB.ui({
+    method: 'send',
+    to:     '100003595468082',
+    name:   'minami',
+    link:   'http://yahoo.co.jp',
+    redirect_uri: 'http://dev.mosaicalbum.com/master/start_master'
+  });
+}
+
 // このdiv要素の後で読み込む
 //    <div id="fb-root"></div>
     
