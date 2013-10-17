@@ -116,7 +116,7 @@ CreateMosaic:{
     $createMosaic = new Mosaic\CreateMosaic($splitX, $splitY, $splitWidth, $splitHeight);
    
     # 画像の読み込み
-    $createMosaic->loadRequiredImages($goalImagePath,$albumImagePathList,$goalResizeWidth,$goalResizeHeight);
+    $createMosaic->loadRequiredImages($goalImagePath,$albumImagePathList,$goalResizeWidth,$goalResizeHeight,$albumResizeWidth,$albumResizeHeight);
     
     # モザイク画像生成
     $corrTwoDimension = $createMosaic->execMakeMosaicImage($saveFilePath,$goalImageId,$fbGoalImageId);
@@ -127,7 +127,7 @@ CreateMosaic:{
     $fbImageIdList = array_fill(0, count($corrTwoDimension), 0);
 
     # 画像保存
-    $createMosaic->saveAlbumImages($albumResizeWidth,$albumResizeHeight, $fbImageIdList, $albumIdList, $corrTwoDimension);
+    $createMosaic->saveAlbumImages($albumResizeWidth,$albumResizeHeight, $goalImageId, $fbImageIdList, $albumIdList, $corrTwoDimension);
 
     # 実行時間
     $timeEnd = microtime(true);

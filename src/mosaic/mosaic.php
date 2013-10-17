@@ -7,7 +7,7 @@ include('Image.php');
 include('gd_bmp_util.php');
 
 // 保存するファイルパス
-$saveFilePath = '../../public_html/img/mosaic_img/' . 'mosaicImage.png';
+$saveFilePath = './mosaic_img/' . 'mosaicImage.png';
 
 $albumImageUrlList = [];
 // [DEBUG]
@@ -59,14 +59,14 @@ while($fileName = readdir($dp))
 	// モザイク画像を作成するためのクラスを用意
 	$createMosaic = new Mosaic\CreateMosaic($splitX, $splitY, $splitWidth, $splitHeight);
 	// 画像の読み込み
-	$createMosaic->loadRequiredImages($goalImageUrl, $albumImageUrlList, $goalResizeWidth, $goalResizeHeight);
+	$createMosaic->loadRequiredImages($goalImageUrl, $albumImageUrlList, $goalResizeWidth, $goalResizeHeight, $albumResizeWidth, $albumResizeHeight);
 	// 画像生成開始
 	$corrTwoDimension = $createMosaic->execMakeMosaicImage($saveFilePath, $goalImageId, $fbGoalImageId);
 	// [DEBUG]
 	$albumIdList = array_fill(0, count($corrTwoDimension), 0);
 	$fbImageIdList = array_fill(0, count($corrTwoDimension), 0);
 	// 画像保存
-	$createMosaic->saveAlbumImages($albumResizeWidth, $albumResizeHeight, $fbImageIdList, $albumIdList, $corrTwoDimension);
+	$createMosaic->saveAlbumImages($albumResizeWidth, $albumResizeHeight, $goalImageId, $fbImageIdList, $albumIdList, $corrTwoDimension);
 	$timeEnd = microtime(true);
 	$time = $timeEnd - $timeStart;
 	echo "実行時間:". $time ."秒", PHP_EOL;

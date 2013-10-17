@@ -11,7 +11,8 @@ class CreateMosaic
 	private $splitWidth;
 	private $splitHeight;
 	private $goalImage;
-	private $albumImageDataList;
+	private $albumSaveImageDataList;
+	private $albumCalculationImageDataList;
 
 
 	// コンストラクタ
@@ -22,7 +23,8 @@ class CreateMosaic
 		$this->splitWidth = $splitWidth;
 		$this->splitHeight = $splitHeight;
 		$this->goalImage = null;
-		$this->albumImageDataList = [];
+		$this->albumSaveImageDataList = [];
+		$this->albumCalculationImageDataList = [];
 	}
 
 	// デストラクタ
@@ -31,9 +33,9 @@ class CreateMosaic
 		// メモリ解法
 		unset($this->goalImage);
 		unset($this->createMosaic);
-		for($i = 0, $n = count($this->albumImageDataList); $i < $n; ++$i)
+		for($i = 0, $n = count($this->albumCalculationImageDataList); $i < $n; ++$i)
 		{
-			unset($this->albumImageDataList[$i]);
+			unset($this->albumCalculationImageDataList[$i]);
 		}
 	}
 
@@ -47,9 +49,9 @@ class CreateMosaic
 	public function execMakeMosaicImage($filePath, $goalImageId, $fbGoalImageId)
 	{
 		// 対応関係を計算
-		$corrTwoDimension = self::calcCorrAlbumImageOnGoal($this->goalImage, $this->albumImageDataList);
+		$corrTwoDimension = self::calcCorrAlbumImageOnGoal($this->goalImage, $this->albumCalculationImageDataList);
 		// 対応関係から画像を作成
-		$mosaicImage = self::makeMosaicImageByCorrAlbumImage($corrTwoDimension, $this->goalImage, $this->albumImageDataList);
+		$mosaicImage = self::makeMosaicImageByCorrAlbumImage($corrTwoDimension, $this->goalImage, $this->albumCalculationImageDataList);
 
 		// update内容
 		$data = [
@@ -76,11 +78,13 @@ class CreateMosaic
 	* @param Mosaic\Image[] $albumImageUrlList アルバム画像の読み込み先
 	* @param int $goalReizeWidth 目標画像のリサイズ横幅
 	* @param int $goalReizeHeight 目標画像のリサイズ縦幅
+	* @param int $goalReizeWidth アルバム画像のリサイズ横幅
+	* @param int $goalReizeHeight アルバム画像のリサイズ縦幅
 	*/
-	public function loadRequiredImages($goalImageUrl, $albumImageUrlList, $goalResizeWidth, $goalResizeHeight)
+	public function loadRequiredImages($goalImageUrl, $albumImageUrlList, $goalResizeWidth, $goalResizeHeight, $albumResizeWidth, $albumResizeHeight)
 	{
 		// ゴール画像の読み込みを行う
-		$this->goalImage = self::loadImage($goalImageUrl, $goalResizeWidth, $goalResizeHeight);
+		$this->goalImage = Image::loadImage($goalImageUrl, $goalResizeWidth, $goalResizeHeight);
 		// 読み込み失敗
 		if($this->goalImage === FALSE)
 		{
@@ -92,15 +96,17 @@ class CreateMosaic
 		foreach ($albumImageUrlList as $url)
 		{
 			// 画像をリサイズして読み込む
-			$resizeImage = self::loadImage($url, $this->splitWidth, $this->splitHeight);
+			$saveImage = Image::loadImage($url, $albumResizeWidth, $albumResizeHeight);
+			$calcImage = Image::loadImage($url, $this->splitWidth, $this->splitHeight);
 			// 読み込み失敗
-			if($resizeImage === FALSE)
+			if($saveImage === FALSE || $calcImage === FALSE)
 			{
 				echo $url, '画像の読み込みに失敗しました', PHP_EOL;
 				continue;
 			}
 			// 配列に格納する
-			array_push($this->albumImageDataList, $resizeImage);
+			array_push($this->albumSaveImageDataList, $saveImage);
+			array_push($this->albumCalculationImageDataList, $calcImage);
 		}
 	}
 
@@ -108,22 +114,25 @@ class CreateMosaic
 	* リサイズしたアルバム画像の保存とデーベースへの挿入
 	* @param int $albumResizeWidth アルバム画像のリサイズ横幅
 	* @param int $albumResizeHeight アルバム画像のリサイズ縦幅
+	* @param int $goalImageId DBの対応するgoalImageのID
 	* @param int[] $fbImageId 画像のfacebook固有のID配列
 	* @param int[] $albumId 中間テーブル"iamge_album"でに挿入する関連するAlbumId配列
 	* @param int[][] $corrTwoDimension アルバム画像が目標画像のどの部分に対応しているかの情報 
 	*/
-	public function saveAlbumImages($albumResizeWidth, $albumResizeHeight, $fbImageIdList, $albumIdList, $corrTwoDimension)
+	public function saveAlbumImages($albumResizeWidth, $albumResizeHeight, $goalImageId, $fbImageIdList, $albumIdList, $corrTwoDimension)
 	{
-		for($i = 0, $n = count($this->albumImageDataList); $i < $n; ++$i)
+		// ファイルの保存されるパーミッションを775変更する
+		$old = umask(0002);
+		for($i = 0, $n = count($this->albumSaveImageDataList); $i < $n; ++$i)
 		{
-			$image = $this->albumImageDataList[$i];
-			//$filePath = '../../public_html/img/resize_img/' . $imageDataBaseId . $image->extension;
+			$image = $this->albumSaveImageDataList[$i];
+			//$filePath = '../../public_html/img/resize_img/' . $goalImageId . '/'  $fbImageIdList[$i] . $image->extension;
 			// [DEBUG]	
-			$filePath = '../../public_html/img/resize_img/' . $i . $image->extension;
-      
-      //[debug by 123]
-      $filePath = 'img/resize_img/resize_'.$i.$image->extension;
-      // imageテーブルへの挿入リクエスト
+			$filePath = '../../public_html/img/resize_img/' . $goalImageId . '/' . $i . $image->extension;
+			//[debug by 123]
+			$filePath = 'img/resize_img/' . $goalImageId . '/resize_'.$i.$image->extension;
+
+			// imageテーブルへの挿入リクエスト
 			//$imageDataBaseId = $repository->insert($input);
 			// [DEBUG]
 			$imageDataBaseId = 1;
@@ -146,7 +155,7 @@ class CreateMosaic
 
 			}
 			// 画像の保存
-			$result = imagepng($resizeId, $filePath);
+			$result = $image->saveImage($filePath);
 			// 保存失敗
 			if($result === FALSE)
 			{
@@ -158,6 +167,7 @@ class CreateMosaic
 			foreach ($corrTwoDimension as $y => $v)
 			{
 				$xs = array_keys($v, $i);
+				if(count($xs) == 0) continue;
 				foreach ($xs as $x)
 				{
 					array_push($usingImagePos, ['x' => $x, 'y' => $y]);
@@ -198,20 +208,22 @@ class CreateMosaic
 				}
 			}
 		}
+		// パーミッションの設定を元に戻す
+		umask($old);
 	}
 
 	/**
 	* 目標画像に対応するアルバム画像の位置を求める
 	* @param Mosaic\Image &$goalImage 目標画像
-	* @param Mosaic\Image[] &$albumImageDataList アルバム画像
+	* @param Mosaic\Image[] &$albumCalculationImageDataList アルバム画像
 	* @param array() &$usingCounter
 	* @return array(array()) $corrTwoDimension アルバム画像が目標画像のどの部分に対応しているかの情報
 	*/
-	private function calcCorrAlbumImageOnGoal(&$goalImage, &$albumImageDataList)
+	private function calcCorrAlbumImageOnGoal(&$goalImage, &$albumCalculationImageDataList)
 	{
 		$corrTwoDimension = [];
 		// 対応するアルバム画像がどれだけ使われたかを保持する配列
-		$usingCounter = array_fill(0, count($albumImageDataList), 0);
+		$usingCounter = array_fill(0, count($albumCalculationImageDataList), 0);
 		for($y = 0; $y < $this->splitY; ++$y)
 		{			
 			$corr = [];
@@ -227,10 +239,10 @@ class CreateMosaic
 				$subId = $this->goalImage->makeSubImage($fx, $fy, $this->splitWidth, $this->splitHeight);
 				$subImage = new Image($subId);
 
-				for($i = 0, $n = count($albumImageDataList); $i < $n; ++$i)
+				for($i = 0, $n = count($albumCalculationImageDataList); $i < $n; ++$i)
 				{
 					// 画像間から局所距離を求める
-					$d = self::calcDistanceBetweenPixels($subImage, $albumImageDataList[$i]);
+					$d = self::calcDistanceBetweenPixels($subImage, $albumCalculationImageDataList[$i]);
 					// 使われた回数で重み付けする
 					// これにより、同じ画像が複数回使用されるのを防ぐ
 					// 局所距離が0になるのを避けるために、1を足している
@@ -257,10 +269,10 @@ class CreateMosaic
 	* モザイク画像をアルバム画像の対応関係作成する関数
 	* @param array(array()) $corrTwoDimension アルバム画像が目標画像のどの部分に対応しているかの情報
 	* @param Mosaic\Image &$goalImage 目標画像
-	* @param Mosaic\Image[] &$albumImageDataList アルバム画像
+	* @param Mosaic\Image[] &$albumCalculationImageDataList アルバム画像
 	* @return $mosaicImage モザイク画像のリソースID
 	*/
-	public function makeMosaicImageByCorrAlbumImage(&$corrTwoDimension, &$goalImage, &$albumImageDataList)
+	public function makeMosaicImageByCorrAlbumImage(&$corrTwoDimension, &$goalImage, &$albumCalculationImageDataList)
 	{
 		$mosaicImage = imagecreatetruecolor($goalImage->width, $goalImage->height);
 		// 白で塗りつぶしておく
@@ -274,7 +286,7 @@ class CreateMosaic
 				$fx = (int)($x * $this->splitWidth);
 				$fy = (int)($y * $this->splitHeight);
 				// 対応する画像を取得
-				$image = $albumImageDataList[$corrTwoDimension[$y][$x]];
+				$image = $albumCalculationImageDataList[$corrTwoDimension[$y][$x]];
 				// 対応する位置にアルバムの画像を貼り付ける 
 				imagecopy($mosaicImage, $image->id, $fx, $fy, 0, 0, $this->splitWidth, $this->splitHeight);
 			}
@@ -311,73 +323,5 @@ class CreateMosaic
 			}
 		}
 		return sqrt($d['red'] * $d['red'] + $d['green'] * $d['green'] + $d['blue'] * $d['blue']);
-	}
-
-
-	/**
-	* 画像をURLから読み込む（サイズが指定されている場合はリサイズを行う）
-	* @param 画像のURL
-	* @return 読み込みが失敗したらFALSE,成功ならばMosaic\Image
-	* @note FaceBookの対応画像形式 .jpg、.bmp、.png、.gif、.tiff
-	*/
-	public static function loadImage($url, $width = null, $height = null)
-	{
-		$id = null;
-		$fileExtension = null;
-		$type = exif_imagetype($url);
-		switch ($type) {
-			case 1: // GIF
-				$id = imagecreatefromgif($url);
-				$fileExtension = '.gif';
-				break;
-			case 2: // JPEG
-				$id = imagecreatefromjpeg($url);
-				$fileExtension = '.jpg';
-				break;
-			case 3: // PNG
-				$id = imagecreatefrompng($url);
-				$fileExtension = '.png';
-				break;
-			case 6: // BMP
-				// 独自ライブラリを使用
-				$id = imageCreateFromBMP($url);
-				$fileExtension = '.bmp';
-				break;
-			//case 7: // TIFF
-			//case 8:
-			// 現状,TIFFのサポートはしない
-			//	break; 
-			default:
-				echo $url, '対応する画像形式ではありません', PHP_EOL;
-				break;
-		}
-		// 読み込み失敗
-		if($id === FALSE || $id == null) return FALSE;
-		// Imageクラスを生成
-		$image = new Image($id);
-		$image->extension = $fileExtension;
-		// リサイズを行う場合
-		if(empty($width) === FALSE && empty($height) === FALSE)
-		{
-			// リサイズ用のリソースを用意する
-			$resizeId = imagecreatetruecolor($width, $height);
-			$ret = imagecopyresized($resizeId, $id, 0, 0, 0, 0, $width, $height, $image->width, $image->height);
-			// リサイズ処理に成功した場合
-			if($ret)
-			{
-				// メモリを解法して、リサイズした画像のクラスを作成
-				unset($image);
-				$image = new Image($resizeId);
-				$image->extension = $fileExtension;
-			}
-			// リサイズ処理に失敗した場合
-			else
-			{
-				// リサイズ画像のメモリ領域を解法
-				imagedestroy($resizeId);
-				return FALSE;
-			}
-		}
-		return $image;
 	}
 }

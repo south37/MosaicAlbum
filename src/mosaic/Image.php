@@ -82,4 +82,101 @@ class Image
 		imagecopy($subId, $this->id, 0, 0, $fx, $fy, $width, $height);
 		return $subId;
 	}
+
+	/**
+	* 拡張子に合わせた画像を保存する
+	*/
+	public function saveImage($filePath)
+	{
+		$res = null;
+		switch ($this->extension) {
+			case '.gif': // GIF
+				$res = imagegif($this->id, $filePath);
+				break;
+			case '.jpg': // JPEG
+				$res = imagejpeg($this->id, $filePath);
+				break;
+			case '.png': // PNG
+				$res = imagepng($this->id, $filePath);
+				break;
+			case '.bmp': // BMP
+				$res = imageBMP($this->id, $filePath);
+				break;
+			//case 7: // TIFF
+			//case 8:
+			// 現状,TIFFのサポートはしない
+			//	break; 
+			default:
+				echo $this->extension, PHP_EOL;
+				break;
+		}
+		return $res;
+	}
+
+	/**
+	* 画像をURLから読み込む（サイズが指定されている場合はリサイズを行う）
+	* @param 画像のURL
+	* @return 読み込みが失敗したらFALSE,成功ならばMosaic\Image
+	* @note FaceBookの対応画像形式 .jpg、.bmp、.png、.gif、.tiff
+	*/
+	public static function loadImage($url, $width = null, $height = null)
+	{
+		$id = null;
+		$fileExtension = null;
+		$type = exif_imagetype($url);
+		switch ($type) {
+			case 1: // GIF
+				$id = imagecreatefromgif($url);
+				$fileExtension = '.gif';
+				break;
+			case 2: // JPEG
+				$id = imagecreatefromjpeg($url);
+				$fileExtension = '.jpg';
+				break;
+			case 3: // PNG
+				$id = imagecreatefrompng($url);
+				$fileExtension = '.png';
+				break;
+			case 6: // BMP
+				// 独自ライブラリを使用
+				$id = imageCreateFromBMP($url);
+				$fileExtension = '.bmp';
+				break;
+			//case 7: // TIFF
+			//case 8:
+			// 現状,TIFFのサポートはしない
+			//	break; 
+			default:
+				echo $url, '対応する画像形式ではありません', PHP_EOL;
+				break;
+		}
+		// 読み込み失敗
+		if($id === FALSE || $id == null) return FALSE;
+		// Imageクラスを生成
+		$image = new Image($id);
+		$image->extension = $fileExtension;
+		// リサイズを行う場合
+		if(empty($width) === FALSE && empty($height) === FALSE)
+		{
+			// リサイズ用のリソースを用意する
+			$resizeId = imagecreatetruecolor($width, $height);
+			$ret = imagecopyresized($resizeId, $id, 0, 0, 0, 0, $width, $height, $image->width, $image->height);
+			// リサイズ処理に成功した場合
+			if($ret)
+			{
+				// メモリを解法して、リサイズした画像のクラスを作成
+				unset($image);
+				$image = new Image($resizeId);
+				$image->extension = $fileExtension;
+			}
+			// リサイズ処理に失敗した場合
+			else
+			{
+				// リサイズ画像のメモリ領域を解法
+				imagedestroy($resizeId);
+				return FALSE;
+			}
+		}
+		return $image;
+	}
 }
