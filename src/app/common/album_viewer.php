@@ -14,7 +14,7 @@ $app->get('/common/album_viewer/:goalImageId', function($goalImageId) use ($app,
 			# DBに登録
 			$imageID = $container['repository.image']->insert($image['id']);
 			# イメージパスリストにイメージパスを保存
-			array_push($imagePathList, $image['imagePath'])
+			array_push($imagePathList, $image['imagePath']);
 		}
 	}
 	# アルバムリスト（アルバム選択画面で表示する）
@@ -26,7 +26,7 @@ $app->get('/common/album_viewer/:goalImageId', function($goalImageId) use ($app,
 		$images = $container['FBHelper']->getImagesInAlbum($fbAlbum['id']);
 		# アルバムリストにアルバムの写真一覧を保存
 		$fbAlbum['images'] = $images;
-		array_push($albumList, $fbAlbum)
+		array_push($albumList, $fbAlbum);
 	}
 	$app->render('common/album_viewer.html.twig',
   		["imagePathList"=>$imagePathList, "albumList"=>$albumList]);
