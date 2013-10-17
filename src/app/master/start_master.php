@@ -5,6 +5,9 @@ $app->get('/master/start_master', function() use ($app, $container) {
 
     $userId = $FBHelper->getUserId();
 
+    #DEBUG:
+    echo $userId;
+
     if (!$userId) {
         $loginUrl = $FBHelper->getLoginUrl();
 
