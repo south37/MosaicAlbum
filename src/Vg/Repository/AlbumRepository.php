@@ -67,6 +67,25 @@ class AlbumRepository
     }
 
     /**
+     * ゴールイメージIDでFacebookアルバムIDを検索
+     * @param  $goalImageId
+     * @return fbAlbumId[]
+     */
+    public function getFbAlbumIdList($goalImageId)
+    {
+        $sql = "SELECT * FROM album WHERE goal_image_id = :goalImageId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        $sth->execute();
+        $fbAlbumIds = [];
+        while($data = $sth->fetch(\PDO::FETCH_ASSOC))
+        {
+            array_push($fbAlbumIds, $data['fb_album_id']);
+        }
+        return $fbAlbumIds;
+    }
+
+    /**
      * ゴールイメージIDでユーザーIDを検索
      * @param  $goalImageId
      * @return userId[]
