@@ -89,6 +89,11 @@ class Image
 	public function saveImage($filePath)
 	{
 		$res = null;
+                $dirPath = dirname($filePath);
+                if(is_dir($dirPath) === FALSE)
+                {
+                    mkdir(dirname($filePath), 0775);
+                }
 		switch ($this->extension) {
 			case '.gif': // GIF
 				$res = imagegif($this->id, $filePath);
