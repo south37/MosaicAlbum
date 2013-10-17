@@ -36,7 +36,7 @@ $app->post('/guest/album_select_guest', function() use ($app, $container) {
   # アルバムビューアへ
   $app->redirect($app->urlFor('album_viewer', ['goalImageId'=>$container['session']->get('goalImageId')]));
 })
-  ->name('add_album')
+  ->name('add_album_guest')
   ;
 
 
@@ -46,7 +46,7 @@ CreateMosaic:{
     # 1:init
     # repository準備
     $goalImageId = $container['session']->get('goalImageId');
-    $goalImageId = '1';
+    //$goalImageId = '1';
 
     $GoalImageRep = $container['repository.goalImage'];
     $AlbumRep = $container['repository.album'];
@@ -55,7 +55,7 @@ CreateMosaic:{
 
     # 2:prepare target & src
     # ゴールイメージ取得
-    $goalImageUrl = $GoalImageRep->getMosaicImg($goalImageId);
+    $goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
 
     #TODO:pathから画像をどう取るのか？:helperに処理追加
     $goalImagePath = 'img/goal_img/miku.jpg'; //使い終わったらけす．

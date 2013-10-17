@@ -29,5 +29,5 @@ $app->post('/master/album_select_master', function() use ($app, $container) {
 	# アルバムビューアへ
 	$app->redirect($app->urlFor('album_viewer', ['goalImageId'=>$container['session']->get('goalImageId')]));
 })
-	->name('add_album')
+	->name('add_album_master')
 	;
