@@ -25,7 +25,7 @@ class AlbumRepository
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':userId', $album->user_id, \PDO::PARAM_INT);
         $sth->bindValue(':sessionId', $album->session_id, \PDO::PARAM_INT);
-        $sth->bindValue(':fbAlbumId', $album->fb_album_id, \PDO::PARAM_STR);
+        $sth->bindParam(':fbAlbumId', $album->fb_album_id, \PDO::PARAM_STR);
         $sth->execute();
         // insertされたカラムのIDを取得する
         $albumId = $this->getLatestId();
@@ -64,6 +64,25 @@ class AlbumRepository
             array_push($albumIds, $data['id']);
         }
         return $albumIds;
+    }
+
+    /**
+     * ゴールイメージIDでFacebookアルバムIDを検索
+     * @param  $goalImageId
+     * @return fbAlbumId[]
+     */
+    public function getFbAlbumIdList($goalImageId)
+    {
+        $sql = "SELECT * FROM album WHERE goal_image_id = :goalImageId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        $sth->execute();
+        $fbAlbumIds = [];
+        while($data = $sth->fetch(\PDO::FETCH_ASSOC))
+        {
+            array_push($fbAlbumIds, $data['fb_album_id']);
+        }
+        return $fbAlbumIds;
     }
 
     /**
