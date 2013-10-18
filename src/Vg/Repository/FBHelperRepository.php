@@ -38,8 +38,8 @@ class FBHelperRepository
     public function getUserProfile()
     {
         try {
-//            $this->facebook->setExtendedAccessToken();
-            $me = $this->facebook->api('/'.$this->userId.'?fields=id,name?locale=ja_JP');
+            //            $this->facebook->setExtendedAccessToken();
+            $me = $this->facebook->api('/'.$this->getUserId().'?locale=ja_JP');
         } catch (FacebookApiException $e) {
             return [];
         }
