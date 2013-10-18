@@ -9,28 +9,41 @@ class FBHelperRepository
     const APP_ID     = '638792116141666';
     const APP_SECRET = '3fd441f744cca9929774227d058690e2';
     
-    public $facebook;
+    private $facebook;
+    private $userRepository;
+    
     private $userId;
+    private $accessToken;
 
-    public function __construct()
+    public function __construct($userRepository)
     {
         $this->facebook = new Facebook([
             'appId'  => self::APP_ID,
             'secret' => self::APP_SECRET,
         ]);
 
-        $this->userId = $this->facebook->getUser();
+        $this->userRepository = $userRepository;
     }
 
     public function getUserId()
     {
+        if (!isset($this->userId)) {
+            $this->userId = $this->facebook->getUser();
+        }
+
         return $this->userId;
     }
 
     public function getLoginUrl()
     {
-        $scope = 'user_photos,friends_photos';
-        $loginUrl = $this->facebook->getLoginUrl(['scope' => $scope]);
+        $this->facebook->destroySession();
+
+        $params = [
+            'scope'        => 'user_photos,friends_photos',
+            'redirect_uri' => 'http://mosaicalbum.com/login_process',
+            'display'      => 'popup'
+        ];
+        $loginUrl = $this->facebook->getLoginUrl($params);
         
         return $loginUrl;
     }
@@ -54,8 +67,21 @@ class FBHelperRepository
         return $userProfile;
     }
 
+    private function setAccessToken()
+    {
+        if (!isset($this->accessToken)) {
+            $user = $this->userRepository->findByFbId($this->getUserId());
+            
+            $this->accessToken = $user->token;
+        }
+
+        $this->facebook->setAccessToken($this->accessToken);
+    }
+
     public function getAlbums()
     {
+        $this->setAccessToken();
+
         try {
             $fbAlbums = $this->facebook->api('/'.$this->userId.'/albums')['data'];
 
@@ -85,6 +111,8 @@ class FBHelperRepository
 
     public function getImagesInAlbum($albumId)
     {
+        $this->setAccessToken();
+        
         try {
             $fbImages = $this->facebook->api('/'.$albumId.'/photos', 'GET')['data'];
         } catch (FacebookApiException $e) {
@@ -105,6 +133,8 @@ class FBHelperRepository
 
     public function getFriends()
     {
+        $this->setAccessToken();
+        
         try {
             $fbFriends = $this->facebook->api('/'.$this->userId.'/friends')['data'];
         } catch (FacebookApiException $e) {
@@ -127,7 +157,9 @@ class FBHelperRepository
       // facebook 埋め込みのページでないと通知は出来ない模様
 //    public function notify($friendId)
 //    {
-//        $data = [
+//       $this->setAccessToken();
+//       
+//       $data = [
 //            'href'         => '//mosaicalbum.com/guest/start_guest',
 //            'access_token' => $this->facebook->getAccessToken(),
 //            'template'     => 'アルバムの作成に招待されました'
@@ -140,7 +172,8 @@ class FBHelperRepository
 //        }
 //    }
 
-    public function downloadImage($imagePath) {
+    public function downloadImage($imagePath)
+    {
         $image = file_get_contents($imagePath);
         $savePath = '/img/resource_img/'.basename($imagePath);
 
@@ -149,7 +182,8 @@ class FBHelperRepository
         return $savePath;
     }
 
-    public function deleteImage($imagePath) {
+    public function deleteImage($imagePath)
+    {
         unlink($imagePath);
     }
 
