@@ -18,7 +18,7 @@ use Slim\Slim;
     require  __DIR__ . '/../src/app/common/mosaic_viewer.php';
     require  __DIR__ . '/../src/app/common/album_viewer.php';
 
-//    require  __DIR__ . '/../src/app/master/goal_select.php';
+    require  __DIR__ . '/../src/app/select_goal/index.php';
     require  __DIR__ . '/../src/app/master/member_select.php';
     require  __DIR__ . '/../src/app/master/album_select_master.php';
 

@@ -1,0 +1,16 @@
+{% extends 'layout.html.twig' %}
+
+{% block contents %}
+    <p>ゴール写真を選んでください</p>
+
+    <select name="imageId" class="images">
+        {% for i, image in images %}
+        <option data-img-src="{{ image['thumbnailPath'] }}" value="{{ image['id'] }}">No.{{ i+1 }}</option>
+        {% endfor %}
+    </select>
+    <a href="javascript:;" onclick="selectImage()" class="btn btn-primary">この写真を選ぶ</a>
+{% endblock %}
+
+{% block javascript%}
+<script type="text/javascript" src="{{ asset('/js/select_goal/select_image.js') }}"></script>
+{% endblock%}
