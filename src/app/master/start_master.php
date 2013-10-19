@@ -80,6 +80,7 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
  * ログアウト
  */
 $app->get('/logout', function() use ($app, $container) {
+        $container['FBHelper']->destroySession();
         $container['session']->clear();
         $app->redirect($app->urlFor('top'));
     })

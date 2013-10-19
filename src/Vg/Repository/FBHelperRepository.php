@@ -47,8 +47,6 @@ class FBHelperRepository
 
     public function getLoginUrl()
     {
-        $this->destroySession();
-
         $params = [
             'scope'        => 'user_photos,friends_photos',
             'redirect_uri' => 'http://mosaicalbum.com/login_process',
