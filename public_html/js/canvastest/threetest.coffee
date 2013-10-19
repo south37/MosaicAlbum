@@ -1,12 +1,10 @@
 $ ->
   console.log "load threetest.coffee"
   window.addEventListener "DOMContentLoaded", ->
-    console.log "load window"
-   
+    
     # レンダラの作成．追加
     width = window.innerWidth
     height = window.innerHeight
-    #render  = new THREE.WebGLRenderer({'canvas':$('#cvs1')[0]})
     render = new THREE.WebGLRenderer()
     render.setSize(width,height)
     $("#container").before render.domElement
@@ -32,7 +30,6 @@ $ ->
     scene.add directioalLight
 
     # textureのロード
-    miku_tex = new THREE.ImageUtils.loadTexture('/img/miku.jpg')
     pathList = [
       "resize_0.png"
       "resize_1.png"
@@ -49,25 +46,6 @@ $ ->
     materials = (new THREE.MeshBasicMaterial {map:tex} for tex in texlist)
 
     # ジオメトリの追加
-    geometry = new THREE.CubeGeometry(20,20,20)
-    material = new THREE.MeshLambertMaterial({map:miku_tex})
-    #material = new THREE.MeshLambertMaterial({color:0x226633})
-    cubeMesh = new THREE.Mesh(geometry,material)
-    scene.add(cubeMesh)
-
-    for i in [0..10]
-      console.log "hoge:",Math.random()
-      tmesh = new THREE.Mesh(geometry,material)
-      tmesh.position.set 20*i,20*i, 0
-      scene.add tmesh
-
-    geometry = new THREE.PlaneGeometry(500,500,1,1)
-    material = new THREE.MeshBasicMaterial({map:miku_tex})
-    planeMesh = new THREE.Mesh(geometry,material)
-    #planeMesh.position.set -100,0,0
-    #planeMesh.rotation.set Math.PI/2, 0, 0
-    scene.add(planeMesh)
-
     row = 80
     col = 60
     sizeX = 1000/col
@@ -80,7 +58,6 @@ $ ->
         scene.add(piece)
 
     #event
-    
     controlMode = "none"
     pclientX = 0
     pclientY = 0 
@@ -92,15 +69,6 @@ $ ->
     $('canvas').mouseup ->
       console.log "mouseup"
       controlMode = "none"
-
-    $(this).rightClick (e) ->
-      console.log "rightclick"
-      controlMode = "right"
-    $(this).leftClick (e) ->
-      console.log "left click"
-  
-    $(this).wheelClick (e)->
-      console.log "whell click"
     
     $('canvas').mousemove (e) ->
       switch controlMode
@@ -124,10 +92,6 @@ $ ->
       pclientX = e.clientX
       pclientY = e.clientY
 
-    $(this).exScrollEvent (e,param) ->
-      console.log param.scroll.top
-      e.preventDefault()
-
     $(this).keypress (e) ->
       console.log e.which
       switch e.which
@@ -145,20 +109,20 @@ $ ->
           controlMode = "reset"
         else
           controlMode = "none"
+
     # ループ関数
 
-    theta = 0
-    
+    trans = (object, target, duration) ->
+      new TWEEN.Tween(object.position)
+        .to({x:target.x , y:target.y , z:target.z} , duration)
+        .easing(TWEEN.Easing.Elastic.InOut)
+        .start()
+
     anim = ->
       requestAnimationFrame anim
-      rad = theta * Math.PI / 180.0
-      cubeMesh.rotation.set rad,rad,rad
-      #theta++
-      #camera.lookAt(new THREE.Vector3(0, 0, 0))
+      TWEEN.update()
       render.render scene,camera
-      #controls.update()
-      return true 
 
+    # main的なあれ
     render.render(scene,camera)
     anim()
-    return true 
