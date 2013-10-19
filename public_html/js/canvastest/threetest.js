@@ -2,13 +2,13 @@
 $(function() {
   console.log("load threetest.coffee");
   return window.addEventListener("DOMContentLoaded", function() {
-    var anim, aspect, camera, col, cubeMesh, directioalLight, far, fov, geometry, height, i, isEnableMove, j, material, materials, miku_tex, near, path, pathList, pclientX, pclientY, piece, planeMesh, render, row, scene, sizeX, sizeY, tex, texlist, theta, tmesh, width, _i, _j, _k;
+    var anim, aspect, camera, col, controlMode, cubeMesh, directioalLight, far, fov, geometry, height, i, j, material, materials, miku_tex, near, path, pathList, pclientX, pclientY, piece, planeMesh, render, row, scene, sizeX, sizeY, target, tex, texlist, theta, tmesh, width, _i, _j, _k;
     console.log("load window");
     width = window.innerWidth;
     height = window.innerHeight;
     render = new THREE.WebGLRenderer();
     render.setSize(width, height);
-    document.body.appendChild(render.domElement);
+    $("body").append(render.domElement);
     render.setClearColor(0x000000, 1);
     scene = new THREE.Scene();
     fov = 80;
@@ -16,9 +16,10 @@ $(function() {
     near = 1;
     far = 10000;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    target = new THREE.Vector3(0, 0, 0);
     camera.position.set(0, 0, 500);
     scene.add(camera);
-    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    camera.lookAt(target);
     directioalLight = new THREE.DirectionalLight(0xffffff, 3);
     directioalLight.position.z = 300;
     scene.add(directioalLight);
@@ -74,33 +75,73 @@ $(function() {
         scene.add(piece);
       }
     }
-    isEnableMove = false;
+    controlMode = "none";
     pclientX = 0;
     pclientY = 0;
     $('canvas').mousedown(function(e) {
       console.log("mousedown:", e);
-      return isEnableMove = true;
+      return controlMode = "move";
     });
     $('canvas').mouseup(function() {
       console.log("mouseup");
-      return isEnableMove = false;
+      return controlMode = "none";
     });
     $(this).rightClick(function(e) {
-      return console.log("rightclick");
+      console.log("rightclick");
+      return controlMode = "right";
     });
     $(this).leftClick(function(e) {
       return console.log("left click");
     });
+    $(this).wheelClick(function(e) {
+      return console.log("whell click");
+    });
     $('canvas').mousemove(function(e) {
       var diff;
-      console.log("mousemove");
-      if (isEnableMove) {
-        console.log("enable");
-        diff = new THREE.Vector3(-e.clientX + pclientX, e.clientY - pclientY, 0);
-        camera.position.add(diff);
+      switch (controlMode) {
+        case "move":
+          diff = new THREE.Vector3(-e.clientX + pclientX, e.clientY - pclientY, 0);
+          camera.position.add(diff);
+          break;
+        case "zoom":
+          diff = new THREE.Vector3(0, 0, e.clientY - pclientY);
+          camera.position.add(diff);
+          break;
+        case "target":
+          diff = new THREE.Vector3(-e.clientX + pclientX, e.clientY - pclientY, 0);
+          target.add(diff);
+          camera.lookAt(target);
+          break;
+        case "reset":
+          camera.position.set(0, 0, 500);
+          target.set(0, 0, 0);
+          camera.lookAt(target);
+          controlMode = "none";
+          break;
+        case "none":
+          console.log("none");
       }
       pclientX = e.clientX;
       return pclientY = e.clientY;
+    });
+    $(this).exScrollEvent(function(e, param) {
+      console.log(param.scroll.top);
+      return e.preventDefault();
+    });
+    $(this).keypress(function(e) {
+      console.log(e.which);
+      switch (e.which) {
+        case 113:
+          return controlMode = controlMode === "move" ? "none" : "move";
+        case 119:
+          return controlMode = controlMode === "zoom" ? "none" : "zoom";
+        case 101:
+          return controlMode = controlMode === "target" ? "none" : "target";
+        case 97:
+          return controlMode = "reset";
+        default:
+          return controlMode = "none";
+      }
     });
     theta = 0;
     anim = function() {

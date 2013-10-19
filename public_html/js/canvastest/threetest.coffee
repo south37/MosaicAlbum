@@ -9,8 +9,7 @@ $ ->
     #render  = new THREE.WebGLRenderer({'canvas':$('#cvs1')[0]})
     render = new THREE.WebGLRenderer()
     render.setSize(width,height)
-    document.body.appendChild( render.domElement)
-    #$(this).append render.domElement
+    $("body").append render.domElement
     render.setClearColor(0x000000,1)
 
     # sceneの作成
@@ -22,9 +21,10 @@ $ ->
     near = 1
     far = 10000
     camera = new THREE.PerspectiveCamera(fov,aspect,near,far)
+    target = new THREE.Vector3(0,0,0)
     camera.position.set 0,0,500
     scene.add camera
-    camera.lookAt(new THREE.Vector3(0,0,0))
+    camera.lookAt target
 
     # camera controller
     #controls = new THREE.TrackballControls(camera, render.domElement)
@@ -86,37 +86,70 @@ $ ->
 
     #event
     
-    isEnableMove = false
+    controlMode = "none"
     pclientX = 0
     pclientY = 0 
     
     $('canvas').mousedown (e)->
       console.log "mousedown:", e
-      isEnableMove = true
+      controlMode = "move"
 
     $('canvas').mouseup ->
       console.log "mouseup"
-      isEnableMove = false
+      controlMode = "none"
 
     $(this).rightClick (e) ->
-          console.log "rightclick"
-
-
+      console.log "rightclick"
+      controlMode = "right"
     $(this).leftClick (e) ->
       console.log "left click"
-   
+  
+    $(this).wheelClick (e)->
+      console.log "whell click"
     
     $('canvas').mousemove (e) ->
-      console.log "mousemove"
-      if isEnableMove
-        console.log "enable"
-        diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
-        camera.position.add diff
+      switch controlMode
+        when "move"
+          diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
+          camera.position.add diff
+        when "zoom"
+          diff = new THREE.Vector3( 0, 0, e.clientY - pclientY)
+          camera.position.add diff
+        when "target"
+          diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
+          target.add diff
+          camera.lookAt target
+        when "reset"
+          camera.position.set 0,0,500
+          target.set 0,0,0
+          camera.lookAt target
+          controlMode = "none"
+        when "none"
+          console.log "none"
       pclientX = e.clientX
       pclientY = e.clientY
 
+    $(this).exScrollEvent (e,param) ->
+      console.log param.scroll.top
+      e.preventDefault()
 
-
+    $(this).keypress (e) ->
+      console.log e.which
+      switch e.which
+        when 113 
+          #q
+          controlMode = if controlMode == "move" then "none" else "move"   
+        when 119
+          #w
+          controlMode = if controlMode == "zoom" then "none" else "zoom"
+        when 101
+          #e
+          controlMode = if controlMode == "target" then "none" else "target"   
+        when 97
+          #a
+          controlMode = "reset"
+        else
+          controlMode = "none"
     # ループ関数
 
     theta = 0
