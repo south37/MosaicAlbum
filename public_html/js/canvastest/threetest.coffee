@@ -20,7 +20,7 @@ $ ->
     far = 10000
     camera = new THREE.PerspectiveCamera(fov,aspect,near,far)
     target = new THREE.Vector3(0,0,0)
-    camera.position.set 0,0,500
+    camera.position.set 0,0,1000
     scene.add camera
     camera.lookAt target
 
@@ -46,8 +46,8 @@ $ ->
     materials = (new THREE.MeshBasicMaterial {map:tex} for tex in texlist)
 
     # ジオメトリの追加
-    row = 80
-    col = 60
+    row = 40
+    col = 40
     sizeX = 1000/col
     sizeY = 1000/row
     geometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
@@ -75,7 +75,8 @@ $ ->
     $('canvas').mouseup ->
       console.log "mouseup"
       controlMode = "none"
-      trans(piece,new THREE.Vector3(0,0,300),2000)
+      for i in [0..row]
+        trans(pieces[i][i],new THREE.Vector3(sizeX*i-500,600,30),500,500*i)
       
     $('canvas').mousemove (e) ->
       switch controlMode
@@ -123,6 +124,7 @@ $ ->
       render.render(scene,camera)
 
     trans = (object, target, duration, delay) ->
+      #TWEEN.removeAll()
       new TWEEN.Tween(object.position)
         .to({x:target.x , y:target.y , z:target.z} , duration)
         .delay(delay)

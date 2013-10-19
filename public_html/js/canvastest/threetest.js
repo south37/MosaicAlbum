@@ -16,7 +16,7 @@ $(function() {
     far = 10000;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     target = new THREE.Vector3(0, 0, 0);
-    camera.position.set(0, 0, 500);
+    camera.position.set(0, 0, 1000);
     scene.add(camera);
     camera.lookAt(target);
     directioalLight = new THREE.DirectionalLight(0xffffff, 3);
@@ -43,8 +43,8 @@ $(function() {
       }
       return _results;
     })();
-    row = 80;
-    col = 60;
+    row = 40;
+    col = 40;
     sizeX = 1000 / col;
     sizeY = 1000 / row;
     geometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
@@ -68,9 +68,14 @@ $(function() {
       return controlMode = "move";
     });
     $('canvas').mouseup(function() {
+      var _k, _results;
       console.log("mouseup");
       controlMode = "none";
-      return trans(piece, new THREE.Vector3(0, 0, 300), 2000);
+      _results = [];
+      for (i = _k = 0; 0 <= row ? _k <= row : _k >= row; i = 0 <= row ? ++_k : --_k) {
+        _results.push(trans(pieces[i][i], new THREE.Vector3(sizeX * i - 500, 600, 30), 500, 500 * i));
+      }
+      return _results;
     });
     $('canvas').mousemove(function(e) {
       var diff;
