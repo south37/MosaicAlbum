@@ -1,7 +1,5 @@
 {% extends 'layout.html.twig' %}
 
-
-
 {% block contents %}
 <div class="hero-unit">
   <h1>Mosaic_viewer</h1>
@@ -14,11 +12,9 @@
 {% endblock %}
 
 
-
-
 {% block javascript%}
 <!--<script type="text/javascript" src="{{ asset('/js/mosaic/canvastest.js') }}"></script>-->
-<script type="text/javascript" src="{{ asset('/js/canvastest/draw.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/canvastest/threetest.js') }}"></script>
 <script type="x-shader/x-vertex" src="{{ asset('/shader/test.vert') }}"></script>
 <script type="x-shader/x-fragment" src="{{ asset('/shader/test.frag') }}"></script>
 {% endblock%}

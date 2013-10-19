@@ -2,16 +2,16 @@
 /**
  * トップページ
  */
-$app->get('/master/start_master', function() use ($app, $container) {
+$app->get('/', function() use ($app, $container) {
     $FBHelper = $container['FBHelper'];
 
-   if ($container['session']->get('isLogin') === true) {
+    if ($container['session']->get('isLogin') === true) {
         $loginUrl = '';
     } else {
         $loginUrl = $FBHelper->getLoginUrl();
     }
 
-  $app->render('master/start_master.html.twig', ['loginUrl' => $loginUrl]);
+  $app->render('top/index.html.twig', ['loginUrl' => $loginUrl]);
 })
   ->name('top')
   ;

@@ -28,7 +28,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="/">GroupWorkBase</a>
+          <a class="brand" href="/">MosaicAlbum</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="dropdown">
@@ -41,7 +41,6 @@
                 <li><a href="{{ urlFor('doc_extend') }}">用意された拡張</a></li>
               </ul>
               </li>
-              <li><a href="{{ urlFor('hello', {name: 'VOYAGE_GROUP'}) }}">demo</a></li>
               <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">課題 <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -55,11 +54,7 @@
             <ul class="nav pull-right">
               {% block login %}
               {% if session.get('isLogin') %}
-              <li><a href="{{ urlFor('user_edit') }}" >{{ session.get('user.name') }}</a></li>
-              <li><a href="{{ urlFor('user_logout') }}">ログアウト</a></li>
-              {% else %}
-              <li><a href="{{ urlFor('user_login') }}">ログイン</a></li>
-              <li><a href="{{ urlFor('user_register') }}">新規登録</a></li>
+              <li><a href="{{ urlFor('logout') }}">ログアウト</a></li>
               {% endif %}
               {% endblock %}
             </ul>
@@ -84,6 +79,8 @@
     <script src="{{ asset('/js/backbone.js') }}"></script>
     <script src="{{ asset('/bootstrap/js/bootstrap.js') }}"></script>
     <script src="{{ asset('/js/three.min.js') }}"></script>
+    <script src="{{ asset('/js/tween.min.js') }}"></script>
+    <script src="{{ asset('/js/TrackballControls.js') }}"></script>
     <script src="http://code.createjs.com/createjs-2013.09.25.min.js"></script>
     {% block javascript '' %}
   </body>
