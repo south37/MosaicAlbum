@@ -1,0 +1,15 @@
+{% extends 'layout.html.twig' %}
+
+{% block contents %}
+    <!-- Main hero unit for a primary marketing message or call to action -->
+    <div class="hero-unit">
+      <h1>select_goal</h1>
+      <p>This is a start page of MosaicAlbum.</p>
+    </div>
+
+    <a herf="javascript:;" onclick="invite()">友達を招待する</a>
+{% endblock %}
+
+{% block javascript%}
+<script type="text/javascript" src="{{ asset('/js/facebook.js') }}"></script>
+{% endblock%}
