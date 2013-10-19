@@ -23,7 +23,7 @@ $app->post('/select_goal', function() use ($app, $container) {
 /**
  * ゴールイメージの入ったアルバムを選択
  */
-$app->get('/select_goal/select_album', function () use ($app, $container) {
+$app->get('/select_goal/modal_album', function () use ($app, $container) {
     $fbAlbums = $container['FBHelper']->getAlbums();
     /*
     $fbAlbums = [[ 
@@ -36,15 +36,15 @@ $app->get('/select_goal/select_album', function () use ($app, $container) {
         "thumbnailPath" => "https://fbcdn-photos-e-a.akamaihd.net/hphotos-ak-ash3/533896_367905493339296_1533302163_s.jpg"    
     ]];
      */
-    $app->render('select_goal/select_album.html.twig', ['fbAlbums' => $fbAlbums]);
+    $app->render('select_goal/modal_album.html.twig', ['fbAlbums' => $fbAlbums]);
 })
-    ->name('select_goal_album')
+    ->name('select_goal_modal_album')
     ;
 
 /**
  * ゴール写真を選択
  */
-$app->post('/select_goal/select_image', function () use ($app, $container) {
+$app->post('/select_goal/modal_image', function () use ($app, $container) {
     $input = $app->request()->post();
 
     $images = $container['FBHelper']->getImagesInAlbum($input['albumId']);
@@ -60,7 +60,7 @@ $app->post('/select_goal/select_image', function () use ($app, $container) {
     ]];
     */
 
-    $app->render('select_goal/select_image.html.twig', ['images' => $images]);
+    $app->render('select_goal/modal_image.html.twig', ['images' => $images]);
 })
-    ->name('select_goal_image')
+    ->name('select_goal_modal_image')
     ;

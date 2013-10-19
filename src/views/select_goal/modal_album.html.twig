@@ -3,7 +3,7 @@
 {% block contents %}
     <p>ゴール写真が入っているアルバムを選んでください</p>
 
-    <form action="{{ urlFor('select_goal_image') }}" method="post"> 
+    <form action="{{ urlFor('select_goal_modal_image') }}" method="post"> 
         <select name="albumId" class="albums">
             {% for fbAlbum in fbAlbums %}
             <option data-img-src="{{ fbAlbum['thumbnailPath'] }}" value="{{ fbAlbum['id'] }}">{{ fbAlbum['name'] }}</option>
@@ -14,5 +14,5 @@
 {% endblock %}
 
 {% block javascript%}
-<script type="text/javascript" src="{{ asset('/js/select_goal/select_album.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/select_goal/modal_album.js') }}"></script>
 {% endblock%}
