@@ -2,13 +2,12 @@
 $(function() {
   console.log("load threetest.coffee");
   return window.addEventListener("DOMContentLoaded", function() {
-    var anim, aspect, camera, col, controlMode, cubeMesh, directioalLight, far, fov, geometry, height, i, j, material, materials, miku_tex, near, path, pathList, pclientX, pclientY, piece, planeMesh, render, row, scene, sizeX, sizeY, target, tex, texlist, theta, tmesh, width, _i, _j, _k;
-    console.log("load window");
+    var anim, aspect, camera, col, controlMode, directioalLight, far, fov, geometry, height, i, j, materials, near, path, pathList, pclientX, pclientY, piece, pieces, render, rendering, row, scene, sizeX, sizeY, target, tex, texlist, tmppieces, trans, width, _i, _j;
     width = window.innerWidth;
     height = window.innerHeight;
     render = new THREE.WebGLRenderer();
     render.setSize(width, height);
-    $("body").append(render.domElement);
+    $("#container").before(render.domElement);
     render.setClearColor(0x000000, 1);
     scene = new THREE.Scene();
     fov = 80;
@@ -17,13 +16,12 @@ $(function() {
     far = 10000;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     target = new THREE.Vector3(0, 0, 0);
-    camera.position.set(0, 0, 500);
+    camera.position.set(0, 0, 1000);
     scene.add(camera);
     camera.lookAt(target);
     directioalLight = new THREE.DirectionalLight(0xffffff, 3);
     directioalLight.position.z = 300;
     scene.add(directioalLight);
-    miku_tex = new THREE.ImageUtils.loadTexture('/img/miku.jpg');
     pathList = ["resize_0.png", "resize_1.png", "resize_2.png", "resize_3.png", "resize_4.png", "resize_5.png", "resize_6.png", "resize_7.png", "resize_8.png", "resize_9.jpg"];
     texlist = (function() {
       var _i, _len, _results;
@@ -45,36 +43,23 @@ $(function() {
       }
       return _results;
     })();
-    geometry = new THREE.CubeGeometry(20, 20, 20);
-    material = new THREE.MeshLambertMaterial({
-      map: miku_tex
-    });
-    cubeMesh = new THREE.Mesh(geometry, material);
-    scene.add(cubeMesh);
-    for (i = _i = 0; _i <= 10; i = ++_i) {
-      console.log("hoge:", Math.random());
-      tmesh = new THREE.Mesh(geometry, material);
-      tmesh.position.set(20 * i, 20 * i, 0);
-      scene.add(tmesh);
-    }
-    geometry = new THREE.PlaneGeometry(500, 500, 1, 1);
-    material = new THREE.MeshBasicMaterial({
-      map: miku_tex
-    });
-    planeMesh = new THREE.Mesh(geometry, material);
-    scene.add(planeMesh);
-    row = 80;
-    col = 60;
+    row = 40;
+    col = 40;
     sizeX = 1000 / col;
     sizeY = 1000 / row;
     geometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
-    for (i = _j = 0; 0 <= col ? _j <= col : _j >= col; i = 0 <= col ? ++_j : --_j) {
-      for (j = _k = 0; 0 <= row ? _k <= row : _k >= row; j = 0 <= row ? ++_k : --_k) {
+    pieces = [];
+    for (i = _i = 0; 0 <= col ? _i <= col : _i >= col; i = 0 <= col ? ++_i : --_i) {
+      tmppieces = [];
+      for (j = _j = 0; 0 <= row ? _j <= row : _j >= row; j = 0 <= row ? ++_j : --_j) {
         piece = new THREE.Mesh(geometry, materials[(i + j) % 10]);
         piece.position.set(sizeX * i - 500, sizeY * j - 500, -10);
         scene.add(piece);
+        tmppieces.push(piece);
       }
+      pieces.push(tmppieces);
     }
+    console.log(pieces);
     controlMode = "none";
     pclientX = 0;
     pclientY = 0;
@@ -83,18 +68,14 @@ $(function() {
       return controlMode = "move";
     });
     $('canvas').mouseup(function() {
+      var _k, _results;
       console.log("mouseup");
-      return controlMode = "none";
-    });
-    $(this).rightClick(function(e) {
-      console.log("rightclick");
-      return controlMode = "right";
-    });
-    $(this).leftClick(function(e) {
-      return console.log("left click");
-    });
-    $(this).wheelClick(function(e) {
-      return console.log("whell click");
+      controlMode = "none";
+      _results = [];
+      for (i = _k = 0; 0 <= row ? _k <= row : _k >= row; i = 0 <= row ? ++_k : --_k) {
+        _results.push(trans(pieces[i][i], new THREE.Vector3(sizeX * i - 500, 600, 30), 500, 500 * i));
+      }
+      return _results;
     });
     $('canvas').mousemove(function(e) {
       var diff;
@@ -124,10 +105,6 @@ $(function() {
       pclientX = e.clientX;
       return pclientY = e.clientY;
     });
-    $(this).exScrollEvent(function(e, param) {
-      console.log(param.scroll.top);
-      return e.preventDefault();
-    });
     $(this).keypress(function(e) {
       console.log(e.which);
       switch (e.which) {
@@ -143,17 +120,23 @@ $(function() {
           return controlMode = "none";
       }
     });
-    theta = 0;
+    rendering = function() {
+      return render.render(scene, camera);
+    };
+    trans = function(object, target, duration, delay) {
+      new TWEEN.Tween(object.position).to({
+        x: target.x,
+        y: target.y,
+        z: target.z
+      }, duration).delay(delay).easing(TWEEN.Easing.Linear.None).start();
+      return new TWEEN.Tween(this).to({}, duration).onUpdate(rendering).start();
+    };
     anim = function() {
-      var rad;
       requestAnimationFrame(anim);
-      rad = theta * Math.PI / 180.0;
-      cubeMesh.rotation.set(rad, rad, rad);
-      render.render(scene, camera);
-      return true;
+      TWEEN.update();
+      return render.render(scene, camera);
     };
     render.render(scene, camera);
-    anim();
-    return true;
+    return anim();
   });
 });

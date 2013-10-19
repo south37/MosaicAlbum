@@ -1,15 +1,13 @@
 $ ->
   console.log "load threetest.coffee"
   window.addEventListener "DOMContentLoaded", ->
-    console.log "load window"
-   
+    
     # レンダラの作成．追加
     width = window.innerWidth
     height = window.innerHeight
-    #render  = new THREE.WebGLRenderer({'canvas':$('#cvs1')[0]})
     render = new THREE.WebGLRenderer()
     render.setSize(width,height)
-    $("body").append render.domElement
+    $("#container").before render.domElement
     render.setClearColor(0x000000,1)
 
     # sceneの作成
@@ -22,14 +20,9 @@ $ ->
     far = 10000
     camera = new THREE.PerspectiveCamera(fov,aspect,near,far)
     target = new THREE.Vector3(0,0,0)
-    camera.position.set 0,0,500
+    camera.position.set 0,0,1000
     scene.add camera
     camera.lookAt target
-
-    # camera controller
-    #controls = new THREE.TrackballControls(camera, render.domElement)
-    #controls.rotateSpeed = 0.5
-    #controls.addEventListener('change',render)
 
     # lightの作成．追加
     directioalLight = new THREE.DirectionalLight(0xffffff,3)
@@ -37,7 +30,6 @@ $ ->
     scene.add directioalLight
 
     # textureのロード
-    miku_tex = new THREE.ImageUtils.loadTexture('/img/miku.jpg')
     pathList = [
       "resize_0.png"
       "resize_1.png"
@@ -54,38 +46,24 @@ $ ->
     materials = (new THREE.MeshBasicMaterial {map:tex} for tex in texlist)
 
     # ジオメトリの追加
-    geometry = new THREE.CubeGeometry(20,20,20)
-    material = new THREE.MeshLambertMaterial({map:miku_tex})
-    #material = new THREE.MeshLambertMaterial({color:0x226633})
-    cubeMesh = new THREE.Mesh(geometry,material)
-    scene.add(cubeMesh)
-
-    for i in [0..10]
-      console.log "hoge:",Math.random()
-      tmesh = new THREE.Mesh(geometry,material)
-      tmesh.position.set 20*i,20*i, 0
-      scene.add tmesh
-
-    geometry = new THREE.PlaneGeometry(500,500,1,1)
-    material = new THREE.MeshBasicMaterial({map:miku_tex})
-    planeMesh = new THREE.Mesh(geometry,material)
-    #planeMesh.position.set -100,0,0
-    #planeMesh.rotation.set Math.PI/2, 0, 0
-    scene.add(planeMesh)
-
-    row = 80
-    col = 60
+    row = 40
+    col = 40
     sizeX = 1000/col
     sizeY = 1000/row
     geometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
+    pieces = []
     for i in [0..col]
+      tmppieces = []
       for j in [0..row]
         piece = new THREE.Mesh(geometry,materials[(i+j)%10])
         piece.position.set sizeX*i - 500, sizeY * j - 500, -10
         scene.add(piece)
+        tmppieces.push piece
+      pieces.push tmppieces
+    console.log pieces
+        
 
     #event
-    
     controlMode = "none"
     pclientX = 0
     pclientY = 0 
@@ -97,16 +75,9 @@ $ ->
     $('canvas').mouseup ->
       console.log "mouseup"
       controlMode = "none"
-
-    $(this).rightClick (e) ->
-      console.log "rightclick"
-      controlMode = "right"
-    $(this).leftClick (e) ->
-      console.log "left click"
-  
-    $(this).wheelClick (e)->
-      console.log "whell click"
-    
+      for i in [0..row]
+        trans(pieces[i][i],new THREE.Vector3(sizeX*i-500,600,30),500,500*i)
+      
     $('canvas').mousemove (e) ->
       switch controlMode
         when "move"
@@ -129,10 +100,6 @@ $ ->
       pclientX = e.clientX
       pclientY = e.clientY
 
-    $(this).exScrollEvent (e,param) ->
-      console.log param.scroll.top
-      e.preventDefault()
-
     $(this).keypress (e) ->
       console.log e.which
       switch e.which
@@ -150,20 +117,31 @@ $ ->
           controlMode = "reset"
         else
           controlMode = "none"
-    # ループ関数
 
-    theta = 0
-    
+
+    # tween用関数
+    rendering = ->
+      render.render(scene,camera)
+
+    trans = (object, target, duration, delay) ->
+      #TWEEN.removeAll()
+      new TWEEN.Tween(object.position)
+        .to({x:target.x , y:target.y , z:target.z} , duration)
+        .delay(delay)
+        .easing(TWEEN.Easing.Linear.None)
+        .start()
+
+      new TWEEN.Tween(this)
+        .to({},duration)
+        .onUpdate(rendering)
+        .start()
+
+    # animation設定
     anim = ->
       requestAnimationFrame anim
-      rad = theta * Math.PI / 180.0
-      cubeMesh.rotation.set rad,rad,rad
-      #theta++
-      #camera.lookAt(new THREE.Vector3(0, 0, 0))
+      TWEEN.update()
       render.render scene,camera
-      #controls.update()
-      return true 
 
+    # main的なあれ
     render.render(scene,camera)
     anim()
-    return true 
