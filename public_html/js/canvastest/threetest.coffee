@@ -90,8 +90,9 @@ $ ->
     pclientX = 0
     pclientY = 0 
     
-    $('canvas').mousedown ->
-      console.log "mousedown"
+    $('canvas').mousedown (e)->
+
+      console.log "mousedown:",e
       isEnableMove = true
 
     $('canvas').mouseup ->
@@ -107,8 +108,9 @@ $ ->
       pclientX = e.clientX
       pclientY = e.clientY
 
-    $(this).scroll (e) ->
-      console.log e
+    $(this).keydown (e) ->
+      console.log "keydown"
+
     # ループ関数
 
     theta = 0
@@ -117,7 +119,7 @@ $ ->
       requestAnimationFrame anim
       rad = theta * Math.PI / 180.0
       cubeMesh.rotation.set rad,rad,rad
-      theta++
+      #theta++
       #camera.lookAt(new THREE.Vector3(0, 0, 0))
       render.render scene,camera
       #controls.update()

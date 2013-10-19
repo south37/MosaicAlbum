@@ -77,8 +77,8 @@ $(function() {
     isEnableMove = false;
     pclientX = 0;
     pclientY = 0;
-    $('canvas').mousedown(function() {
-      console.log("mousedown");
+    $('canvas').mousedown(function(e) {
+      console.log("mousedown:", e);
       return isEnableMove = true;
     });
     $('canvas').mouseup(function() {
@@ -96,8 +96,8 @@ $(function() {
       pclientX = e.clientX;
       return pclientY = e.clientY;
     });
-    $(this).scroll(function(e) {
-      return console.log(e);
+    $(this).keydown(function(e) {
+      return console.log("keydown");
     });
     theta = 0;
     anim = function() {
@@ -105,7 +105,6 @@ $(function() {
       requestAnimationFrame(anim);
       rad = theta * Math.PI / 180.0;
       cubeMesh.rotation.set(rad, rad, rad);
-      theta++;
       render.render(scene, camera);
       return true;
     };
