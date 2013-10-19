@@ -2,7 +2,7 @@
 $(function() {
   console.log("load threetest.coffee");
   return window.addEventListener("DOMContentLoaded", function() {
-    var anim, aspect, camera, col, controlMode, directioalLight, far, fov, geometry, height, i, j, materials, near, path, pathList, pclientX, pclientY, piece, render, row, scene, sizeX, sizeY, target, tex, texlist, trans, width, _i, _j;
+    var anim, aspect, camera, col, controlMode, directioalLight, far, fov, geometry, height, i, j, materials, near, path, pathList, pclientX, pclientY, piece, pieces, render, rendering, row, scene, sizeX, sizeY, target, tex, texlist, tmppieces, trans, width, _i, _j;
     width = window.innerWidth;
     height = window.innerHeight;
     render = new THREE.WebGLRenderer();
@@ -48,13 +48,18 @@ $(function() {
     sizeX = 1000 / col;
     sizeY = 1000 / row;
     geometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
+    pieces = [];
     for (i = _i = 0; 0 <= col ? _i <= col : _i >= col; i = 0 <= col ? ++_i : --_i) {
+      tmppieces = [];
       for (j = _j = 0; 0 <= row ? _j <= row : _j >= row; j = 0 <= row ? ++_j : --_j) {
         piece = new THREE.Mesh(geometry, materials[(i + j) % 10]);
         piece.position.set(sizeX * i - 500, sizeY * j - 500, -10);
         scene.add(piece);
+        tmppieces.push(piece);
       }
+      pieces.push(tmppieces);
     }
+    console.log(pieces);
     controlMode = "none";
     pclientX = 0;
     pclientY = 0;
@@ -64,7 +69,8 @@ $(function() {
     });
     $('canvas').mouseup(function() {
       console.log("mouseup");
-      return controlMode = "none";
+      controlMode = "none";
+      return trans(piece, new THREE.Vector3(0, 0, 300), 2000);
     });
     $('canvas').mousemove(function(e) {
       var diff;
@@ -109,12 +115,16 @@ $(function() {
           return controlMode = "none";
       }
     });
-    trans = function(object, target, duration) {
-      return new TWEEN.Tween(object.position).to({
+    rendering = function() {
+      return render.render(scene, camera);
+    };
+    trans = function(object, target, duration, delay) {
+      new TWEEN.Tween(object.position).to({
         x: target.x,
         y: target.y,
         z: target.z
-      }, duration).easing(TWEEN.Easing.Elastic.InOut).start();
+      }, duration).delay(delay).easing(TWEEN.Easing.Linear.None).start();
+      return new TWEEN.Tween(this).to({}, duration).onUpdate(rendering).start();
     };
     anim = function() {
       requestAnimationFrame(anim);

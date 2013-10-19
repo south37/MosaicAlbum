@@ -51,11 +51,17 @@ $ ->
     sizeX = 1000/col
     sizeY = 1000/row
     geometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
+    pieces = []
     for i in [0..col]
+      tmppieces = []
       for j in [0..row]
         piece = new THREE.Mesh(geometry,materials[(i+j)%10])
         piece.position.set sizeX*i - 500, sizeY * j - 500, -10
         scene.add(piece)
+        tmppieces.push piece
+      pieces.push tmppieces
+    console.log pieces
+        
 
     #event
     controlMode = "none"
@@ -69,7 +75,8 @@ $ ->
     $('canvas').mouseup ->
       console.log "mouseup"
       controlMode = "none"
-    
+      trans(piece,new THREE.Vector3(0,0,300),2000)
+      
     $('canvas').mousemove (e) ->
       switch controlMode
         when "move"
@@ -110,14 +117,24 @@ $ ->
         else
           controlMode = "none"
 
-    # ループ関数
 
-    trans = (object, target, duration) ->
+    # tween用関数
+    rendering = ->
+      render.render(scene,camera)
+
+    trans = (object, target, duration, delay) ->
       new TWEEN.Tween(object.position)
         .to({x:target.x , y:target.y , z:target.z} , duration)
-        .easing(TWEEN.Easing.Elastic.InOut)
+        .delay(delay)
+        .easing(TWEEN.Easing.Linear.None)
         .start()
 
+      new TWEEN.Tween(this)
+        .to({},duration)
+        .onUpdate(rendering)
+        .start()
+
+    # animation設定
     anim = ->
       requestAnimationFrame anim
       TWEEN.update()
