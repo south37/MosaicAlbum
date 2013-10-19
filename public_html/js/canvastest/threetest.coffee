@@ -6,9 +6,11 @@ $ ->
     # レンダラの作成．追加
     width = window.innerWidth
     height = window.innerHeight
-    render  = new THREE.WebGLRenderer({'canvas':$('#cvs1')[0]})
-    #render.setSize(width,height)
-    #document.body.appendChild( render.domElement)
+    #render  = new THREE.WebGLRenderer({'canvas':$('#cvs1')[0]})
+    render = new THREE.WebGLRenderer()
+    render.setSize(width,height)
+    document.body.appendChild( render.domElement)
+    render.setClearColor(0x000000,1)
 
     # sceneの作成
     scene = new THREE.Scene()
@@ -26,14 +28,22 @@ $ ->
 
     # lightの作成．追加
     directioalLight = new THREE.DirectionalLight(0xffffff,3)
-    directioalLight.position.z = 3
+    directioalLight.position.z = 300
     scene.add directioalLight
 
     # ジオメトリの追加
     geometry = new THREE.CubeGeometry(200,200,200)
-    material = new THREE.MeshLambertMaterial({color:0x660033})
+    material = new THREE.MeshLambertMaterial({color:0x226633})
     cubeMesh = new THREE.Mesh(geometry,material)
     scene.add(cubeMesh)
+
+    
+    geometry = new THREE.PlaneGeometry(1000,1000,1,1)
+    material = new THREE.MeshLambertMaterial({color:0x660066})
+    planeMesh = new THREE.Mesh(geometry,material)
+    #planeMesh.position.set -100,0,0
+    #planeMesh.rotation.set Math.PI/2, 0, 0
+    scene.add(planeMesh)  
 
     # レンダリング
     render.render(scene,camera)

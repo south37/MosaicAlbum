@@ -2,13 +2,14 @@
 $(function() {
   console.log("load threetest.coffee");
   return window.addEventListener("DOMContentLoaded", function() {
-    var anim, aspect, camera, cubeMesh, directioalLight, far, fov, geometry, height, material, near, render, scene, theta, width;
+    var anim, aspect, camera, cubeMesh, directioalLight, far, fov, geometry, height, material, near, planeMesh, render, scene, theta, width;
     console.log("load window");
     width = window.innerWidth;
     height = window.innerHeight;
-    render = new THREE.WebGLRenderer({
-      'canvas': $('#cvs1')[0]
-    });
+    render = new THREE.WebGLRenderer();
+    render.setSize(width, height);
+    document.body.appendChild(render.domElement);
+    render.setClearColor(0x000000, 1);
     scene = new THREE.Scene();
     fov = 80;
     aspect = width / height;
@@ -20,14 +21,20 @@ $(function() {
     scene.add(camera);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     directioalLight = new THREE.DirectionalLight(0xffffff, 3);
-    directioalLight.position.z = 3;
+    directioalLight.position.z = 300;
     scene.add(directioalLight);
     geometry = new THREE.CubeGeometry(200, 200, 200);
     material = new THREE.MeshLambertMaterial({
-      color: 0x660033
+      color: 0x226633
     });
     cubeMesh = new THREE.Mesh(geometry, material);
     scene.add(cubeMesh);
+    geometry = new THREE.PlaneGeometry(1000, 1000, 1, 1);
+    material = new THREE.MeshLambertMaterial({
+      color: 0x660066
+    });
+    planeMesh = new THREE.Mesh(geometry, material);
+    scene.add(planeMesh);
     render.render(scene, camera);
     theta = 0;
     anim = function() {
