@@ -22,15 +22,14 @@ $ ->
     near = 1
     far = 10000
     camera = new THREE.PerspectiveCamera(fov,aspect,near,far)
-    camera.position.z = 500
-    camera.position.x = 100
+    camera.position.set 0,0,500
     scene.add camera
     camera.lookAt(new THREE.Vector3(0,0,0))
 
     # camera controller
-    controls = new THREE.TrackballControls(camera, render.domElement)
-    controls.rotateSpeed = 0.5
-    controls.addEventListener('change',render)
+    #controls = new THREE.TrackballControls(camera, render.domElement)
+    #controls.rotateSpeed = 0.5
+    #controls.addEventListener('change',render)
 
     # lightの作成．追加
     directioalLight = new THREE.DirectionalLight(0xffffff,3)
@@ -74,12 +73,15 @@ $ ->
     #planeMesh.rotation.set Math.PI/2, 0, 0
     scene.add(planeMesh)
 
-    geometry = new THREE.PlaneGeometry(100,100,1,1)
-    for i in [0..10]
-      for j in [0..10]
-        console.log i,":",j
+    row = 80
+    col = 60
+    sizeX = 1000/col
+    sizeY = 1000/row
+    geometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
+    for i in [0..col]
+      for j in [0..row]
         piece = new THREE.Mesh(geometry,materials[(i+j)%10])
-        piece.position.set 100*i - 500, 100*j - 500, -10*(i+j)
+        piece.position.set sizeX*i - 500, sizeY * j - 500, -10
         scene.add(piece)
 
     #event
@@ -100,10 +102,13 @@ $ ->
       console.log "mousemove"
       if isEnableMove
         console.log "enable"
-        diff = new THREE.Vector3( - e.clientX + pclientX, - e.clientY + pclientY, 0)
+        diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
         camera.position.add diff
       pclientX = e.clientX
       pclientY = e.clientY
+
+    $(this).scroll (e) ->
+      console.log e
     # ループ関数
 
     theta = 0
@@ -113,9 +118,9 @@ $ ->
       rad = theta * Math.PI / 180.0
       cubeMesh.rotation.set rad,rad,rad
       theta++
-      #camera.lookAt(new THREE.Vector3(100 * Math.sin(rad), 100 * Math.cos(rad) , 0))
+      #camera.lookAt(new THREE.Vector3(0, 0, 0))
       render.render scene,camera
-      controls.update()
+      #controls.update()
       return true 
 
     render.render(scene,camera)

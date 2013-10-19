@@ -2,7 +2,7 @@
 $(function() {
   console.log("load threetest.coffee");
   return window.addEventListener("DOMContentLoaded", function() {
-    var anim, aspect, camera, controls, cubeMesh, directioalLight, far, fov, geometry, height, i, isEnableMove, j, material, materials, miku_tex, near, path, pathList, pclientX, pclientY, piece, planeMesh, render, scene, tex, texlist, theta, tmesh, width, _i, _j, _k;
+    var anim, aspect, camera, col, cubeMesh, directioalLight, far, fov, geometry, height, i, isEnableMove, j, material, materials, miku_tex, near, path, pathList, pclientX, pclientY, piece, planeMesh, render, row, scene, sizeX, sizeY, tex, texlist, theta, tmesh, width, _i, _j, _k;
     console.log("load window");
     width = window.innerWidth;
     height = window.innerHeight;
@@ -16,13 +16,9 @@ $(function() {
     near = 1;
     far = 10000;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.z = 500;
-    camera.position.x = 100;
+    camera.position.set(0, 0, 500);
     scene.add(camera);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
-    controls = new THREE.TrackballControls(camera, render.domElement);
-    controls.rotateSpeed = 0.5;
-    controls.addEventListener('change', render);
     directioalLight = new THREE.DirectionalLight(0xffffff, 3);
     directioalLight.position.z = 300;
     scene.add(directioalLight);
@@ -66,12 +62,15 @@ $(function() {
     });
     planeMesh = new THREE.Mesh(geometry, material);
     scene.add(planeMesh);
-    geometry = new THREE.PlaneGeometry(100, 100, 1, 1);
-    for (i = _j = 0; _j <= 10; i = ++_j) {
-      for (j = _k = 0; _k <= 10; j = ++_k) {
-        console.log(i, ":", j);
+    row = 80;
+    col = 60;
+    sizeX = 1000 / col;
+    sizeY = 1000 / row;
+    geometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
+    for (i = _j = 0; 0 <= col ? _j <= col : _j >= col; i = 0 <= col ? ++_j : --_j) {
+      for (j = _k = 0; 0 <= row ? _k <= row : _k >= row; j = 0 <= row ? ++_k : --_k) {
         piece = new THREE.Mesh(geometry, materials[(i + j) % 10]);
-        piece.position.set(100 * i - 500, 100 * j - 500, -10 * (i + j));
+        piece.position.set(sizeX * i - 500, sizeY * j - 500, -10);
         scene.add(piece);
       }
     }
@@ -91,11 +90,14 @@ $(function() {
       console.log("mousemove");
       if (isEnableMove) {
         console.log("enable");
-        diff = new THREE.Vector3(-e.clientX + pclientX, -e.clientY + pclientY, 0);
+        diff = new THREE.Vector3(-e.clientX + pclientX, e.clientY - pclientY, 0);
         camera.position.add(diff);
       }
       pclientX = e.clientX;
       return pclientY = e.clientY;
+    });
+    $(this).scroll(function(e) {
+      return console.log(e);
     });
     theta = 0;
     anim = function() {
@@ -105,7 +107,6 @@ $(function() {
       cubeMesh.rotation.set(rad, rad, rad);
       theta++;
       render.render(scene, camera);
-      controls.update();
       return true;
     };
     render.render(scene, camera);
