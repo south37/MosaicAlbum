@@ -42,11 +42,6 @@ $container['session'] = $container->share(function() {
         return new \Vg\Session();
     });
 
-// FBHelper
-$container['FBHelper'] = $container->share(function(){
-        return new \Vg\Repository\FBHelperRepository();
-    });
-
 // ゴールイメージリポジトリ
 $container['repository.goalImage'] = $container->share(function($c){
         return new \Vg\Repository\GoalImageRepository($c['db']);
@@ -80,6 +75,11 @@ $container['repository.user'] = $container->share(function($c){
 // ユーズドイメージリポジトリ
 $container['repository.usedImage'] = $container->share(function($c){
         return new \Vg\Repository\UsedImageRepository($c['db']);
+});
+
+// FBHelper
+$container['FBHelper'] = $container->share(function($c){
+        return new \Vg\Repository\FBHelperRepository($c['repository.user']);
     });
 
 return $container;

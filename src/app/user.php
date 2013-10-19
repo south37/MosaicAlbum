@@ -52,7 +52,7 @@ use Respect\Validation\Validator as v;
 ログアウト: {
     $app->get('/user/logout', function() use ($app, $container) {
             $container['session']->clear();
-            $app->redirect($app->urlFor('user_login'));
+            $app->redirect($app->urlFor('top'));
         })
         ->name('user_logout')
     ;

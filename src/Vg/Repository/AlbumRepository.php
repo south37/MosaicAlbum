@@ -25,7 +25,7 @@ class AlbumRepository
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':userId', $album->user_id, \PDO::PARAM_INT);
         $sth->bindValue(':sessionId', $album->session_id, \PDO::PARAM_INT);
-        $sth->bindValue(':fbAlbumId', $album->fb_album_id, \PDO::PARAM_STR);
+        $sth->bindParam(':fbAlbumId', $album->fb_album_id, \PDO::PARAM_STR);
         $sth->execute();
         // insertされたカラムのIDを取得する
         $albumId = $this->getLatestId();
