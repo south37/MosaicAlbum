@@ -9,6 +9,12 @@
 
     <a href="javascript:;" onclick="showAlbums()" class="btn btn-primary">ゴール写真を選ぶ</a>
     <a href="javascript:;" onclick="invite()" class="btn btn-primary">友達を招待する</a>
+
+    <p></p>
+    <form action="{{ urlFor('select_goal_post') }}" method="post">
+        <input type="hidden" id="goalImageId" name="goalImageId" value="" />
+        <button type="submit" class="btn btn-primary">アルバム作成を待つ</button>
+    </form>
 {% endblock %}
 
 {% block javascript%}
