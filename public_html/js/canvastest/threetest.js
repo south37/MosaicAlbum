@@ -8,7 +8,7 @@ $(function() {
     height = window.innerHeight;
     render = new THREE.WebGLRenderer();
     render.setSize(width, height);
-    $("body").append(render.domElement);
+    $("#container").before(render.domElement);
     render.setClearColor(0x000000, 1);
     scene = new THREE.Scene();
     fov = 80;

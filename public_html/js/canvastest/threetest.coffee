@@ -9,7 +9,7 @@ $ ->
     #render  = new THREE.WebGLRenderer({'canvas':$('#cvs1')[0]})
     render = new THREE.WebGLRenderer()
     render.setSize(width,height)
-    $("body").append render.domElement
+    $("#container").before render.domElement
     render.setClearColor(0x000000,1)
 
     # sceneの作成
@@ -25,11 +25,6 @@ $ ->
     camera.position.set 0,0,500
     scene.add camera
     camera.lookAt target
-
-    # camera controller
-    #controls = new THREE.TrackballControls(camera, render.domElement)
-    #controls.rotateSpeed = 0.5
-    #controls.addEventListener('change',render)
 
     # lightの作成．追加
     directioalLight = new THREE.DirectionalLight(0xffffff,3)
