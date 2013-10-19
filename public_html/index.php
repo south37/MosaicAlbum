@@ -13,7 +13,7 @@ use Slim\Slim;
     // コントローラーを増やす場合はここにrequireでコントローラーへのパスを追加する
     require  __DIR__ . '/../src/app/welcome.php';
     require  __DIR__ . '/../src/app/document.php';
-    require  __DIR__ . '/../src/app/user.php';
+//    require  __DIR__ . '/../src/app/user.php';
     require  __DIR__ . '/../src/app/common/mosaic_viewer.php';
     require  __DIR__ . '/../src/app/common/album_viewer.php';
     require  __DIR__ . '/../src/app/master/start_master.php';

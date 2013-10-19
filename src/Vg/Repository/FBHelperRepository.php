@@ -11,32 +11,43 @@ class FBHelperRepository
     
     private $facebook;
     private $userRepository;
+    private $session;
     
     private $userId;
     private $accessToken;
 
-    public function __construct($userRepository)
+    public function __construct($container)
     {
         $this->facebook = new Facebook([
             'appId'  => self::APP_ID,
             'secret' => self::APP_SECRET,
         ]);
 
-        $this->userRepository = $userRepository;
+        $this->userRepository = $container['repository.user'];
+        $this->session        = $container['session'];
+    }
+
+    public function destroySession() {
+        $this->facebook->destroySession();
     }
 
     public function getUserId()
     {
-        if (!isset($this->userId)) {
-            $this->userId = $this->facebook->getUser();
+        if (isset($this->userId)) {
+            return $this->userId;
         }
 
-        return $this->userId;
+        $userId = $this->session->get('user.id');
+        if ($userId !== NULL) {
+            return $this->userId = $userId;
+        } else {
+            return $this->userId = $this->facebook->getUser();
+        }
     }
 
     public function getLoginUrl()
     {
-        $this->facebook->destroySession();
+        $this->destroySession();
 
         $params = [
             'scope'        => 'user_photos,friends_photos',
@@ -48,17 +59,17 @@ class FBHelperRepository
         return $loginUrl;
     }
 
-    public function getUserProfile()
+    public function getUserProfileForRegistration()
     {
         try {
-            //            $this->facebook->setExtendedAccessToken();
+            $this->facebook->setExtendedAccessToken();
             $me = $this->facebook->api('/'.$this->getUserId().'?locale=ja_JP');
         } catch (FacebookApiException $e) {
             return [];
         }
         
         $userProfile = [
-            'fb_user_id'  => $this->userId,
+            'fb_user_id'  => $this->getUserId(),
             'token'       => $this->facebook->getAccessToken(),
             'name'        => $me['name'],
             'fb_icon_url' => 'https://graph.facebook.com/'.$me['id'].'/picture',
@@ -83,7 +94,7 @@ class FBHelperRepository
         $this->setAccessToken();
 
         try {
-            $fbAlbums = $this->facebook->api('/'.$this->userId.'/albums')['data'];
+            $fbAlbums = $this->facebook->api('/'.$this->getUserId().'/albums')['data'];
 
         } catch (FacebookApiException $e) {
             return [];
@@ -136,7 +147,7 @@ class FBHelperRepository
         $this->setAccessToken();
         
         try {
-            $fbFriends = $this->facebook->api('/'.$this->userId.'/friends')['data'];
+            $fbFriends = $this->facebook->api('/'.$this->getUserId().'/friends')['data'];
         } catch (FacebookApiException $e) {
             return [];
         }

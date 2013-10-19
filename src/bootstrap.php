@@ -79,7 +79,7 @@ $container['repository.usedImage'] = $container->share(function($c){
 
 // FBHelper
 $container['FBHelper'] = $container->share(function($c){
-        return new \Vg\Repository\FBHelperRepository($c['repository.user']);
+        return new \Vg\Repository\FBHelperRepository($c);
     });
 
 return $container;
