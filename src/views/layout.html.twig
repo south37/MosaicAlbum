@@ -55,11 +55,7 @@
             <ul class="nav pull-right">
               {% block login %}
               {% if session.get('isLogin') %}
-              <li><a href="{{ urlFor('user_edit') }}" >{{ session.get('user.name') }}</a></li>
-              <li><a href="{{ urlFor('user_logout') }}">ログアウト</a></li>
-              {% else %}
-              <li><a href="{{ urlFor('user_login') }}">ログイン</a></li>
-              <li><a href="{{ urlFor('user_register') }}">新規登録</a></li>
+              <li><a href="{{ urlFor('logout') }}">ログアウト</a></li>
               {% endif %}
               {% endblock %}
             </ul>
