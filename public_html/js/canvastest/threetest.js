@@ -2,7 +2,7 @@
 $(function() {
   console.log("load threetest.coffee");
   return window.addEventListener("DOMContentLoaded", function() {
-    var anim, aspect, camera, cubeMesh, directioalLight, far, fov, geometry, height, material, near, planeMesh, render, scene, theta, width;
+    var anim, aspect, camera, cubeMesh, directioalLight, far, fov, geometry, height, i, material, near, planeMesh, render, scene, tex, theta, tmesh, width, _i;
     console.log("load window");
     width = window.innerWidth;
     height = window.innerHeight;
@@ -17,21 +17,28 @@ $(function() {
     far = 1000;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     camera.position.z = 500;
-    camera.position.x = 300;
+    camera.position.x = 100;
     scene.add(camera);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     directioalLight = new THREE.DirectionalLight(0xffffff, 3);
     directioalLight.position.z = 300;
     scene.add(directioalLight);
-    geometry = new THREE.CubeGeometry(200, 200, 200);
+    tex = new THREE.ImageUtils.loadTexture('/img/miku.jpg');
+    geometry = new THREE.CubeGeometry(20, 20, 20);
     material = new THREE.MeshLambertMaterial({
-      color: 0x226633
+      map: tex
     });
     cubeMesh = new THREE.Mesh(geometry, material);
     scene.add(cubeMesh);
-    geometry = new THREE.PlaneGeometry(1000, 1000, 1, 1);
-    material = new THREE.MeshLambertMaterial({
-      color: 0x660066
+    for (i = _i = 0; _i <= 10; i = ++_i) {
+      console.log("hoge:", Math.random());
+      tmesh = new THREE.Mesh(geometry, material);
+      tmesh.position.set(20 * i, 20 * i, 0);
+      scene.add(tmesh);
+    }
+    geometry = new THREE.PlaneGeometry(500, 500, 1, 1);
+    material = new THREE.MeshBasicMaterial({
+      map: tex
     });
     planeMesh = new THREE.Mesh(geometry, material);
     scene.add(planeMesh);
@@ -42,7 +49,6 @@ $(function() {
       rad = theta * Math.PI / 180.0;
       cubeMesh.rotation.set(rad, rad, rad);
       theta++;
-      camera.lookAt(new THREE.Vector3(100 * Math.sin(rad), 100 * Math.cos(rad), 0));
       render.render(scene, camera);
       return requestAnimationFrame(anim);
     };
