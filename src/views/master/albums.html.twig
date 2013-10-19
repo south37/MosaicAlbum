@@ -1,0 +1,11 @@
+{% extends 'layout.html.twig' %}
+
+{% block contents %}
+    {% for fbAlbum in fbAlbums %}
+    <p>{{ fbAlbum['id'] }}</p>
+    {% endfor %}
+{% endblock %}
+
+{% block javascript%}
+<script type="text/javascript" src="{{ asset('/js/facebook/invite.js') }}"></script>
+{% endblock%}

@@ -7,9 +7,10 @@
       <p>This is a start page of MosaicAlbum.</p>
     </div>
 
-    <a herf="javascript:;" onclick="invite()">友達を招待する</a>
+    <a href="javascript:;" onclick="selectGoalImage()" class="btn btn-primary">ゴール写真を選ぶ</a>
+    <a href="javascript:;" onclick="invite()" class="btn btn-primary">友達を招待する</a>
 {% endblock %}
 
 {% block javascript%}
-<script type="text/javascript" src="{{ asset('/js/facebook/invite.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/select_goal/select_goal.js') }}"></script>
 {% endblock%}

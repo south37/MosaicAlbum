@@ -3,14 +3,27 @@
  * ゴールイメージ選択
  */
 $app->get('/master/select_goal', function() use ($app, $container) {
-	$fbAlbums = $container['FBHelper']->getAlbums();
-	$app->render('master/select_goal.html.twig', ['fbAlbums' => $fbAlbums]);
+    $app->render('master/select_goal.html.twig');
 })
-  ->name('select_goal')
-  ;
+    ->name('select_goal')
+    ;
+
+$app->get('/master/albums', function () use ($app, $container) {
+    $fbAlbums = [[ 
+        "id"            => "400193440110501",
+        "name"          => "2013年秋日本物理学会",
+        "thumbnailPath" => "https://fbcdn-photos-g-a.akamaihd.net/hphotos-ak-prn2/1378561_400194690110376_1611527405_s.jpg"
+    ]];
+    $app->render('master/albums.html.twig', ['fbAlbums' => $fbAlbums]);
+})
+    ->name('get_albums')
+    ;
 
 $app->get('/master/get_images/:albumId', function ($albumId) use ($app, $container) {
-   	echo $container['FBHelper']->getImagesInAlbum($albumId);
+   	$images = $container['FBHelper']->getImagesInAlbum($albumId);
+    $imagesJson = json_encode($images);
+    
+    echo $imagesJson;
 })
     ->name('get_images')
     ;
