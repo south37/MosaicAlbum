@@ -1,9 +1,13 @@
 {% extends 'layout.html.twig' %}
 
 {% block contents %}
+    <p>ゴール写真が入っているアルバムを選んでください</p>
+
     {% for fbAlbum in fbAlbums %}
-    <p>{{ fbAlbum['id'] }}</p>
+    <img src="{{ fbAlbum['thumbnailPath'] }}" title="{{ fbAlbum['name'] }}"></image>
     {% endfor %}
+
+    <a href="javascript:;" onclick="showImages()" class="btn btn-primary">このアルバムにする</a>
 {% endblock %}
 
 {% block javascript%}
