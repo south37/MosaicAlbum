@@ -8,7 +8,7 @@ $app->get('/master/select_goal', function() use ($app, $container) {
     ->name('select_goal')
     ;
 
-$app->get('/master/albums', function () use ($app, $container) {
+$app->get('/master/select_album', function () use ($app, $container) {
     $fbAlbums = [[ 
         "id"            => "400193440110501",
         "name"          => "2013年秋日本物理学会",
@@ -18,16 +18,17 @@ $app->get('/master/albums', function () use ($app, $container) {
         "name"          => "Profile Pictures",
         "thumbnailPath" => "https://fbcdn-photos-e-a.akamaihd.net/hphotos-ak-ash3/533896_367905493339296_1533302163_s.jpg"    
     ]];
-    $app->render('master/albums.html.twig', ['fbAlbums' => $fbAlbums]);
+    $app->render('master/select_album.html.twig', ['fbAlbums' => $fbAlbums]);
 })
-    ->name('get_albums')
+    ->name('select_album')
     ;
 
-$app->get('/master/get_images/:albumId', function ($albumId) use ($app, $container) {
-   	$images = $container['FBHelper']->getImagesInAlbum($albumId);
-    $imagesJson = json_encode($images);
+$app->post('/master/select_image', function () use ($app, $container) {
+    $input = $app->request()->post();
+
+    $images = $container['FBHelper']->getImagesInAlbum($input['albumId']);
     
-    echo $imagesJson;
+    $app->render('master/select_image.html.twig', ['images' => $images]);
 })
-    ->name('get_images')
+    ->name('select_image')
     ;

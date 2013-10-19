@@ -1,0 +1,16 @@
+{% extends 'layout.html.twig' %}
+
+{% block contents %}
+    <p>ゴール写真を選んでください</p>
+
+    <select name="imageId" class="albums">
+        {% for image in images %}
+        <option data-img-src="{{ image['imagePath'] }}" value="{{ image['id'] }}"></option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">このアルバムを選ぶ</button>
+{% endblock %}
+
+{% block javascript%}
+<script type="text/javascript" src="{{ asset('/js/select_goal/select_album.js') }}"></script>
+{% endblock%}
