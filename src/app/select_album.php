@@ -30,4 +30,13 @@ $app->post('/master/album_select_master', function() use ($app, $container) {
 	$app->redirect($app->urlFor('album_viewer', ['goalImageId'=>$container['session']->get('goalImageId')]));
 })
 	->name('add_album_master')
-	;
+    ;
+
+/**
+ * アルバムセレクト
+ */
+$app->get('/select_album', function() use ($app, $container) {
+    $app->render('select_goal/select_goal.html.twig');
+})
+    ->name('select_album')
+    ;

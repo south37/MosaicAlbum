@@ -35,7 +35,7 @@ $app->get('/select_goal/select_album', function () use ($app, $container) {
     ]];
     $app->render('select_goal/select_album.html.twig', ['fbAlbums' => $fbAlbums]);
 })
-    ->name('select_album')
+    ->name('select_goal_album')
     ;
 
 /**
@@ -57,5 +57,5 @@ $app->post('/select_goal/select_image', function () use ($app, $container) {
     
     $app->render('select_goal/select_image.html.twig', ['images' => $images]);
 })
-    ->name('select_image')
+    ->name('select_goal_image')
     ;
