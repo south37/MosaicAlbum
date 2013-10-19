@@ -85,6 +85,12 @@ $(function() {
       console.log("mouseup");
       return isEnableMove = false;
     });
+    $(this).rightClick(function(e) {
+      return console.log("rightclick");
+    });
+    $(this).leftClick(function(e) {
+      return console.log("left click");
+    });
     $('canvas').mousemove(function(e) {
       var diff;
       console.log("mousemove");
@@ -95,9 +101,6 @@ $(function() {
       }
       pclientX = e.clientX;
       return pclientY = e.clientY;
-    });
-    $(this).keydown(function(e) {
-      return console.log("keydown");
     });
     theta = 0;
     anim = function() {

@@ -91,14 +91,21 @@ $ ->
     pclientY = 0 
     
     $('canvas').mousedown (e)->
-
-      console.log "mousedown:",e
+      console.log "mousedown:", e
       isEnableMove = true
 
     $('canvas').mouseup ->
       console.log "mouseup"
       isEnableMove = false
 
+    $(this).rightClick (e) ->
+          console.log "rightclick"
+
+
+    $(this).leftClick (e) ->
+      console.log "left click"
+   
+    
     $('canvas').mousemove (e) ->
       console.log "mousemove"
       if isEnableMove
@@ -108,8 +115,7 @@ $ ->
       pclientX = e.clientX
       pclientY = e.clientY
 
-    $(this).keydown (e) ->
-      console.log "keydown"
+
 
     # ループ関数
 
