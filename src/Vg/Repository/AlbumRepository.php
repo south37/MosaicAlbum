@@ -19,12 +19,14 @@ class AlbumRepository
     public function insert($album)
     {
         $sql = "INSERT INTO album
-                SET user_id = :userId,
-                    session_id = :sessionId
-                    fb_album_id = :fbAlbumId";
+                SET user_id       = :userId,
+                    goal_image_id = :goalImageId,
+                    fb_album_id   = :fbAlbumId";
+
         $sth = $this->db->prepare($sql);
+        var_dump($sth);
         $sth->bindValue(':userId', $album->user_id, \PDO::PARAM_INT);
-        $sth->bindValue(':sessionId', $album->session_id, \PDO::PARAM_INT);
+        $sth->bindValue(':goalImageId', $album->goal_image_id, \PDO::PARAM_INT);
         $sth->bindParam(':fbAlbumId', $album->fb_album_id, \PDO::PARAM_STR);
         $sth->execute();
         // insertされたカラムのIDを取得する

@@ -131,8 +131,9 @@ class FBHelperRepository
         $images = [];
         foreach($fbImages as $fbImage) {
             $image = [
-                'id'        => $fbImage['id'],
-                'imagePath' => $fbImage['source'],
+                'id'            => $fbImage['id'],
+                'imagePath'     => $fbImage['source'],
+                'thumbnailPath' => $fbImage['picture'],
             ];
             array_push($images, $image);
         }

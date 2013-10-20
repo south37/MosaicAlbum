@@ -28,8 +28,8 @@ class GoalImageRepository
         $sth->bindParam(':fbGoalImageId', $fbGoalImageId, \PDO::PARAM_STR);
         $sth->bindValue(':tateDivision', 100, \PDO::PARAM_INT);
         $sth->bindValue(':yokoDivision', 100, \PDO::PARAM_INT);
-        $sth->bindValue(':isMaleMosaic', FALSE, \PDO::PARAM_BOOL);
-        $sth->execute();
+        $sth->bindValue(':isMakeMosaic', 'FALSE', \PDO::PARAM_STR);
+        var_dump($sth->execute());
         // insertされたカラムのIDを取得する
         $goalImageId = $this->getLatestId();
         return $goalImageId;
@@ -62,6 +62,21 @@ class GoalImageRepository
         $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
         $sth->execute();
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
-        return $data['mosaic_path'];
+        return ['path'=>$data['mosaic_path'], 'id'=>$data['fb_goal_image_id']];
+    }
+
+    /**
+     * ゴールイメージIDでモザイクが生成されているかをチェックする
+     * @param  $goalImageId
+     * @return True or False
+     */
+    public function isMakeMosaic($goalImageId)
+    {
+        $sql = "SELECT * FROM goal_image WHERE id = :goalImageId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        $sth->execute();
+        $data = $sth->fetch(\PDO::FETCH_ASSOC);
+        return $data['is_make_mosaic'];
     }
 }

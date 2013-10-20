@@ -51,52 +51,19 @@ CreateMosaic:{
     $GoalImageRep = $container['repository.goalImage'];
     $AlbumRep = $container['repository.album'];
     $AlbumImageRep = $container['repository.albumImage'];
+    $UsedImageRep = $container['repository.usedImage'];
     $FBHelper = $container['FBHelper'];
 
     # 2:prepare target & src
     # ゴールイメージ取得
     $goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
-
-    #TODO:pathから画像をどう取るのか？:helperに処理追加
-    $goalImagePath = 'img/goal_img/miku.jpg'; //使い終わったらけす．
-
     # アルバムid取得
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
-    # 各アルバムの写真を取得
-    $albumImageUrlList = []; 
-    foreach ($albumIdList as $albumId) {
-      $tmpAlbumImageUrlList = $FBHelper->getImagesInAlbum($albumId);
-      array_push($albumImageUrlList,$tmpAlbumImageUrlList);
-    }
-
-
-    var_dump($albumImageUrlList);
-
-    #TODO:pathから画像をどう取るのか？:helperに処理追加
-    $albumImagePathList = [['img/tmp/hoge'],['img/tmp/huga']];
-    $albumImagePathList = [
-      'img/resource_img/ism/figure001.png',
-      'img/resource_img/ism/figure002.png',
-      'img/resource_img/ism/figure003.png',
-      'img/resource_img/ism/figure004.png',
-      'img/resource_img/ism/figure005.png',
-      'img/resource_img/ism/figure006.png',
-      'img/resource_img/ism/figure007.png',
-      'img/resource_img/ism/figure008.png',
-      'img/resource_img/ism/figure009.png',
-      'img/resource_img/ism/miku.jpg',
-
-      ]; //[debug]
+    # albumImagePathList[albumId][imageNo]=>[path, id]
+    $albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId);
 
     # 3.process
     # だっちプログラムにtarget/srcListなげる
-
-
-    // [debug]
-    
-
-
-
     createMosaic($goalImageId,$goalImagePath,$albumImagePathList,$albumIdList);
 
     # 4.notification
@@ -104,7 +71,7 @@ CreateMosaic:{
     createNotif($container);
 
     $link = '/common/mosaic_viewer/'.$goalImageId;
-    //$app->redirect($link);
+    $app->redirect($link);
 
   })
     ->name('create_mosaic')
@@ -162,10 +129,15 @@ CreateMosaic:{
 
   function createNotif($container){
     # mosaic作ったことをみんなにおしらせ
-   
     # opt:goalImgが生成されているかチェック
-
-
-    # FBヘルパー使ってお知らせ#
+    $GoalImageRep = $container['repository.goalImage'];
+    $isMakeMosaic = $GoalImageRep->isMakeMosaic($container['session']->get('goalImageId'));
+    if (!$isMakeMosaic) {
+      # モザイク未生成時($isMakeMosaic==False)
+      return $isMakeMosaic;
+    }
+    # FBヘルパー使ってお知らせ
+    $FBHelper = $container['FBHelper'];
+    $FBHelper->notifCreateMosaic();
   }
 }
