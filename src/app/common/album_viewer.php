@@ -1,8 +1,8 @@
 <?php
 // アルバムビューア：現在の素材画像一覧を表示
-$app->get('/common/album_viewer/:goalImageId', function($goalImageId) use ($app, $container) {
-	# セッションにゴールイメージIDを登録
-	$container['session']->set('goalImageId', $goalImageId);
+$app->get('/album_viewer', function() use ($app, $container) {
+	# セッションからゴールイメージIDを取得
+	$goalImageId = $container['session']->get('goalImageId');
 	# ゴールイメージIDを渡してDBからFacebookアルバムIDのリストを取得
 	$fbAlbumIds = $container['repository.album']->getFbAlbumIdList($goalImageId);
 	# イメージパスリスト（現在の素材画像一覧として表示する）	
@@ -17,7 +17,7 @@ $app->get('/common/album_viewer/:goalImageId', function($goalImageId) use ($app,
 			array_push($imagePathList, $image['imagePath']);
 		}
 	}
-	$app->render('common/album_viewer.html.twig', ["imagePathList"=>$imagePathList]);
+	$app->render('album_viewer/album_viewer.html.twig', ["imagePathList"=>$imagePathList]);
 })
 	->name('album_viewer')
     ;
@@ -46,9 +46,9 @@ $app->post('/album_viewer', function() use ($app, $container) {
 /**
  * アルバムを選択
  */
-$app->get('/select_album/modal', function () use ($app, $container) {
+$app->get('/album_viewer/modal', function () use ($app, $container) {
     $fbAlbums = $container['FBHelper']->getAlbums();
-    $app->render('select_album/modal.html.twig', ['fbAlbums' => $fbAlbums]);
+    $app->render('album_viewer/modal.html.twig', ['fbAlbums' => $fbAlbums]);
 })
-    ->name('select_album_modal')
+    ->name('album_viewer_modal')
     ;
