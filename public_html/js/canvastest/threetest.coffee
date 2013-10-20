@@ -46,8 +46,8 @@ $ ->
     materials = (new THREE.MeshBasicMaterial {map:tex} for tex in texlist)
 
     # ジオメトリの追加
-    row = 40
-    col = 40
+    row = 80
+    col = 60
     sizeX = 1000/col
     sizeY = 1000/row
     geometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
@@ -75,7 +75,7 @@ $ ->
       controlMode = "none"
       for i in [0..col]
         for j in [0..row]
-          trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,100*(i+j*col))
+          trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,500 + 100*(Math.floor(Math.random()*(row+col))))
           console.log i,":",j
       
     $('canvas').mousemove (e) ->
@@ -126,7 +126,8 @@ $ ->
     trans = (object, target, duration, delay) ->
       #TWEEN.removeAll()
       new TWEEN.Tween(object.position)
-        .to({x:target.x , y:target.y , z:target.z} , duration)
+        #.to({x:target.x , y:target.y , z:target.z} , duration)
+        .to(target,duration)
         .delay(delay)
         .easing(TWEEN.Easing.Linear.None)
         .start()

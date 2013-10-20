@@ -43,8 +43,8 @@ $(function() {
       }
       return _results;
     })();
-    row = 40;
-    col = 40;
+    row = 80;
+    col = 60;
     sizeX = 1000 / col;
     sizeY = 1000 / row;
     geometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
@@ -76,7 +76,7 @@ $(function() {
           var _l, _results1;
           _results1 = [];
           for (j = _l = 0; 0 <= row ? _l <= row : _l >= row; j = 0 <= row ? ++_l : --_l) {
-            trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 100 * (i + j * col));
+            trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 500 + 100 * (Math.floor(Math.random() * (row + col))));
             _results1.push(console.log(i, ":", j));
           }
           return _results1;
@@ -131,11 +131,7 @@ $(function() {
       return render.render(scene, camera);
     };
     trans = function(object, target, duration, delay) {
-      return new TWEEN.Tween(object.position).to({
-        x: target.x,
-        y: target.y,
-        z: target.z
-      }, duration).delay(delay).easing(TWEEN.Easing.Linear.None).start();
+      return new TWEEN.Tween(object.position).to(target, duration).delay(delay).easing(TWEEN.Easing.Linear.None).start();
     };
     anim = function() {
       requestAnimationFrame(anim);
