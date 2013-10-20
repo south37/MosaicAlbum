@@ -40,11 +40,9 @@ $redirectIfNotLogin = function ( $session ) {
  */
 $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogin) {
     $FBHelper = $container['FBHelper'];
-
     $userId = $FBHelper->getUserId();
     
     $redirect = $redirectIfNotLogin($container['session']);
-
     if (!$userId) {
         $redirect();
     }
@@ -69,7 +67,7 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
     }
 
     $container['session']->set('isLogin', true);
-    $container['session']->set('user.id', $userId);
+    $container['session']->set('userId', $userId);
 
     $app->redirect($app->urlFor('top'));
 })
