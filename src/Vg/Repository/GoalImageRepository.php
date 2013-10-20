@@ -28,8 +28,8 @@ class GoalImageRepository
         $sth->bindParam(':fbGoalImageId', $fbGoalImageId, \PDO::PARAM_STR);
         $sth->bindValue(':tateDivision', 100, \PDO::PARAM_INT);
         $sth->bindValue(':yokoDivision', 100, \PDO::PARAM_INT);
-        $sth->bindValue(':isMaleMosaic', FALSE, \PDO::PARAM_BOOL);
-        $sth->execute();
+        $sth->bindValue(':isMakeMosaic', 'FALSE', \PDO::PARAM_STR);
+        var_dump($sth->execute());
         // insertされたカラムのIDを取得する
         $goalImageId = $this->getLatestId();
         return $goalImageId;

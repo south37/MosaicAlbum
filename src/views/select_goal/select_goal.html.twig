@@ -10,10 +10,12 @@
     <a href="javascript:;" onclick="showAlbums()" class="btn btn-primary">ゴール写真を選ぶ</a>
     <a href="javascript:;" onclick="invite()" class="btn btn-primary">友達を招待する</a>
 
-    <p></p>
+    <div>
+        <img src="http://www.sankou-mw.jp/option/img/pic_no-photo.jpg" alt="ゴール写真">
+    </div>
     <form action="{{ urlFor('select_goal_post') }}" method="post">
         <input type="hidden" id="goalImageId" name="goalImageId" value="" />
-        <button type="submit" class="btn btn-primary">アルバム作成を待つ</button>
+        <button type="submit" class="btn btn-primary">この画像に決定</button>
     </form>
 {% endblock %}
 
