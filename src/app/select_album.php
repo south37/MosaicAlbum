@@ -45,6 +45,8 @@ $app->get('/select_album', function() use ($app, $container) {
  * アルバムを選択
  */
 $app->get('/select_album/modal', function () use ($app, $container) {
+    $fbAlbums = $container['FBHelper']->getAlbums();
+    /*
     $fbAlbums = [[ 
         "id"            => "400193440110501",
         "name"          => "2013年秋日本物理学会",
@@ -54,6 +56,7 @@ $app->get('/select_album/modal', function () use ($app, $container) {
         "name"          => "Profile Pictures",
         "thumbnailPath" => "https://fbcdn-photos-e-a.akamaihd.net/hphotos-ak-ash3/533896_367905493339296_1533302163_s.jpg"    
     ]];
+    */
     $app->render('select_album/modal.html.twig', ['fbAlbums' => $fbAlbums]);
 })
     ->name('select_album_modal')
