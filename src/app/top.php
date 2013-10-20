@@ -69,7 +69,7 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
     $container['session']->set('isLogin', true);
     $container['session']->set('userId', $userId);
 
-    $app->redirect($app->urlFor('top'));
+    $app->redirect($app->urlFor('select_goal'));
 })
     ->name('login_process')
     ;

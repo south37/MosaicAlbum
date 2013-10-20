@@ -22,7 +22,7 @@ $app->post('/add_album', function() use ($app, $container) {
         'goal_image_id' => $goalImageId,
         'fb_album_id'   => $fbAlbumId,
     ]);
-	$container['repository.album']->insert($album);
+    $container['repository.album']->insert($album);
 	# アルバムビューアへ
 	$app->redirect($app->urlFor('album_viewer', ['goalImageId' => $goalImageId]));
 })
