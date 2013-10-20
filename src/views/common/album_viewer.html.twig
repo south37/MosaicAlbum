@@ -6,6 +6,7 @@
       <h1>Album view</h1>
       <p>現在登録されている画像の一覧です。</p>
       <a href="javascript:;" onclick="showAlbums()" class="btn btn-primary">アルバムを追加する</a>
+      <a href="{{urlFor('mosaic_viewer')}}" class="btn btn-primary">モザイクを生成する</a>
     </div>
     {% for imagePath in imagePathList %}
          <img src="{{ imagePath }}"  width="150px"></option>
