@@ -3,12 +3,15 @@
 {% block contents %}
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="hero-unit">
-      <h1>Mosaic Album dayo</h1>
-      <p>This is a demonstration page with GroupWorkBase.</p>
+      <h1>Mosaic Album</h1>
+      <p>みんなの写真を集めてモザイク写真をつくろう！</p>
       <p><a href="{{ urlFor('doc_top') }}" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
     </div>
 
     {% if loginUrl != '' %}
-    <a href="{{ loginUrl }}" class="btn btn-primary">ログイン</a>
+    <a href="{{ loginUrl }}" class="btn btn-primary">facebookログイン</a>
+    {% else %}
+    <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary">スタート</a>
     {% endif %}
+    
 {% endblock %}
