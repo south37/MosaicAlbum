@@ -22,16 +22,23 @@ class UsedImageRepository
         $albumRepository = new AlbumRepository();
         $albumImageRepository = new AlbumImageRepository();
         $imageRepository = new ImageRepository();
+        $fbHelper = new FBHelperRepository();
         // ゴールイメージIDに関連するアルバムIDのリスト
-        $albumIds = $albumRepository->getAlbumIdList($goalImageId)
-        foreach ($albumIds as $albumId) {
+        $albumIdList = $albumRepository->getAlbumIdList($goalImageId);
+        $albumImageUrlList = [];
+        foreach ($albumIdList as $albumId) {
+            // アルバムIDに関連するイメージURLのリスト
+            $imageUrlList = $fbHelper->getImagesInAlbum($albumId);
             // アルバムIDに関連するイメージIDのリスト
             $imageIds = $albumImageRepository->getImageIdList($albumId);
             // イメージIDとFacebookイメージIDの連想配列
             $imageId2fbImageId = $imageRepository->getFbImageIdList($imageIds);
             // アルバムIDと（イメージIDとFacebookイメージIDの連想配列）の連想配列
+            $i = 0;
             foreach ($imageId2fbImageId as $fbImageId) {
-                $albumId2imageId_fbImageId[$albumId][] = $fbImageId;
+                $imagePath = $fbHelper->downloadImage($imageUrlList[$i])
+                $albumId2imageId_fbImageId[$albumId][] = ["path"=>$imagePath, "id"=>$fbImageId];
+                $i++;
             }
         }
         return $albumId2imageId_fbImageId;

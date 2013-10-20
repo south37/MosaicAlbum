@@ -62,6 +62,21 @@ class GoalImageRepository
         $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
         $sth->execute();
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
-        return $data['mosaic_path'];
+        return ['path'=>$data['mosaic_path'], 'id'=>$data['fb_goal_image_id']];
+    }
+
+    /**
+     * ゴールイメージIDでモザイクが生成されているかをチェックする
+     * @param  $goalImageId
+     * @return True or False
+     */
+    public function isMakeMosaic($goalImageId)
+    {
+        $sql = "SELECT * FROM goal_image WHERE id = :goalImageId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        $sth->execute();
+        $data = $sth->fetch(\PDO::FETCH_ASSOC);
+        return $data['is_make_mosaic'];
     }
 }
