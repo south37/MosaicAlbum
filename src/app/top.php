@@ -3,15 +3,20 @@
  * トップページ
  */
 $app->get('/', function() use ($app, $container) {
-    $FBHelper = $container['FBHelper'];
+    $input = $app->request()->get();
+    $session = $container['session'];
 
-    if ($container['session']->get('isLogin') === true) {
-        $loginUrl = '';
-    } else {
-        $loginUrl = $FBHelper->getLoginUrl();
+    if (array_key_exists('goalImageId', $input)) {
+        $session->set('goalImageId', $input['goalImageId']);
     }
 
-  $app->render('top/index.html.twig', ['loginUrl' => $loginUrl]);
+    if ($session->get('isLogin') === true) {
+        $loginUrl = '';
+    } else {
+        $loginUrl = $container['FBHelper']->getLoginUrl();
+    }
+
+  $app->render('top/index.html.twig', ['loginUrl' => $loginUrl, 'goalImageId' => $session->get('goalImageId')]);
 })
   ->name('top')
   ;
