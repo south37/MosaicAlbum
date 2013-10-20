@@ -18,9 +18,8 @@ $app->post('/select_goal', function() use ($app, $container) {
 
     $goalImageId = $container['repository.goalImage']->insert($fbGoalImageId);
     $container['session']->set('goalImageId', $goalImageId);
-    var_dump($goalImageId);
 
-    $app->render('select_goal/select_goal.html.twig');
+    $app->redirect($app->urlFor('select_album'));
 })
     ->name('select_goal_post')
     ;
