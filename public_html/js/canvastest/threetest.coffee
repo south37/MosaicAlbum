@@ -56,27 +56,43 @@ $ ->
       tmppieces = []
       for j in [0..row]
         piece = new THREE.Mesh(geometry,materials[(i+j)%10])
-        piece.position.set sizeX*i - 500, -600, -10
+        piece.position.set sizeX*i - 500, -600, 0
         scene.add(piece)
         tmppieces.push piece
       pieces.push tmppieces
 
+    # ray
+    projector = new THREE.Projector()
+    $(render.domElement).bind 'mousedown',(e)->
+      console.log "renderclicked"
+      mouseX = ((e.pageX - e.target.offsetParent.offsetLeft) / render.domElement.width) * 2 - 1
+      mouseY = ((e.pageY - e.target.offsetParent.offsetTop) / render.domElement.height) * 2 - 1
+      vec = new THREE.Vector3 mouseX,mouseY,0
+      projector.unprojectVector vec,camera
+      
+      ray = new THREE.Raycaster(camera.position, vec.sub(camera.position).normalize())
+      obj = ray.intersectObjects scene.children,true 
+  
+      if obj.length > 0
+        console.log "object clicked",obj[0].object.id
+      else
+        console.log "no clicked object"
+   
     #event
     controlMode = "none"
     pclientX = 0
     pclientY = 0 
     
     $('canvas').mousedown (e)->
-      console.log "mousedown:", e
+      #console.log "mousedown:", e
       controlMode = "move"
 
     $('canvas').mouseup ->
-      console.log "mouseup"
+      #console.log "mouseup"
       controlMode = "none"
       for i in [0..col]
         for j in [0..row]
           trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,500 + 100*(Math.floor(Math.random()*(row+col))))
-          console.log i,":",j
       
     $('canvas').mousemove (e) ->
       switch controlMode

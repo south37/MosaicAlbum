@@ -2,7 +2,7 @@
 $(function() {
   console.log("load threetest.coffee");
   return window.addEventListener("DOMContentLoaded", function() {
-    var anim, aspect, camera, col, controlMode, directioalLight, far, fov, geometry, height, i, j, materials, near, path, pathList, pclientX, pclientY, piece, pieces, render, rendering, row, scene, sizeX, sizeY, target, tex, texlist, tmppieces, trans, width, _i, _j;
+    var anim, aspect, camera, col, controlMode, directioalLight, far, fov, geometry, height, i, j, materials, near, path, pathList, pclientX, pclientY, piece, pieces, projector, render, rendering, row, scene, sizeX, sizeY, target, tex, texlist, tmppieces, trans, width, _i, _j;
     width = window.innerWidth;
     height = window.innerHeight;
     render = new THREE.WebGLRenderer();
@@ -53,22 +53,36 @@ $(function() {
       tmppieces = [];
       for (j = _j = 0; 0 <= row ? _j <= row : _j >= row; j = 0 <= row ? ++_j : --_j) {
         piece = new THREE.Mesh(geometry, materials[(i + j) % 10]);
-        piece.position.set(sizeX * i - 500, -600, -10);
+        piece.position.set(sizeX * i - 500, -600, 0);
         scene.add(piece);
         tmppieces.push(piece);
       }
       pieces.push(tmppieces);
     }
+    projector = new THREE.Projector();
+    $(render.domElement).bind('mousedown', function(e) {
+      var mouseX, mouseY, obj, ray, vec;
+      console.log("renderclicked");
+      mouseX = ((e.pageX - e.target.offsetParent.offsetLeft) / render.domElement.width) * 2 - 1;
+      mouseY = ((e.pageY - e.target.offsetParent.offsetTop) / render.domElement.height) * 2 - 1;
+      vec = new THREE.Vector3(mouseX, mouseY, 0);
+      projector.unprojectVector(vec, camera);
+      ray = new THREE.Raycaster(camera.position, vec.sub(camera.position).normalize());
+      obj = ray.intersectObjects(scene.children, true);
+      if (obj.length > 0) {
+        return console.log("object clicked", obj[0].object.id);
+      } else {
+        return console.log("no clicked object");
+      }
+    });
     controlMode = "none";
     pclientX = 0;
     pclientY = 0;
     $('canvas').mousedown(function(e) {
-      console.log("mousedown:", e);
       return controlMode = "move";
     });
     $('canvas').mouseup(function() {
       var _k, _results;
-      console.log("mouseup");
       controlMode = "none";
       _results = [];
       for (i = _k = 0; 0 <= col ? _k <= col : _k >= col; i = 0 <= col ? ++_k : --_k) {
@@ -76,8 +90,7 @@ $(function() {
           var _l, _results1;
           _results1 = [];
           for (j = _l = 0; 0 <= row ? _l <= row : _l >= row; j = 0 <= row ? ++_l : --_l) {
-            trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 500 + 100 * (Math.floor(Math.random() * (row + col))));
-            _results1.push(console.log(i, ":", j));
+            _results1.push(trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 500 + 100 * (Math.floor(Math.random() * (row + col)))));
           }
           return _results1;
         })());
