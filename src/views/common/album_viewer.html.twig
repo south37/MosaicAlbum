@@ -5,11 +5,22 @@
     <div class="hero-unit">
       <h1>Album view</h1>
       <p>現在登録されている画像の一覧です。</p>
-      <a href="javascript:;" onclick="showAlbums()" class="btn btn-primary">アルバムを追加する</a>
-      <a href="{{urlFor('mosaic_viewer')}}" class="btn btn-primary">モザイクを生成する</a>
+      <a href="javascript:;" onclick="showAlbums()" class="btn btn-primary">追加するアルバムを選ぶ</a>
+      <form action="{{ urlFor('album_viewer_post') }}" method="post">
+        <input type="hidden" id="albumId" name="albumId" value="" />
+        <button type="submit" class="btn btn-primary">このアルバムを追加</button>
+      </form>
     </div>
+   
     {% for imagePath in imagePathList %}
          <img src="{{ imagePath }}"  width="150px"></option>
     {% endfor %}
-
+   
+    <div>
+      <a href="{{ urlFor('mosaic_viewer') }}" class="btn btn-primary btn-large">モザイクを作成する</a>
+    </div>
 {% endblock %}
+
+{% block javascript%}
+<script type="text/javascript" src="{{ asset('/js/select_album/select_album.js') }}"></script>
+{% endblock%}

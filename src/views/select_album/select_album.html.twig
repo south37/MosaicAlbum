@@ -9,9 +9,6 @@
 
     <a href="javascript:;" onclick="showAlbums()" class="btn btn-primary">アルバムを選ぶ</a>
 
-    <div>
-        <img src="http://www.sankou-mw.jp/option/img/pic_no-photo.jpg" alt="ゴール写真">
-    </div>
     <form action="{{ urlFor('add_album') }}" method="post">
         <input type="hidden" id="albumId" name="albumId" value="" />
         <button type="submit" class="btn btn-primary">アルバム追加</button>

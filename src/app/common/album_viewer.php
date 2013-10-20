@@ -20,4 +20,35 @@ $app->get('/common/album_viewer/:goalImageId', function($goalImageId) use ($app,
 	$app->render('common/album_viewer.html.twig', ["imagePathList"=>$imagePathList]);
 })
 	->name('album_viewer')
-	;
+    ;
+
+// アルバムを追加
+$app->post('/album_viewer', function() use ($app, $container) {
+    $input = $app->request()->post();
+    #各変数
+    $userId      = $container['session']->get('userId');
+    $goalImageId = $container['session']->get('goalImageId');
+    $fbAlbumId   = $input['albumId'];
+    #アルバムをDBに保存 
+    $album = new \Vg\Model\Album();
+    $album->setProperties([
+        'user_id'       => $userId,
+        'goal_image_id' => $goalImageId,
+        'fb_album_id'   => $fbAlbumId,
+    ]);
+    $container['repository.album']->insert($album);
+	#アルバムビューアへ戻る
+	$app->redirect($app->urlFor('album_viewer', ['goalImageId' => $goalImageId]));
+})
+	->name('album_viewer_post')
+    ;
+
+/**
+ * アルバムを選択
+ */
+$app->get('/select_album/modal', function () use ($app, $container) {
+    $fbAlbums = $container['FBHelper']->getAlbums();
+    $app->render('select_album/modal.html.twig', ['fbAlbums' => $fbAlbums]);
+})
+    ->name('select_album_modal')
+    ;
