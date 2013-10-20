@@ -56,12 +56,10 @@ $ ->
       tmppieces = []
       for j in [0..row]
         piece = new THREE.Mesh(geometry,materials[(i+j)%10])
-        piece.position.set sizeX*i - 500, sizeY * j - 500, -10
+        piece.position.set sizeX*i - 500, -600, -10
         scene.add(piece)
         tmppieces.push piece
       pieces.push tmppieces
-    console.log pieces
-        
 
     #event
     controlMode = "none"
@@ -75,8 +73,10 @@ $ ->
     $('canvas').mouseup ->
       console.log "mouseup"
       controlMode = "none"
-      for i in [0..row]
-        trans(pieces[i][i],new THREE.Vector3(sizeX*i-500,600,30),500,500*i)
+      for i in [0..col]
+        for j in [0..row]
+          trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,100*(i+j*col))
+          console.log i,":",j
       
     $('canvas').mousemove (e) ->
       switch controlMode
@@ -130,12 +130,7 @@ $ ->
         .delay(delay)
         .easing(TWEEN.Easing.Linear.None)
         .start()
-
-      new TWEEN.Tween(this)
-        .to({},duration)
-        .onUpdate(rendering)
-        .start()
-
+     
     # animation設定
     anim = ->
       requestAnimationFrame anim

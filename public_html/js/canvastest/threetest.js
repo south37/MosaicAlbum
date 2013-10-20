@@ -53,13 +53,12 @@ $(function() {
       tmppieces = [];
       for (j = _j = 0; 0 <= row ? _j <= row : _j >= row; j = 0 <= row ? ++_j : --_j) {
         piece = new THREE.Mesh(geometry, materials[(i + j) % 10]);
-        piece.position.set(sizeX * i - 500, sizeY * j - 500, -10);
+        piece.position.set(sizeX * i - 500, -600, -10);
         scene.add(piece);
         tmppieces.push(piece);
       }
       pieces.push(tmppieces);
     }
-    console.log(pieces);
     controlMode = "none";
     pclientX = 0;
     pclientY = 0;
@@ -72,8 +71,16 @@ $(function() {
       console.log("mouseup");
       controlMode = "none";
       _results = [];
-      for (i = _k = 0; 0 <= row ? _k <= row : _k >= row; i = 0 <= row ? ++_k : --_k) {
-        _results.push(trans(pieces[i][i], new THREE.Vector3(sizeX * i - 500, 600, 30), 500, 500 * i));
+      for (i = _k = 0; 0 <= col ? _k <= col : _k >= col; i = 0 <= col ? ++_k : --_k) {
+        _results.push((function() {
+          var _l, _results1;
+          _results1 = [];
+          for (j = _l = 0; 0 <= row ? _l <= row : _l >= row; j = 0 <= row ? ++_l : --_l) {
+            trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 100 * (i + j * col));
+            _results1.push(console.log(i, ":", j));
+          }
+          return _results1;
+        })());
       }
       return _results;
     });
@@ -124,12 +131,11 @@ $(function() {
       return render.render(scene, camera);
     };
     trans = function(object, target, duration, delay) {
-      new TWEEN.Tween(object.position).to({
+      return new TWEEN.Tween(object.position).to({
         x: target.x,
         y: target.y,
         z: target.z
       }, duration).delay(delay).easing(TWEEN.Easing.Linear.None).start();
-      return new TWEEN.Tween(this).to({}, duration).onUpdate(rendering).start();
     };
     anim = function() {
       requestAnimationFrame(anim);
