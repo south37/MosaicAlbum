@@ -33,7 +33,8 @@ $app->post('/add_album', function() use ($app, $container) {
  * アルバムを選択
  */
 $app->get('/select_album/modal', function () use ($app, $container) {
-    //$fbAlbums = $container['FBHelper']->getAlbums();
+    $fbAlbums = $container['FBHelper']->getAlbums();
+    /*
     $fbAlbums = [[ 
         "id"            => "400193440110501",
         "name"          => "2013年秋日本物理学会",
@@ -43,26 +44,26 @@ $app->get('/select_album/modal', function () use ($app, $container) {
         "name"          => "Profile Pictures",
         "thumbnailPath" => "https://fbcdn-photos-e-a.akamaihd.net/hphotos-ak-ash3/533896_367905493339296_1533302163_s.jpg"    
     ]];
-    
+    */ 
     $app->render('select_album/modal.html.twig', ['fbAlbums' => $fbAlbums]);
 })
     ->name('select_album_modal')
     ;
 
 // アルバムセレクト＿マスター：使うアルバムを選択
-$app->get('/master/album_select_master', function() use ($app, $container) {
-	$albumList = [];
-	# 自分のFacebookアルバムのリストを取得
-	$fbAlbums = $container['FBHelper']->getAlbums();
-	foreach ($fbAlbums as $fbAlbum) {
-		# アルバムの写真一覧を取得（fbImageId, imagePath）
-		$images = $container['FBHelper']->getImagesInAlbum($fbAlbum['id']);
-		# アルバムリストにアルバムの写真一覧を保存
-		$fbAlbum['images'] = $images;
-		array_push($albumList, $fbAlbum);
-	}
-	$app->render('master/album_select_master.html.twig', ["albumList"=>$albumList]);
-})
-  ->name('album_select_master')
-  ;
-
+//$app->get('/master/album_select_master', function() use ($app, $container) {
+//	$albumList = [];
+//	# 自分のFacebookアルバムのリストを取得
+//	$fbAlbums = $container['FBHelper']->getAlbums();
+//	foreach ($fbAlbums as $fbAlbum) {
+//		# アルバムの写真一覧を取得（fbImageId, imagePath）
+//		$images = $container['FBHelper']->getImagesInAlbum($fbAlbum['id']);
+//		# アルバムリストにアルバムの写真一覧を保存
+//		$fbAlbum['images'] = $images;
+//		array_push($albumList, $fbAlbum);
+//	}
+//	$app->render('master/album_select_master.html.twig', ["albumList"=>$albumList]);
+//})
+//  ->name('album_select_master')
+//  ;
+//
