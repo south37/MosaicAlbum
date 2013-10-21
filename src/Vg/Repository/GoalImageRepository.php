@@ -51,6 +51,21 @@ class GoalImageRepository
     }
 
     /**
+     * ゴールイメージIDでFacebookゴールイメージIDを検索する
+     * @param  $goalImageId
+     * @return $fbGoalImageId
+     */
+    public function getFbGoalImageId($goalImageId)
+    {
+        $sql = "SELECT * FROM goal_image WHERE id = :goalImageId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        $sth->execute();
+        $data = $sth->fetch(\PDO::FETCH_ASSOC);
+        return $data['fb_goal_image_id'];
+    }
+
+    /**
      * ゴールイメージIDでモザイクを検索する
      * @param  $goalImageId
      * @return $mosaicPath
