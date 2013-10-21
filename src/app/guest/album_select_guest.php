@@ -56,14 +56,35 @@ CreateMosaic:{
     # 2:prepare target & src
     # ゴールイメージ取得
 	$fbGoalId = $GoalImageRep->getFbGoalImageId($goalImageId);
-	$goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
+	//$goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
+        //[DEUBG @ datch]
+        $goalPath = 'img/resource_img/ism/miku.jpg';
 	$goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalId];
     #####$goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
 
     # アルバムid取得
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
     # albumImagePathList[albumId][imageNo]=>[path, id]
-    $albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
+    //$albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
+    // [DEBUG @ datch]
+    $albumImagePathList = [
+        1 => [
+            ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],
+            ['path' => 'img/resource_img/ism/figure002.png', 'id' => 2],
+            ['path' => 'img/resource_img/ism/figure003.png', 'id' => 3],
+            ['path' => 'img/resource_img/ism/figure004.png', 'id' => 4]
+        ],
+        2 => [
+            ['path' => 'img/resource_img/ism/figure005.png', 'id' => 5],
+            ['path' => 'img/resource_img/ism/figure006.png', 'id' => 6]
+        ],
+        3 => [
+            ['path' => 'img/resource_img/ism/figure007.png', 'id' => 7],
+            ['path' => 'img/resource_img/ism/figure008.png', 'id' => 8],
+            ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
+        ]
+    ];
+    
 
     # 3.process
     # だっちプログラムにtarget/srcListなげる
@@ -74,7 +95,7 @@ CreateMosaic:{
     //createNotif($container);
 
     $link = '/common/mosaic_viewer/'.$goalImageId;
-    $app->redirect($link);
+    //$app->redirect($link);
 
   })
     ->name('create_mosaic')
@@ -96,7 +117,7 @@ CreateMosaic:{
     $splitHeight = $goalResizeHeight / $splitY;
     
     # 処理用変数
-    $fbGoalImageId = $goalImagePath['id'];
+    // $fbGoalImageId = $goalImagePath['id'];
 
     ########
     # 処理 #
@@ -110,7 +131,7 @@ CreateMosaic:{
     $createMosaic->loadRequiredImages($goalImagePath, $albumImagePathList, $goalResizeWidth, $goalResizeHeight, $albumResizeWidth, $albumResizeHeight);
     
     # モザイク画像生成
-    $corrTwoDimension = $createMosaic->execMakeMosaicImage($saveFilePath, $goalImageId, $fbGoalImageId, $container);
+    $corrTwoDimension = $createMosaic->execMakeMosaicImage($goalImagePath, $goalImageId, $container);
 
     # 画像保存
     $createMosaic->saveAlbumImages($albumResizeWidth, $albumResizeHeight, $goalImageId, $albumImagePathList, $corrTwoDimension, $container);

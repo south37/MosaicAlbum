@@ -17,7 +17,7 @@ class Image
 		$this->id = $id;
 		$this->width = imagesx($id);
 		$this->height = imagesy($id);
-		$this->exntension = null;
+		$this->extension = null;
 	}
 
 	function __destruct()
@@ -89,11 +89,6 @@ class Image
 	public function saveImage($filePath)
 	{
 		$res = null;
-                $dirPath = dirname($filePath);
-                if(is_dir($dirPath) === FALSE)
-                {
-                    mkdir(dirname($filePath), 0775);
-                }
 		switch ($this->extension) {
 			case '.gif': // GIF
 				$res = imagegif($this->id, $filePath);
@@ -128,7 +123,6 @@ class Image
 	{
 		$id = null;
 		$fileExtension = null;
-                var_dump($url);
 		$type = exif_imagetype($url);
 		switch ($type) {
 			case 1: // GIF
