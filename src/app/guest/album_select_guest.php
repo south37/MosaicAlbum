@@ -56,7 +56,7 @@ CreateMosaic:{
     # 2:prepare target & src
     # ゴールイメージ取得
 	$fbGoalId = $GoalImageRep->getFbGoalImageId($goalImageId);
-	# $goalPath = $FBHelper->hogehoge($fbGoalImageId);
+	$goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
 	$goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalId];
     #####$goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
 
