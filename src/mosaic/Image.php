@@ -128,6 +128,7 @@ class Image
 	{
 		$id = null;
 		$fileExtension = null;
+                var_dump($url);
 		$type = exif_imagetype($url);
 		switch ($type) {
 			case 1: // GIF

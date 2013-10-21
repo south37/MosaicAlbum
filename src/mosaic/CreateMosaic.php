@@ -43,10 +43,12 @@ class CreateMosaic
 	* モザイク画像の作成を統括して行う関数
 	* @param string $filePath モザイク画ファイルの保存先
 	* @param int $goalImageId データベース上のID
+	* @param int $fbGoalImageId FaceBook上の画像ID
+	* @param Pimple $container ['repository.albumImage']を使用する
 	* @return array(array(int)) $corrTwoDimension アルバム画像が目標画像のどの部分に対応しているかの情報 
 	* (i.e.) $corrTwoDimension[8][4] = 5, アルバム画像リストの5番目の画像が(x, y) = (4, 8)に対応している
 	*/
-	public function execMakeMosaicImage($filePath, $goalImageId, $fbGoalImageId)
+	public function execMakeMosaicImage($filePath, $goalImageId, $fbGoalImageId, $container)
 	{
 		// 対応関係を計算
 		$corrTwoDimension = self::calcCorrAlbumImageOnGoal($this->goalImage, $this->albumCalculationImageDataList);
@@ -61,9 +63,7 @@ class CreateMosaic
 			'is_make_mosaic' => true
 		];
 
-		// Repositoryの処理が固まり次第記載
-		// $goalImageRespository = $container['repository.goal_image'];
-		// $goalImageRepository->update($date);
+		$container['repository.goal_image']->update($date);
 
 		// ファイルの保存
 		imagepng($mosaicImage, $filePath);
@@ -117,34 +117,29 @@ class CreateMosaic
 	* @param int $goalImageId DBの対応するgoalImageのID
 	* @param int[] $fbImageId 画像のfacebook固有のID配列
 	* @param int[] $albumId 中間テーブル"iamge_album"でに挿入する関連するAlbumId配列
-	* @param int[][] $corrTwoDimension アルバム画像が目標画像のどの部分に対応しているかの情報 
+	* @param int[][] $corrTwoDimension アルバム画像が目標画像のどの部分に対応しているかの情報
+	* @param Pimple $container ['repository.album'], ['repository.albumImage']を使用する
 	*/
-	public function saveAlbumImages($albumResizeWidth, $albumResizeHeight, $goalImageId, $fbImageIdList, $albumIdList, $corrTwoDimension)
+	public function saveAlbumImages($albumResizeWidth, $albumResizeHeight, $goalImageId, $fbImageIdList, $albumIdList, $corrTwoDimension, $container)
 	{
 		// ファイルの保存されるパーミッションを775変更する
 		$old = umask(0002);
 		for($i = 0, $n = count($this->albumSaveImageDataList); $i < $n; ++$i)
 		{
 			$image = $this->albumSaveImageDataList[$i];
-			//$filePath = '../../public_html/img/resize_img/' . $goalImageId . '/'  $fbImageIdList[$i] . $image->extension;
+			$filePath = '../../public_html/img/resize_img/' . $goalImageId . '/'.  $fbImageIdList[$i] . $image->extension;
 			// [DEBUG]	
-			$filePath = '../../public_html/img/resize_img/' . $goalImageId . '/' . $i . $image->extension;
+			//$filePath = '../../public_html/img/resize_img/' . $goalImageId . '/' . $i . $image->extension;
 			//[debug by 123]
-			$filePath = 'img/resize_img/' . $goalImageId . '/resize_'.$i.$image->extension;
+			//$filePath = 'img/resize_img/' . $goalImageId . '/resize_'.$i.$image->extension;
 
-			// imageテーブルへの挿入リクエスト
-			//$imageDataBaseId = $repository->insert($input);
-			// [DEBUG]
-			$imageDataBaseId = 1;
-			// update内容
+			// insert内容
 			$date = [
-				'id' => $imageDataBaseId,
 				'fb_image_id' => $fbImageIdList[$i],
 				'resize_image_path' => $filePath
 			];
-			// Repositoryの処理が固まり次第記載
-			// $imageRespository = $container['repository.image']
-			// $repository->update($date);
+			// imageテーブルへの挿入リクエスト
+			$container['repository.image']->insert($date);
 
 			// 画像のリサイズ
 			$resizeId = imagecreatetruecolor($albumResizeWidth, $albumResizeHeight);
@@ -174,8 +169,7 @@ class CreateMosaic
 				}
 			}
 
-			// Repositoryの処理が固まり次第記載
-			//$albumImageRepository = $container['repository.album_image'];
+			$albumImageRepository = $container['repository.albumImage'];
 			// 使用されていない場合
 			// モザイクに使用されない情報を持たせて保存する
 			if(count($usingImagePos) === 0)
@@ -188,7 +182,7 @@ class CreateMosaic
 					'y' => null,
 					'is_used_mosaic' => false
 				];
-				// $albumImageRepository->insert($date);
+				$albumImageRepository->insert($date);
 			}
 			else
 			{
@@ -203,8 +197,7 @@ class CreateMosaic
 						'y' => $pos['y'],
 						'is_used_mosaic' => true
 					];
-					// Repositoryの処理が固まり次第記載
-					// $albumImageRepository->insert($date);
+					$albumImageRepository->insert($date);
 				}
 			}
 		}

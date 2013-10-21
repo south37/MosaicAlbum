@@ -66,6 +66,7 @@ class ImageRepository
      */
     public function getFbImageIdList($imageIds)
     {
+        $imageId2fbImageId = [];
         foreach ($imageIds as $imageId) {
             $sql = "SELECT * FROM image WHERE id = :imageId";
             $sth = $this->db->prepare($sql);

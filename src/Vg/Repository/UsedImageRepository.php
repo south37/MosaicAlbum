@@ -17,14 +17,15 @@ class UsedImageRepository
      * @param  $goalImageId
      * @return x[albumId][0~n-1(imageId)][fbImageId]
      */
-    public function getUsedImageList($goalImageId)
+    public function getUsedImageList($goalImageId, &$container)
     {
-        $albumRepository = new AlbumRepository();
-        $albumImageRepository = new AlbumImageRepository();
-        $imageRepository = new ImageRepository();
-        $fbHelper = new FBHelperRepository();
+        $albumRepository = $container['repository.album'];//new AlbumRepository();
+        $albumImageRepository = $container['repository.albumImage'];//new AlbumImageRepository();
+        $imageRepository = $container['repository.image']; //new ImageRepository();
+        $fbHelper =  $container['FBHelper'];//new FBHelperRepository();
         // ゴールイメージIDに関連するアルバムIDのリスト
         $albumIdList = $albumRepository->getAlbumIdList($goalImageId);
+        $albumId2imageId_fbImageId = [];
         $albumImageUrlList = [];
         foreach ($albumIdList as $albumId) {
             // アルバムIDに関連するイメージURLのリスト
@@ -36,7 +37,8 @@ class UsedImageRepository
             // アルバムIDと（イメージIDとFacebookイメージIDの連想配列）の連想配列
             $i = 0;
             foreach ($imageId2fbImageId as $fbImageId) {
-                $imagePath = $fbHelper->downloadImage($imageUrlList[$i])
+                $imagePath = $fbHelper->downloadImage($imageUrlList[$i]);
+                echo '$imagePath : ' . var_dump($imagePath) . '<br>';
                 $albumId2imageId_fbImageId[$albumId][] = ["path"=>$imagePath, "id"=>$fbImageId];
                 $i++;
             }
