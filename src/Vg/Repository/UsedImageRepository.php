@@ -37,7 +37,7 @@ class UsedImageRepository
             // アルバムIDと（イメージIDとFacebookイメージIDの連想配列）の連想配列
             $i = 0;
             foreach ($imageId2fbImageId as $fbImageId) {
-                $imagePath = $fbHelper->downloadImage($imageUrlList[$i]);
+                $imagePath = $fbHelper->downloadImage($imageUrlList[$i]['imagePath']);
                 echo '$imagePath : ' . var_dump($imagePath) . '<br>';
                 $albumId2imageId_fbImageId[$albumId][] = ["path"=>$imagePath, "id"=>$fbImageId];
                 $i++;

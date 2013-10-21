@@ -46,7 +46,6 @@ CreateMosaic:{
     # 1:init
     # repository準備
     $goalImageId = $container['session']->get('goalImageId');
-    //$goalImageId = '1';
 
     $GoalImageRep = $container['repository.goalImage'];
     $AlbumRep = $container['repository.album'];
@@ -56,7 +55,11 @@ CreateMosaic:{
 
     # 2:prepare target & src
     # ゴールイメージ取得
-    $goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
+	$fbGoalId = $GoalImageRep->getFbGoalImageId($goalImageId);
+	# $goalPath = $FBHelper->hogehoge($fbGoalImageId);
+	$goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalId];
+    #####$goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
+
     # アルバムid取得
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
     # albumImagePathList[albumId][imageNo]=>[path, id]
@@ -64,7 +67,7 @@ CreateMosaic:{
 
     # 3.process
     # だっちプログラムにtarget/srcListなげる
-    createMosaic($goalImageId,$goalImagePath,$albumImagePathList,$albumIdList, $container);
+    createMosaic($goalImageId, $goalImagePath, $albumImagePathList, $container);
 
     # 4.notification
     # モザイク作成されたことをお知らせする
@@ -77,7 +80,7 @@ CreateMosaic:{
     ->name('create_mosaic')
     ;
 
-  function createMosaic($goalImageId,$goalImagePath, $albumImagePathList, $container){
+  function createMosaic($goalImageId, $goalImagePath, $albumImagePathList, $container){
     # だっちのプログラムはここに移植
     $saveFilePath = 'img/mosaic_img/'.'mosaic'.$goalImageId.'.png';
 
@@ -93,10 +96,7 @@ CreateMosaic:{
     $splitHeight = $goalResizeHeight / $splitY;
     
     # 処理用変数
-    $fbImageIdList = [];
-    $albumIdList = [];
-
-    $fbGoalImageId = 1; //何に使うのこれ:DBに保存する．
+    $fbGoalImageId = $goalImagePath['id'];
 
     ########
     # 処理 #
@@ -107,23 +107,13 @@ CreateMosaic:{
     $createMosaic = new Mosaic\CreateMosaic($splitX, $splitY, $splitWidth, $splitHeight);
    
     # 画像の読み込み
-    echo '$goalImagePath' . var_dump($goalImagePath) . '<br>';
-    $createMosaic->loadRequiredImages($goalImagePath,$albumImagePathList,$goalResizeWidth,$goalResizeHeight,$albumResizeWidth,$albumResizeHeight);
+    $createMosaic->loadRequiredImages($goalImagePath, $albumImagePathList, $goalResizeWidth, $goalResizeHeight, $albumResizeWidth, $albumResizeHeight);
     
     # モザイク画像生成
-    $corrTwoDimension = $createMosaic->execMakeMosaicImage($saveFilePath,$goalImageId,$fbGoalImageId, $container);
-
-    # TODO:n番目の画像が，どのアルバムのものだったか，というリスト
-    $fbImageIdList = [];
-    $albumIdList = array_keys($albumImagePathList);
-    foreach ($albumImagePathList as $albumId => $imagePathList) {
-      foreach ($imagePathList as $imageNo => $path_fbidList) {
-        $fbImageIdList[$imageNo] = $path_fbidList['id'];
-      }
-    }
+    $corrTwoDimension = $createMosaic->execMakeMosaicImage($saveFilePath, $goalImageId, $fbGoalImageId, $container);
 
     # 画像保存
-    $createMosaic->saveAlbumImages($albumResizeWidth,$albumResizeHeight, $goalImageId, $fbImageIdList, $albumIdList, $corrTwoDimension, $container);
+    $createMosaic->saveAlbumImages($albumResizeWidth, $albumResizeHeight, $goalImageId, $albumImagePathList, $corrTwoDimension, $container);
 
     # 実行時間
     $timeEnd = microtime(true);
