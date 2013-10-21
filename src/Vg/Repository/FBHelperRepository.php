@@ -209,4 +209,11 @@ class FBHelperRepository
         unlink($imagePath);
     }
 
+    public function downloadImageFromFbId($fbImageId)
+    {
+        $r = $this->facebook->api('/'.$fbImageId);
+        $imagePath = $r['source'];
+        return $this->downloadImage($imagePath);
+    }
+
 }
