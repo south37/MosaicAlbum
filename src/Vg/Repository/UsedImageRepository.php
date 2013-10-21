@@ -17,14 +17,16 @@ class UsedImageRepository
      * @param  $goalImageId
      * @return x[albumId][0~n-1(imageId)][fbImageId]
      */
-    public function getUsedImageList($goalImageId)
+    public function getUsedImageList($goalImageId, &$container)
     {
-        $albumRepository = new AlbumRepository();
-        $albumImageRepository = new AlbumImageRepository();
-        $imageRepository = new ImageRepository();
-        $fbHelper = new FBHelperRepository();
+        $albumRepository = $container['repository.album'];
+        $albumImageRepository = $container['repository.albumImage'];
+        $imageRepository = $container['repository.image'];
+        $fbHelper = $container['FBHelper'];
+
         // ゴールイメージIDに関連するアルバムIDのリスト
         $albumIdList = $albumRepository->getAlbumIdList($goalImageId);
+        $albumId2imageId_fbImageId = [];
         $albumImageUrlList = [];
         foreach ($albumIdList as $albumId) {
             // アルバムIDに関連するイメージURLのリスト
