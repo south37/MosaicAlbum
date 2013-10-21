@@ -19,7 +19,7 @@ use Slim\Slim;
     require  __DIR__ . '/../src/app/common/album_viewer.php';
 
     require  __DIR__ . '/../src/app/select_goal.php';
-    require  __DIR__ . '/../src/app/select_album.php';
+//    require  __DIR__ . '/../src/app/select_album.php';
 
     require  __DIR__ . '/../src/app/guest/start_guest.php';
     require  __DIR__ . '/../src/app/guest/album_select_guest.php';

@@ -14,12 +14,11 @@ $app->get('/select_goal', function() use ($app, $container) {
 $app->post('/select_goal', function() use ($app, $container) {
     $input = $app->request()->post();
     $fbGoalImageId = $input['goalImageId'];
-    var_dump($fbGoalImageId);
 
     $goalImageId = $container['repository.goalImage']->insert($fbGoalImageId);
     $container['session']->set('goalImageId', $goalImageId);
 
-    $app->redirect($app->urlFor('select_album'));
+    $app->redirect($app->urlFor('album_viewer', ['goalImageId' => $goalImageId]));
 })
     ->name('select_goal_post')
     ;

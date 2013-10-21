@@ -68,7 +68,7 @@ CreateMosaic:{
 
     # 4.notification
     # モザイク作成されたことをお知らせする
-    createNotif($container);
+    //createNotif($container);
 
     $link = '/common/mosaic_viewer/'.$goalImageId;
     $app->redirect($link);
@@ -113,9 +113,13 @@ CreateMosaic:{
     $corrTwoDimension = $createMosaic->execMakeMosaicImage($saveFilePath,$goalImageId,$fbGoalImageId);
 
     # TODO:n番目の画像が，どのアルバムのものだったか，というリスト
-    # mgmgさんがきれいな配列をつくってくれます．
-    $albumIdList = array_fill(0, count($corrTwoDimension), 0);
-    $fbImageIdList = array_fill(0, count($corrTwoDimension), 0);
+    $fbImageIdList = [];
+    $albumIdList = array_keys($albumImagePathList);
+    foreach ($albumImagePathList as $albumId => $imagePathList) {
+      foreach ($imagePathList as $imageNo => $path_fbidList) {
+        $fbImageIdList[] = $path_fbidList['id'];
+      }
+    }
 
     # 画像保存
     $createMosaic->saveAlbumImages($albumResizeWidth,$albumResizeHeight, $goalImageId, $fbImageIdList, $albumIdList, $corrTwoDimension);
