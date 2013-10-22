@@ -197,7 +197,7 @@ class FBHelperRepository
     public function downloadImage($imagePath)
     {
         $image = file_get_contents($imagePath);
-        $savePath = '/img/resource_img/'.basename($imagePath);
+        $savePath = __DIR__.'/../../public_html/img/resource_img/'.basename($imagePath);
 
         file_put_contents($savePath, $image);
 
@@ -207,6 +207,13 @@ class FBHelperRepository
     public function deleteImage($imagePath)
     {
         unlink($imagePath);
+    }
+
+    public function downloadImageFromFbId($fbImageId)
+    {
+        $r = $this->facebook->api('/'.$fbImageId);
+        $imagePath = $r['source'];
+        return $this->downloadImage($imagePath);
     }
 
 }
