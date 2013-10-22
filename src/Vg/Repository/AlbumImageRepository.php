@@ -33,7 +33,7 @@ class AlbumImageRepository
         $sth->bindValue(':imageId', $imageId, \PDO::PARAM_INT);
         $sth->bindValue(':x', $x, \PDO::PARAM_INT);
         $sth->bindValue(':y', $y, \PDO::PARAM_INT);
-        $sth->bindValue(':isUsedMosaic', $isUsedMosaic, \PDO::PARAM_BOOL);
+        $sth->bindValue(':isUsedMosaic', $isUsedMosaic, \PDO::PARAM_INT);
         $sth->execute();
         // insertされたカラムのIDを取得する
         $albumImageId = $this->getLatestId();
