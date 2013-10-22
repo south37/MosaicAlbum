@@ -21,7 +21,7 @@ class ImageRepository
     {
         $sql = "INSERT INTO image SET fb_image_id = :fbImageId";
         $sth = $this->db->prepare($sql);
-        $sth->bindParam(':fbImageId', $fbImageId, \PDO::PARAM_STR);
+        $sth->bindValue(':fbImageId', $fbImageId, \PDO::PARAM_STR);
         $sth->execute();
         // insertされたカラムのIDを取得する
         $imageId = $this->getLatestId();
@@ -53,7 +53,7 @@ class ImageRepository
         $imageId = $this->getLatestId();        
         $sql = "UPDATE image SET resize_image_path = :resizeImagePath WHERE id = :imageId";
         $sth = $this->db->prepare($sql);
-        $sth->bindParam(':resizeImagePath', $resizeImagePath, \PDO::PARAM_STR);
+        $sth->bindValue(':resizeImagePath', $resizeImagePath, \PDO::PARAM_STR);
         $sth->bindValue(':imageId', $imageId, \PDO::PARAM_INT);
         $sth->execute();
         return $imageId;

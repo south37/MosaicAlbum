@@ -26,11 +26,11 @@ class UserRepository
                     fb_icon_url = :fbIconUrl,
                     mail_address = :mailAddress";
         $sth = $this->db->prepare($sql);
-        $sth->bindParam(':fbUserId', $user->fb_user_id, \PDO::PARAM_STR);
-        $sth->bindParam(':token', $user->token, \PDO::PARAM_STR);
-        $sth->bindParam(':name', $user->name, \PDO::PARAM_STR);
-        $sth->bindParam(':fbIconUrl', $user->fb_icon_url, \PDO::PARAM_STR);
-        $sth->bindParam(':mailAddress', $user->mail_address, \PDO::PARAM_STR);
+        $sth->bindValue(':fbUserId', $user->fb_user_id, \PDO::PARAM_STR);
+        $sth->bindValue(':token', $user->token, \PDO::PARAM_STR);
+        $sth->bindValue(':name', $user->name, \PDO::PARAM_STR);
+        $sth->bindValue(':fbIconUrl', $user->fb_icon_url, \PDO::PARAM_STR);
+        $sth->bindValue(':mailAddress', $user->mail_address, \PDO::PARAM_STR);
         $sth->execute();
         // insertされたカラムのIDを取得する
         $userId = $this->getLatestId();
@@ -79,7 +79,7 @@ class UserRepository
     {
         $sql = "SELECT * FROM user WHERE fb_user_id = :fbUserId";
         $sth = $this->db->prepare($sql);
-        $sth->bindParam(':fbUserId', $fbUserId, \PDO::PARAM_STR);
+        $sth->bindValue(':fbUserId', $fbUserId, \PDO::PARAM_STR);
         $sth->execute();
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
         $user = new User();
