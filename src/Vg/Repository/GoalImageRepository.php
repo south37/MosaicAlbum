@@ -28,11 +28,26 @@ class GoalImageRepository
         $sth->bindParam(':fbGoalImageId', $fbGoalImageId, \PDO::PARAM_STR);
         $sth->bindValue(':tateDivision', 100, \PDO::PARAM_INT);
         $sth->bindValue(':yokoDivision', 100, \PDO::PARAM_INT);
-        $sth->bindValue(':isMakeMosaic', 'FALSE', \PDO::PARAM_STR);
+        $sth->bindParam(':isMakeMosaic', 'FALSE', \PDO::PARAM_STR);
         var_dump($sth->execute());
         // insertされたカラムのIDを取得する
         $goalImageId = $this->getLatestId();
         return $goalImageId;
+    }
+
+    /**
+     * 更新（モザイクを保存）
+	 * @param  $goalImageId
+     * @param  $mosaicPath
+     */
+    public function update($goalImageId, $mosaicPath)
+    {
+        $sql = "UPDATE goal_image SET mosaic_path = :mosaicPath, is_make_mosaic = :isMakeMosaic WHERE id = :goalImageId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindParam(':mosaicPath', $mosaicPath, \PDO::PARAM_STR);
+        $sth->bindParam(':isMakeMosaic', 'TRUE', \PDO::PARAM_STR);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        $sth->execute();
     }
 
     /**
