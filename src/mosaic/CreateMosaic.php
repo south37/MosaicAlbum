@@ -63,7 +63,7 @@ class CreateMosaic
 		];
 
 		// [サーバー上でコメント解除]
-		//$container['repository.goal_image']->update($date);
+		$container['repository.goalImage']->update($data);
 
 		// ファイルの保存
 		imagepng($mosaicImage, $goalImageInfo['path']);
@@ -147,14 +147,15 @@ class CreateMosaic
 				//$filePath = 'img/resize_img/' . $goalImageId . '/resize_'.$i.$image->extension;
 
 				// insert内容
-				$date = [
+				$data = [
 					'fb_image_id' => $fbImageId,
 					'resize_image_path' => $filePath
 				];
 				// [サーバー上でコメント解除]
 				// imageテーブルへの挿入リクエスト
-				//$imageDataBaseId = $container['repository.image']->insert($date);
-				$imageDataBaseId = 1;
+				$imageDataBaseId = $container['repository.image']->insert($fbImageId);
+				$container['repository.image']->update($fbImageId);
+				//$imageDataBaseId = 1;
 
 				// 画像のリサイズ
 				$resizeId = imagecreatetruecolor($albumResizeWidth, $albumResizeHeight);
@@ -185,13 +186,13 @@ class CreateMosaic
 				}
 
 				// [サーバー上でコメント解除]
-				//$albumImageRepository = $container['repository.albumImage'];
+				$albumImageRepository = $container['repository.albumImage'];
 				// 使用されていない場合
 				// モザイクに使用されない情報を持たせて保存する
 				if(count($usingImagePos) === 0)
 				{
 					// album_image insert内容
-					$date = [
+					$data = [
 						'album_id' => $albumId,
 						'image_id' => $imageDataBaseId,
 						'x' => null,
@@ -199,7 +200,7 @@ class CreateMosaic
 						'is_used_mosaic' => false
 					];
 					// [サーバー上でコメント解除]
-					//$albumImageRepository->insert($date);
+					$albumImageRepository->insert($albumId, $imageDataBaseId, null, null, false);
 				}
 				else
 				{
@@ -207,7 +208,7 @@ class CreateMosaic
 					foreach ($usingImagePos as $pos)
 					{
 						// album_image insert内容
-						$date = [
+						$data = [
 							'album_id' => $albumId,
 							'image_id' => $imageDataBaseId,
 							'x' => $pos['x'],
@@ -215,7 +216,7 @@ class CreateMosaic
 							'is_used_mosaic' => true
 						];
 						// [サーバー上でコメント解除]
-						//$albumImageRepository->insert($date);
+						$albumImageRepository->insert($albumId, $imageDataBaseId, $pos['x'], $pos['y'], true);
 					}
 				}
 			}

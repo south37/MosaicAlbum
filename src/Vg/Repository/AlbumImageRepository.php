@@ -20,7 +20,7 @@ class AlbumImageRepository
      * @param  $y
      * @return $albumImageId 
      */
-    public function insert($albumId, $imageId, $x, $y)
+    public function insert($albumId, $imageId, $x, $y, $isUsedMosaic)
     {
         $sql = "INSERT INTO album_image
                 SET album_id = :albumId,
@@ -33,7 +33,7 @@ class AlbumImageRepository
         $sth->bindValue(':imageId', $imageId, \PDO::PARAM_INT);
         $sth->bindValue(':x', $x, \PDO::PARAM_INT);
         $sth->bindValue(':y', $y, \PDO::PARAM_INT);
-        $sth->bindValue(':isUsedMosaic', FALSE, \PDO::PARAM_BOOL);
+        $sth->bindValue(':isUsedMosaic', $isUsedMosaic, \PDO::PARAM_BOOL);
         $sth->execute();
         // insertされたカラムのIDを取得する
         $albumImageId = $this->getLatestId();
