@@ -5,6 +5,8 @@ include('../src/mosaic/CreateMosaic.php');
 include('../src/mosaic/Image.php');
 include('../src/mosaic/gd_bmp_util.php');
 
+// スクリプトの実行時間を300秒に設定
+set_time_limit(300);
 
 // アルバムセレクト＿ゲスト：使うアルバムを選択
 $app->get('/guest/album_select_guest', function() use ($app, $container) {
