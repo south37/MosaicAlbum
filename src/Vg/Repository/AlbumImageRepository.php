@@ -31,9 +31,9 @@ class AlbumImageRepository
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':albumId', $albumId, \PDO::PARAM_INT);
         $sth->bindValue(':imageId', $imageId, \PDO::PARAM_INT);
-        $sth->bindValue(':x', $x, \PDO::PARAM_INT);
-        $sth->bindValue(':y', $y, \PDO::PARAM_INT);
-        $sth->bindValue(':isUsedMosaic', $isUsedMosaic, \PDO::PARAM_BOOL);
+        $sth->bindValue(':x', $x, ($x !== NULL) ? \PDO::PARAM_INT : \PDO::PARAM_NULL);
+        $sth->bindValue(':y', $y, ($y !== NULL) ? \PDO::PARAM_INT : \PDO::PARAM_NULL);
+        $sth->bindValue(':isUsedMosaic', $isUsedMosaic, \PDO::PARAM_INT);
         $sth->execute();
         // insertされたカラムのIDを取得する
         $albumImageId = $this->getLatestId();

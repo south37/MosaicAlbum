@@ -119,6 +119,9 @@ CreateMosaic:{
     # 処理用変数
     // $fbGoalImageId = $goalImagePath['id'];
 
+    // DEBUG
+    $goalImageId = 1;
+
     ########
     # 処理 #
     ########
@@ -131,7 +134,7 @@ CreateMosaic:{
     $createMosaic->loadRequiredImages($goalImagePath, $albumImagePathList, $goalResizeWidth, $goalResizeHeight, $albumResizeWidth, $albumResizeHeight);
     
     # モザイク画像生成
-    $corrTwoDimension = $createMosaic->execMakeMosaicImage($goalImagePath, $goalImageId, $container);
+    $corrTwoDimension = $createMosaic->execMakeMosaicImage($saveFilePath, $goalImageId, $container);
 
     # 画像保存
     $createMosaic->saveAlbumImages($albumResizeWidth, $albumResizeHeight, $goalImageId, $albumImagePathList, $corrTwoDimension, $container);

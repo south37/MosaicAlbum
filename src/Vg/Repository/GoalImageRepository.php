@@ -45,7 +45,7 @@ class GoalImageRepository
         $sql = "UPDATE goal_image SET mosaic_path = :mosaicPath, is_make_mosaic = :isMakeMosaic WHERE id = :goalImageId";
         $sth = $this->db->prepare($sql);
         $sth->bindParam(':mosaicPath', $mosaicPath, \PDO::PARAM_STR);
-        $sth->bindParam(':isMakeMosaic', 'TRUE', \PDO::PARAM_STR);
+        $sth->bindValue(':isMakeMosaic', 1, \PDO::PARAM_INT);
         $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
         $sth->execute();
     }
