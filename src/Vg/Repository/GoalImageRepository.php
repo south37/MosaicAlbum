@@ -25,14 +25,29 @@ class GoalImageRepository
                     yoko_division = :yokoDivision,
                     is_make_mosaic = :isMakeMosaic";
         $sth = $this->db->prepare($sql);
-        $sth->bindParam(':fbGoalImageId', $fbGoalImageId, \PDO::PARAM_STR);
+        $sth->bindValue(':fbGoalImageId', $fbGoalImageId, \PDO::PARAM_STR);
         $sth->bindValue(':tateDivision', 100, \PDO::PARAM_INT);
         $sth->bindValue(':yokoDivision', 100, \PDO::PARAM_INT);
-        $sth->bindValue(':isMakeMosaic', 'FALSE', \PDO::PARAM_STR);
+        $sth->bindValue(':isMakeMosaic', 0, \PDO::PARAM_INT);
         var_dump($sth->execute());
         // insertされたカラムのIDを取得する
         $goalImageId = $this->getLatestId();
         return $goalImageId;
+    }
+
+    /**
+     * 更新（モザイクを保存）
+	 * @param  $goalImageId
+     * @param  $mosaicPath
+     */
+    public function update($goalImageId, $mosaicPath)
+    {
+        $sql = "UPDATE goal_image SET mosaic_path = :mosaicPath, is_make_mosaic = :isMakeMosaic WHERE id = :goalImageId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':mosaicPath', $mosaicPath, \PDO::PARAM_STR);
+        $sth->bindValue(':isMakeMosaic', 1, \PDO::PARAM_INT);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        $sth->execute();
     }
 
     /**

@@ -24,7 +24,6 @@ class AlbumRepository
                     fb_album_id   = :fbAlbumId";
 
         $sth = $this->db->prepare($sql);
-        var_dump($sth);
         $sth->bindValue(':userId', $album->user_id, \PDO::PARAM_INT);
         $sth->bindValue(':goalImageId', $album->goal_image_id, \PDO::PARAM_INT);
         $sth->bindParam(':fbAlbumId', $album->fb_album_id, \PDO::PARAM_STR);
