@@ -17,7 +17,7 @@ class Image
 		$this->id = $id;
 		$this->width = imagesx($id);
 		$this->height = imagesy($id);
-		$this->exntension = null;
+		$this->extension = null;
 	}
 
 	function __destruct()
