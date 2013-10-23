@@ -3,9 +3,6 @@ $ ->
     #ajaxで取得するよ
     $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
       console.log data
-      
-      #for piece in data.mosaicPieces
-        #console.log piece.x,":",piece.y
 
       # レンダラの作成．追加
       width  = window.innerWidth
@@ -24,12 +21,14 @@ $ ->
       nearClip = 1
       farClip = 10000
       camera = new THREE.PerspectiveCamera(fov,aspect,nearClip,farClip)
-      target = new THREE.Vector3(0,0,0)
-      camera.position.set(0,0,1000)
-      scene.add camera
-      camera.lookAt target
+      lookTarget = new THREE.Vector3(0,0,0)
+      cameraPosition = new THREE.Vector3(0,0,1000)
+      camera.position.copy cameraPosition
 
-      # traclball:
+      scene.add camera
+      camera.lookAt lookTarget
+
+      # traclball
       trackball = new THREE.TrackballControls(camera, renderer.domElement)
 
       # lightの作成．追加
@@ -38,20 +37,27 @@ $ ->
       scene.add directioalLight
 
       # textureのロード
+      # FB-icon
+      fb_icon_materials = data.userIcons
+      
+      # mosaic piece
+      # TODO:DBからpathlistが取得できるようになるはずです．
       pathList = [
-        "resize_0.png"
-        "resize_1.png"
-        "resize_2.png"
-        "resize_3.png"
-        "resize_4.png"
-        "resize_5.png"
-        "resize_6.png"
-        "resize_7.png"
-        "resize_8.png"
-        "resize_9.jpg"
+        "1.png"
+        "2.png"
+        "3.png"
+        "4.png"
+        "5.png"
+        "6.png"
+        "7.png"
+        "8.png"
+        "9.png"
       ]
-      texlist = (new THREE.ImageUtils.loadTexture('/img/resize_img/'+path) for path in pathList)
+      pathList = data.mosaicTextures
+
+      texlist = (new THREE.ImageUtils.loadTexture('/img/resize_img/1/'+path) for path in pathList)
       materials = (new THREE.MeshBasicMaterial {map:tex} for tex in texlist)
+
       materialNumbers =
         "img/resize_img/1/1.png":0
         "img/resize_img/1/2.png":1
@@ -62,8 +68,6 @@ $ ->
         "img/resize_img/1/7.png":6
         "img/resize_img/1/8.png":7
         "img/resize_img/1/9.png":8
-
-
 
 
       # ジオメトリの追加
@@ -77,20 +81,11 @@ $ ->
       geometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
       pieces = []
       pieces_tween = []
-      ###
-      for i in [0..col]
-        tmppieces = []
-        for j in [0..row]
-          piece = new THREE.Mesh(geometry,materials[(i+j)%10])
-          piece.position.set sizeX*i - 500, -600, 0
-          scene.add(piece)
-          tmppieces.push piece
-        pieces.push tmppieces
-      ###
-     
+      
       cnt = 0
       for piecedata in data.mosaicPieces
         # メッシュの作成
+        # TODO:initial_positionの設定
         piece = new THREE.Mesh( geometry, materials[ materialNumbers[piecedata.resize_image_path]])
         position = new THREE.Vector3(cnt-1000, -500, 0) 
         piece.position.copy position
@@ -99,7 +94,7 @@ $ ->
         # tween設定
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
         movetime = 300
-        delaytime = 500 + 10 * cnt
+        delaytime = 100 + 10 * cnt
         twn = new TWEEN.Tween(piece.position)
           .to(target , movetime)
           .delay(delaytime)
@@ -122,51 +117,18 @@ $ ->
           console.log "object clicked",obj[0].object.id
         else
           console.log "no clicked object"
-     
-      #event
-      controlMode = "none"
-      pclientX = 0
-      pclientY = 0 
       
-      $('canvas').mousedown (e)->
-        #console.log "mousedown:", e
-        controlMode = "move"
-
+      # マウスイベント：クリック：tweenスタート！
+      isTweenInitiaized = false
       $('canvas').mouseup ->
-        #console.log "mouseup"
-        controlMode = "none"
-        ###
-        for i in [0..col]
-          for j in [0..row]
-            movetime = 200 * Math.floor( Math.random() * (row+col))
-            trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,500 + movetime)
-        ###
-        for twn in pieces_tween
-          twn.start()
+        if not isTweenInitiaized
+          console.log "tweenset"
+          for twn in pieces_tween
+            twn.start()
+          isTweenInitiaized = true
 
-      $('canvas').mousemove (e) ->
-        switch controlMode
-          when "move"
-            diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
-            camera.position.add diff
-          when "zoom"
-            diff = new THREE.Vector3( 0, 0, e.clientY - pclientY)
-            camera.position.add diff
-          when "target"
-            diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
-            target.add diff
-            camera.lookAt target
-          when "reset"
-            camera.position.set 0,0,500
-            target.set 0,0,0
-            camera.lookAt target
-            controlMode = "none"
-          when "none"
-            console.log "none"
-        pclientX = e.clientX
-        pclientY = e.clientY
-
-      $(this).keypress (e) ->
+      # キーボード入力：TODO:なんかこれ動いてないっぽい
+      $('canvas').keypress (e) ->
         console.log e.which
         switch e.which
           when 113 
@@ -181,22 +143,12 @@ $ ->
           when 97
             #a
             controlMode = "reset"
+            camera.position.set 0,0,1000
+            camera.lookAt THREE.Vector3(0,0,0)
           else
             controlMode = "none"
 
-      # tween用関数
-      rendering = ->
-        renderer.render(scene,camera)
-
-      trans = (object, target, duration, delay) ->
-        #TWEEN.removeAll()
-        new TWEEN.Tween(object.position)
-          .to(target,duration)
-          .delay(delay)
-          .easing(TWEEN.Easing.Linear.None)
-          .start()
-       
-      # animation設定
+      # animation設定.毎回呼ばれる．
       anim = ->
         requestAnimationFrame anim
         trackball.update()

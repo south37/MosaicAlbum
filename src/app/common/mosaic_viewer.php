@@ -7,7 +7,7 @@
     ;
 }
 
-ゴールIDをもとにアクセスされたときの処理:{
+アクセスされたときの処理:{
   $app->get('/common/mosaic_viewer', function() use ($app, $container){
 
     # 1:init
@@ -60,12 +60,30 @@ ajax_mosaic画像リスト取得:{
     # 2.参加ユーザの画像リスト取得
     $userIconPathList = ['img/miku.jpg'];
 
-    # 3.mosaic画像リスト取得
-    $mosaicPieces = [['img/resize_img/1/1.png']];
+    # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
+    $mosaicTextures = [
+     '1.png', 
+     '2.png',
+     '3.png',
+     '4.png',
+     '5.png',
+     '6.png',
+     '7.png',
+     '8.png',
+     '9.png'
+      ];
     $mosaicPieces = $mosaicPieceRep->getMosaicPieceList($goalImageId);
 
-    # 4.ajax_return
-    $response = ["userIconPathLsit" => $userIconPathList, "mosaicPieces" => $mosaicPieces];
+    # 4.mosaic画像本体取得
+    $mosaicImage = 'img/mosaic_img/mosaic'.$goalImageId.'.png';
+
+    # 5.ajax_return
+    $response = [
+      "userIcons" => $userIconPathList,
+      "mosaicPieces" => $mosaicPieces,
+      "mosaicTextures"=>$mosaicTextures,
+      "mosaicImage"=>$mosaicImage
+      ];
     echo json_encode($response);
   })
     ->name('get mosaiclist')
