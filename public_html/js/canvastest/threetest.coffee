@@ -24,6 +24,8 @@ $ ->
     scene.add camera
     camera.lookAt target
 
+
+
     # lightの作成．追加
     directioalLight = new THREE.DirectionalLight(0xffffff,3)
     directioalLight.position.z = 300
