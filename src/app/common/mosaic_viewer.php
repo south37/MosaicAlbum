@@ -75,7 +75,7 @@ ajax_mosaic画像リスト取得:{
     $mosaicPieces = $mosaicPieceRep->getMosaicPieceList($goalImageId);
 
     # 4.mosaic画像本体取得
-    $mosaicImage = 'img/mosaic_img/mosaic'.$goalImageId.'.png';
+    $mosaicImage = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
 
     # 5.ajax_return
     $response = [

@@ -1,8 +1,15 @@
 $ ->
   window.addEventListener "DOMContentLoaded", ->
+    $('#closeModal').click ->
+      $('#modal1').toggle('toggle')
+
     #ajaxで取得するよ
     $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
       console.log data
+
+      # goalImgをmodalに追加
+      mosaicContentsStr = "<img src=#{data.mosaicImage} alt='mosaicdayo'></img>"
+      $('#modal1 .modal-body').append(mosaicContentsStr)
 
       # レンダラの作成．追加
       width  = window.innerWidth
