@@ -1,14 +1,13 @@
 $ ->
-  console.log "load threetest.coffee"
   window.addEventListener "DOMContentLoaded", ->
     
     # レンダラの作成．追加
-    width = window.innerWidth
+    width  = window.innerWidth
     height = window.innerHeight
-    render = new THREE.WebGLRenderer()
-    render.setSize(width,height)
-    $("#container").before render.domElement
-    render.setClearColor(0x000000,1)
+    renderer = new THREE.WebGLRenderer()
+    renderer.setSize(width,height)
+    $("#container").before renderer.domElement
+    renderer.setClearColor(0x000000,1)
 
     # sceneの作成
     scene = new THREE.Scene()
@@ -25,7 +24,7 @@ $ ->
     camera.lookAt target
 
     # traclball
-    trackball = new THREE.TrackballControls(camera, render.domElement)
+    trackball = new THREE.TrackballControls(camera, renderer.domElement)
 
     # lightの作成．追加
     directioalLight = new THREE.DirectionalLight(0xffffff,3)
@@ -66,10 +65,10 @@ $ ->
 
     # ray
     projector = new THREE.Projector()
-    $(render.domElement).bind 'mousedown',(e)->
-      console.log "renderclicked"
-      mouseX = ((e.pageX - e.target.offsetParent.offsetLeft) / render.domElement.width) * 2 - 1
-      mouseY = ((e.pageY - e.target.offsetParent.offsetTop) / render.domElement.height) * 2 - 1
+    $(renderer.domElement).bind 'mousedown',(e)->
+      console.log "rendererclicked"
+      mouseX = ((e.pageX - e.target.offsetParent.offsetLeft) / renderer.domElement.width) * 2 - 1
+      mouseY = ((e.pageY - e.target.offsetParent.offsetTop) / renderer.domElement.height) * 2 - 1
       vec = new THREE.Vector3 mouseX,mouseY,0
       projector.unprojectVector vec,camera
       
@@ -140,7 +139,7 @@ $ ->
 
     # tween用関数
     rendering = ->
-      render.render(scene,camera)
+      renderer.render(scene,camera)
 
     trans = (object, target, duration, delay) ->
       #TWEEN.removeAll()
@@ -155,8 +154,8 @@ $ ->
       requestAnimationFrame anim
       trackball.update()
       TWEEN.update()
-      render.render(scene,camera)
+      renderer.render(scene,camera)
 
     # main的なあれ
-    render.render(scene,camera)
+    renderer.render(scene,camera)
     anim()
