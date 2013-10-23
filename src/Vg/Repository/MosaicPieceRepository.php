@@ -38,7 +38,7 @@ class MosaicPieceRepository
         {
             $mosaicPiece = new MosaicPiece();
             $mosaicPiece->setProperties($data);
-            array_push($mosaicPieces, $mosaicPiece)
+            array_push($mosaicPieces, $mosaicPiece);
         }
         return $mosaicPieces;
     }

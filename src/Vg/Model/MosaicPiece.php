@@ -1,7 +1,7 @@
 <?php
 namespace Vg\Model;
 
-class MosaicPieces
+class MosaicPiece
 {
     public $user_id;
     public $x;
