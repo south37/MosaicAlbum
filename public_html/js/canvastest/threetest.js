@@ -2,7 +2,7 @@
 $(function() {
   return window.addEventListener("DOMContentLoaded", function() {
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, col, controlMode, directioalLight, farClip, fov, geometry, height, i, j, materials, nearClip, path, pathList, pclientX, pclientY, piece, pieces, projector, renderer, rendering, row, scene, sizeX, sizeY, target, tex, texlist, tmppieces, trackball, trans, width, _i, _j;
+      var anim, aspect, camera, cnt, col, controlMode, delaytime, directioalLight, farClip, fov, geometry, height, materialNumbers, materials, movetime, nearClip, path, pathList, pclientX, pclientY, piece, piecedata, pieces, pieces_tween, position, projector, renderer, rendering, row, scene, sizeX, sizeY, target, tex, texlist, trackball, trans, twn, width, _i, _len, _ref;
       console.log(data);
       width = window.innerWidth;
       height = window.innerHeight;
@@ -45,21 +45,51 @@ $(function() {
         }
         return _results;
       })();
+      materialNumbers = {
+        "img/resize_img/1/1.png": 0,
+        "img/resize_img/1/2.png": 1,
+        "img/resize_img/1/3.png": 2,
+        "img/resize_img/1/4.png": 3,
+        "img/resize_img/1/5.png": 4,
+        "img/resize_img/1/6.png": 5,
+        "img/resize_img/1/7.png": 6,
+        "img/resize_img/1/8.png": 7,
+        "img/resize_img/1/9.png": 8
+      };
       row = 80;
       col = 60;
       sizeX = 1000 / col;
       sizeY = 1000 / row;
+      sizeX = 10;
+      sizeY = 10;
       geometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
       pieces = [];
-      for (i = _i = 0; 0 <= col ? _i <= col : _i >= col; i = 0 <= col ? ++_i : --_i) {
-        tmppieces = [];
-        for (j = _j = 0; 0 <= row ? _j <= row : _j >= row; j = 0 <= row ? ++_j : --_j) {
-          piece = new THREE.Mesh(geometry, materials[(i + j) % 10]);
-          piece.position.set(sizeX * i - 500, -600, 0);
-          scene.add(piece);
-          tmppieces.push(piece);
-        }
-        pieces.push(tmppieces);
+      pieces_tween = [];
+      /*
+      for i in [0..col]
+        tmppieces = []
+        for j in [0..row]
+          piece = new THREE.Mesh(geometry,materials[(i+j)%10])
+          piece.position.set sizeX*i - 500, -600, 0
+          scene.add(piece)
+          tmppieces.push piece
+        pieces.push tmppieces
+      */
+
+      cnt = 0;
+      _ref = data.mosaicPieces;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        piecedata = _ref[_i];
+        piece = new THREE.Mesh(geometry, materials[materialNumbers[piecedata.resize_image_path]]);
+        position = new THREE.Vector3(cnt - 1000, -500, 0);
+        piece.position.copy(position);
+        scene.add(piece);
+        target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0);
+        movetime = 300;
+        delaytime = 500 + 10 * cnt;
+        twn = new TWEEN.Tween(piece.position).to(target, movetime).delay(delaytime);
+        pieces_tween.push(twn);
+        cnt += 1;
       }
       projector = new THREE.Projector();
       $(renderer.domElement).bind('mousedown', function(e) {
@@ -84,19 +114,19 @@ $(function() {
         return controlMode = "move";
       });
       $('canvas').mouseup(function() {
-        var movetime, _k, _results;
+        var _j, _len1, _results;
         controlMode = "none";
+        /*
+        for i in [0..col]
+          for j in [0..row]
+            movetime = 200 * Math.floor( Math.random() * (row+col))
+            trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,500 + movetime)
+        */
+
         _results = [];
-        for (i = _k = 0; 0 <= col ? _k <= col : _k >= col; i = 0 <= col ? ++_k : --_k) {
-          _results.push((function() {
-            var _l, _results1;
-            _results1 = [];
-            for (j = _l = 0; 0 <= row ? _l <= row : _l >= row; j = 0 <= row ? ++_l : --_l) {
-              movetime = 200 * Math.floor(Math.random() * (row + col));
-              _results1.push(trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 500 + movetime));
-            }
-            return _results1;
-          })());
+        for (_j = 0, _len1 = pieces_tween.length; _j < _len1; _j++) {
+          twn = pieces_tween[_j];
+          _results.push(twn.start());
         }
         return _results;
       });

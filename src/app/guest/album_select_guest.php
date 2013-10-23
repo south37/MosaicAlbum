@@ -96,8 +96,8 @@ CreateMosaic:{
     # モザイク作成されたことをお知らせする
     //createNotif($container);
 
-    $link = '/common/mosaic_viewer/'.$goalImageId;
-    //$app->redirect($link);
+    $link = '/common/mosaic_viewer/';
+    $app->redirect($link);
 
   })
     ->name('create_mosaic')
