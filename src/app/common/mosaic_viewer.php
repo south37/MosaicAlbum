@@ -48,6 +48,27 @@
     ;
 }
 
+ajax_mosaic画像リスト取得:{
+  $app->get('/common/mosaic_viewer/ajax_list', function() use ($app, $container){
+    # 1.リポジトリ，必要変数の確保 
+    $FBRep = $container['FBHelper'];
+    $goalImageId = $container['session']->get('goalImageId');
+    $mosaicPieceRep = $container['repository.mosaicPiece'];
+
+    # 2.参加ユーザの画像リスト取得
+    $userIconPathList = ['img/miku.jpg'];
+
+    # 3.mosaic画像リスト取得
+    $mosaicPieces = [];
+    $mosaicPieces = $mosaicPieceRep->getMosaicPieceList($goalImageId);
+    # 4.ajax_return
+    $response = ["userIconPathLsit" => $userIconPathList, "mosaicPieces" => $mosaicPieces];
+    echo json_encode($response);
+  })
+    ->name('get mosaiclist')
+    ;
+}
+
 ajaxのてすと:{
   $app->get('/common/mosaic_viewer_test/ajax', function() use ($app){
     $res = ["hogehoge"=>"var","bar"=>"yes"];
