@@ -77,8 +77,6 @@ $ ->
       pieces_tween = []
       
       cnt = 0
-      itwn = null
-      ptwn = false
       for piecedata in data.mosaicPieces
         # メッシュの作成
         # TODO:initial_positionの設定
@@ -90,17 +88,10 @@ $ ->
         # tween設定
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
         movetime = 300
-        delaytime = 0 + 0 * cnt
+        delaytime = 100 + 10 * cnt
         twn = new TWEEN.Tween(piece.position)
           .to(target , movetime)
           .delay(delaytime)
-        if not ptwn
-          console.log "init"
-          itwn = twn
-        else
-          console.log "add"
-          ptwn.chain(twn)
-        ptwn = twn
         pieces_tween.push twn
         cnt += 1
 
@@ -125,14 +116,9 @@ $ ->
       isTweenInitiaized = false
       $('canvas').mouseup ->
         if not isTweenInitiaized
-
           console.log "tweenset"
-          ###
           for twn in pieces_tween
             twn.start()
-          ###
-          itwn.start()
-
           isTweenInitiaized = true
 
       # キーボード入力：TODO:なんかこれ動いてないっぽい

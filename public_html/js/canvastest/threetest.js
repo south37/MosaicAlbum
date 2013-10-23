@@ -2,7 +2,7 @@
 $(function() {
   return window.addEventListener("DOMContentLoaded", function() {
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fov, geometry, height, isTweenInitiaized, itwn, lookTarget, materialNumbers, materials, movetime, nearClip, path, pathList, piece, piecedata, pieces, pieces_tween, position, projector, ptwn, renderer, row, scene, sizeX, sizeY, target, tex, texlist, trackball, twn, width, _i, _len, _ref;
+      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fov, geometry, height, isTweenInitiaized, lookTarget, materialNumbers, materials, movetime, nearClip, path, pathList, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, texlist, trackball, twn, width, _i, _len, _ref;
       console.log(data);
       width = window.innerWidth;
       height = window.innerHeight;
@@ -67,8 +67,6 @@ $(function() {
       pieces = [];
       pieces_tween = [];
       cnt = 0;
-      itwn = null;
-      ptwn = false;
       _ref = data.mosaicPieces;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         piecedata = _ref[_i];
@@ -78,16 +76,8 @@ $(function() {
         scene.add(piece);
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0);
         movetime = 300;
-        delaytime = 0 + 0 * cnt;
+        delaytime = 100 + 10 * cnt;
         twn = new TWEEN.Tween(piece.position).to(target, movetime).delay(delaytime);
-        if (!ptwn) {
-          console.log("init");
-          itwn = twn;
-        } else {
-          console.log("add");
-          ptwn.chain(twn);
-        }
-        ptwn = twn;
         pieces_tween.push(twn);
         cnt += 1;
       }
@@ -109,14 +99,13 @@ $(function() {
       });
       isTweenInitiaized = false;
       $('canvas').mouseup(function() {
+        var _j, _len1;
         if (!isTweenInitiaized) {
           console.log("tweenset");
-          /*
-          for twn in pieces_tween
-            twn.start()
-          */
-
-          itwn.start();
+          for (_j = 0, _len1 = pieces_tween.length; _j < _len1; _j++) {
+            twn = pieces_tween[_j];
+            twn.start();
+          }
           return isTweenInitiaized = true;
         }
       });
