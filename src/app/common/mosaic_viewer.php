@@ -55,14 +55,15 @@ ajax_mosaic画像リスト取得:{
     $goalImageId = 1; 
     //$goalImageId = $container['session']->get('goalImageId');
 
-    //$mosaicPieceRep = $container['repository.mosaicPiece'];
+    $mosaicPieceRep = $container['repository.mosaicPiece'];
 
     # 2.参加ユーザの画像リスト取得
     $userIconPathList = ['img/miku.jpg'];
 
     # 3.mosaic画像リスト取得
     $mosaicPieces = [['img/resize_img/1/1.png']];
-    //$mosaicPieces = $mosaicPieceRep->getMosaicPieceList($goalImageId);
+    $mosaicPieces = $mosaicPieceRep->getMosaicPieceList($goalImageId);
+
     # 4.ajax_return
     $response = ["userIconPathLsit" => $userIconPathList, "mosaicPieces" => $mosaicPieces];
     echo json_encode($response);
