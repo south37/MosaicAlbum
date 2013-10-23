@@ -2,7 +2,7 @@
 $(function() {
   return window.addEventListener("DOMContentLoaded", function() {
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, col, controlMode, directioalLight, farClip, fov, geometry, height, materialNumbers, materials, nearClip, path, pathList, pclientX, pclientY, piece, piecedata, pieces, projector, renderer, rendering, row, scene, sizeX, sizeY, target, tex, texlist, trackball, trans, width, _i, _len, _ref;
+      var anim, aspect, camera, cnt, col, controlMode, directioalLight, farClip, fov, geometry, height, materialNumbers, materials, nearClip, path, pathList, pclientX, pclientY, piece, piecedata, pieces, pieces_tween, position, projector, renderer, rendering, row, scene, sizeX, sizeY, target, tex, texlist, trackball, trans, width, _i, _len, _ref;
       console.log(data);
       width = window.innerWidth;
       height = window.innerHeight;
@@ -64,6 +64,7 @@ $(function() {
       sizeY = 10;
       geometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
       pieces = [];
+      pieces_tween = [];
       /*
       for i in [0..col]
         tmppieces = []
@@ -75,12 +76,25 @@ $(function() {
         pieces.push tmppieces
       */
 
+      cnt = 0;
       _ref = data.mosaicPieces;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         piecedata = _ref[_i];
         piece = new THREE.Mesh(geometry, materials[materialNumbers[piecedata.resize_image_path]]);
-        piece.position.set(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0);
+        position = new THREE.Vector3(cnt - 1000, -500, 0);
+        piece.position.copy(position);
         scene.add(piece);
+        /*
+        target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
+        movetime = 500
+        delaytime = 500 + 100 * cnt
+        twn = new TWEEN.Tween(piece.position)
+          .to(target , movetime)
+          .delay(delaytime)
+        pieces_tween.push twn
+        */
+
+        cnt += 1;
       }
       projector = new THREE.Projector();
       $(renderer.domElement).bind('mousedown', function(e) {
@@ -105,19 +119,19 @@ $(function() {
         return controlMode = "move";
       });
       $('canvas').mouseup(function() {
-        var i, j, movetime, _j, _results;
+        var twn, _j, _len1, _results;
         controlMode = "none";
+        /*
+        for i in [0..col]
+          for j in [0..row]
+            movetime = 200 * Math.floor( Math.random() * (row+col))
+            trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,500 + movetime)
+        */
+
         _results = [];
-        for (i = _j = 0; 0 <= col ? _j <= col : _j >= col; i = 0 <= col ? ++_j : --_j) {
-          _results.push((function() {
-            var _k, _results1;
-            _results1 = [];
-            for (j = _k = 0; 0 <= row ? _k <= row : _k >= row; j = 0 <= row ? ++_k : --_k) {
-              movetime = 200 * Math.floor(Math.random() * (row + col));
-              _results1.push(trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 500 + movetime));
-            }
-            return _results1;
-          })());
+        for (_j = 0, _len1 = pieces_tween.length; _j < _len1; _j++) {
+          twn = pieces_tween[_j];
+          _results.push(twn.start());
         }
         return _results;
       });

@@ -76,6 +76,7 @@ $ ->
       sizeY = 10
       geometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
       pieces = []
+      pieces_tween = []
       ###
       for i in [0..col]
         tmppieces = []
@@ -86,12 +87,26 @@ $ ->
           tmppieces.push piece
         pieces.push tmppieces
       ###
-      
+     
+      cnt = 0
       for piecedata in data.mosaicPieces
+        # メッシュの作成
         piece = new THREE.Mesh( geometry, materials[ materialNumbers[piecedata.resize_image_path]])
-        piece.position.set(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
+        position = new THREE.Vector3(cnt-1000, -500, 0) 
+        piece.position.copy position
         scene.add(piece)
-        
+
+        # tween設定
+        ###
+        target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
+        movetime = 500
+        delaytime = 500 + 100 * cnt
+        twn = new TWEEN.Tween(piece.position)
+          .to(target , movetime)
+          .delay(delaytime)
+        pieces_tween.push twn
+        ###
+        cnt += 1
 
       # ray
       projector = new THREE.Projector()
@@ -122,11 +137,15 @@ $ ->
       $('canvas').mouseup ->
         #console.log "mouseup"
         controlMode = "none"
+        ###
         for i in [0..col]
           for j in [0..row]
             movetime = 200 * Math.floor( Math.random() * (row+col))
             trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,500 + movetime)
-        
+        ###
+        for twn in pieces_tween
+          twn.start()
+
       $('canvas').mousemove (e) ->
         switch controlMode
           when "move"
