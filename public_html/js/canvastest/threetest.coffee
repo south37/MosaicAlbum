@@ -13,7 +13,7 @@ $ ->
 
       # レンダラの作成．追加
       width  = window.innerWidth
-      height = window.innerHeight
+      height = window.innerHeight - 100
       renderer = new THREE.WebGLRenderer()
       renderer.setSize(width,height)
       $("#container").before(renderer.domElement)

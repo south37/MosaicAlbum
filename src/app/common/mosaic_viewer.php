@@ -13,10 +13,10 @@
     # 1:init
     #リポジトリの準備
     $FBRep = $container['FBHelper'];
-    echo $FBRep->getUserId();
+    //echo $FBRep->getUserId();
 
     $goalImageId = $container['session']->get('goalImageId');
-    echo "goal:".$goalImageId;
+    //echo "goal:".$goalImageId;
 
     # 2:user
     # opt:セキュリティ処理
