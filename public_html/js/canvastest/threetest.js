@@ -2,7 +2,7 @@
 $(function() {
   return window.addEventListener("DOMContentLoaded", function() {
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cnt, col, controlMode, directioalLight, farClip, fov, geometry, height, materialNumbers, materials, nearClip, path, pathList, pclientX, pclientY, piece, piecedata, pieces, pieces_tween, position, projector, renderer, rendering, row, scene, sizeX, sizeY, target, tex, texlist, trackball, trans, width, _i, _len, _ref;
+      var anim, aspect, camera, cnt, col, controlMode, delaytime, directioalLight, farClip, fov, geometry, height, materialNumbers, materials, movetime, nearClip, path, pathList, pclientX, pclientY, piece, piecedata, pieces, pieces_tween, position, projector, renderer, rendering, row, scene, sizeX, sizeY, target, tex, texlist, trackball, trans, twn, width, _i, _len, _ref;
       console.log(data);
       width = window.innerWidth;
       height = window.innerHeight;
@@ -84,16 +84,11 @@ $(function() {
         position = new THREE.Vector3(cnt - 1000, -500, 0);
         piece.position.copy(position);
         scene.add(piece);
-        /*
-        target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
-        movetime = 500
-        delaytime = 500 + 100 * cnt
-        twn = new TWEEN.Tween(piece.position)
-          .to(target , movetime)
-          .delay(delaytime)
-        pieces_tween.push twn
-        */
-
+        target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0);
+        movetime = 300;
+        delaytime = 500 + 10 * cnt;
+        twn = new TWEEN.Tween(piece.position).to(target, movetime).delay(delaytime);
+        pieces_tween.push(twn);
         cnt += 1;
       }
       projector = new THREE.Projector();
@@ -119,7 +114,7 @@ $(function() {
         return controlMode = "move";
       });
       $('canvas').mouseup(function() {
-        var twn, _j, _len1, _results;
+        var _j, _len1, _results;
         controlMode = "none";
         /*
         for i in [0..col]

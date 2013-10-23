@@ -97,15 +97,13 @@ $ ->
         scene.add(piece)
 
         # tween設定
-        ###
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
-        movetime = 500
-        delaytime = 500 + 100 * cnt
+        movetime = 300
+        delaytime = 500 + 10 * cnt
         twn = new TWEEN.Tween(piece.position)
           .to(target , movetime)
           .delay(delaytime)
         pieces_tween.push twn
-        ###
         cnt += 1
 
       # ray
