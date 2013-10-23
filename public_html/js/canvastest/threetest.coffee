@@ -111,52 +111,16 @@ $ ->
           console.log "object clicked",obj[0].object.id
         else
           console.log "no clicked object"
-     
-      #event
-      ###
-      controlMode = "none"
-      pclientX = 0
-      pclientY = 0
-      isTweenInitiaized  = false
-      
-      $('canvas').mousedown (e)->
-        controlMode = "move"
-      ###
       
       isTweenInitiaized = false
       $('canvas').mouseup ->
-        controlMode = "none"
-        console.log "mouseup"
         if not isTweenInitiaized
           console.log "tweenset"
           for twn in pieces_tween
             twn.start()
           isTweenInitiaized = true
 
-      ###
-      $('canvas').mousemove (e) ->
-        switch controlMode
-          when "move"
-            diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
-            camera.position.add diff
-          when "zoom"
-            diff = new THREE.Vector3( 0, 0, e.clientY - pclientY)
-            camera.position.add diff
-          when "target"
-            diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
-            target.add diff
-            camera.lookAt target
-          when "reset"
-            camera.position.set 0,0,500
-            target.set 0,0,0
-            camera.lookAt target
-            controlMode = "none"
-          when "none"
-            console.log "none"
-        pclientX = e.clientX
-        pclientY = e.clientY
-      ###
-      $(this).keypress (e) ->
+      $('canvas').keypress (e) ->
         console.log e.which
         switch e.which
           when 113 
@@ -176,18 +140,6 @@ $ ->
           else
             controlMode = "none"
 
-      # tween用関数
-      rendering = ->
-        renderer.render(scene,camera)
-
-      trans = (object, target, duration, delay) ->
-        #TWEEN.removeAll()
-        new TWEEN.Tween(object.position)
-          .to(target,duration)
-          .delay(delay)
-          .easing(TWEEN.Easing.Linear.None)
-          .start()
-       
       # animation設定
       anim = ->
         requestAnimationFrame anim

@@ -2,7 +2,7 @@
 $(function() {
   return window.addEventListener("DOMContentLoaded", function() {
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fov, geometry, height, isTweenInitiaized, lookTarget, materialNumbers, materials, movetime, nearClip, path, pathList, piece, piecedata, pieces, pieces_tween, position, projector, renderer, rendering, row, scene, sizeX, sizeY, target, tex, texlist, trackball, trans, twn, width, _i, _len, _ref;
+      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fov, geometry, height, isTweenInitiaized, lookTarget, materialNumbers, materials, movetime, nearClip, path, pathList, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, texlist, trackball, twn, width, _i, _len, _ref;
       console.log(data);
       width = window.innerWidth;
       height = window.innerHeight;
@@ -97,21 +97,9 @@ $(function() {
           return console.log("no clicked object");
         }
       });
-      /*
-      controlMode = "none"
-      pclientX = 0
-      pclientY = 0
-      isTweenInitiaized  = false
-      
-      $('canvas').mousedown (e)->
-        controlMode = "move"
-      */
-
       isTweenInitiaized = false;
       $('canvas').mouseup(function() {
-        var controlMode, _j, _len1;
-        controlMode = "none";
-        console.log("mouseup");
+        var _j, _len1;
         if (!isTweenInitiaized) {
           console.log("tweenset");
           for (_j = 0, _len1 = pieces_tween.length; _j < _len1; _j++) {
@@ -121,31 +109,7 @@ $(function() {
           return isTweenInitiaized = true;
         }
       });
-      /*
-      $('canvas').mousemove (e) ->
-        switch controlMode
-          when "move"
-            diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
-            camera.position.add diff
-          when "zoom"
-            diff = new THREE.Vector3( 0, 0, e.clientY - pclientY)
-            camera.position.add diff
-          when "target"
-            diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
-            target.add diff
-            camera.lookAt target
-          when "reset"
-            camera.position.set 0,0,500
-            target.set 0,0,0
-            camera.lookAt target
-            controlMode = "none"
-          when "none"
-            console.log "none"
-        pclientX = e.clientX
-        pclientY = e.clientY
-      */
-
-      $(this).keypress(function(e) {
+      $('canvas').keypress(function(e) {
         var controlMode;
         console.log(e.which);
         switch (e.which) {
@@ -163,12 +127,6 @@ $(function() {
             return controlMode = "none";
         }
       });
-      rendering = function() {
-        return renderer.render(scene, camera);
-      };
-      trans = function(object, target, duration, delay) {
-        return new TWEEN.Tween(object.position).to(target, duration).delay(delay).easing(TWEEN.Easing.Linear.None).start();
-      };
       anim = function() {
         requestAnimationFrame(anim);
         trackball.update();
