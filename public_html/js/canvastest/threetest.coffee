@@ -86,7 +86,7 @@ $ ->
       pathList = data.mosaicTextures
 
       texlist = (new THREE.ImageUtils.loadTexture('/img/resize_img/1/'+path) for path in pathList)
-      materials = (new THREE.MeshBasicMaterial {map:tex} for tex in texlist)
+      materials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in texlist)
 
       materialNumbers =
         "img/resize_img/1/1.png":0

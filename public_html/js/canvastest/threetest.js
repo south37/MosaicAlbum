@@ -61,7 +61,8 @@ $(function() {
         for (_i = 0, _len = texlist.length; _i < _len; _i++) {
           tex = texlist[_i];
           _results.push(new THREE.MeshBasicMaterial({
-            map: tex
+            map: tex,
+            side: THREE.DoubleSide
           }));
         }
         return _results;
