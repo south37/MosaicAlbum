@@ -2,7 +2,7 @@
 $(function() {
   console.log("load threetest.coffee");
   return window.addEventListener("DOMContentLoaded", function() {
-    var anim, aspect, camera, col, controlMode, directioalLight, far, fov, geometry, height, i, j, materials, near, path, pathList, pclientX, pclientY, piece, pieces, projector, render, rendering, row, scene, sizeX, sizeY, target, tex, texlist, tmppieces, trans, width, _i, _j;
+    var anim, aspect, camera, col, controlMode, directioalLight, far, fov, geometry, height, i, j, materials, near, path, pathList, pclientX, pclientY, piece, pieces, projector, render, rendering, row, scene, sizeX, sizeY, target, tex, texlist, tmppieces, trackball, trans, width, _i, _j;
     width = window.innerWidth;
     height = window.innerHeight;
     render = new THREE.WebGLRenderer();
@@ -19,6 +19,7 @@ $(function() {
     camera.position.set(0, 0, 1000);
     scene.add(camera);
     camera.lookAt(target);
+    trackball = new THREE.TrackballControls(camera, render.domElement);
     directioalLight = new THREE.DirectionalLight(0xffffff, 3);
     directioalLight.position.z = 300;
     scene.add(directioalLight);
@@ -148,6 +149,7 @@ $(function() {
     };
     anim = function() {
       requestAnimationFrame(anim);
+      trackball.update();
       TWEEN.update();
       return render.render(scene, camera);
     };

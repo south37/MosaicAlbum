@@ -24,7 +24,8 @@ $ ->
     scene.add camera
     camera.lookAt target
 
-
+    # traclball
+    trackball = new THREE.TrackballControls(camera, render.domElement)
 
     # lightの作成．追加
     directioalLight = new THREE.DirectionalLight(0xffffff,3)
@@ -153,6 +154,7 @@ $ ->
     # animation設定
     anim = ->
       requestAnimationFrame anim
+      trackball.update()
       TWEEN.update()
       render.render scene,camera
 
