@@ -54,19 +54,17 @@ class CreateMosaic
                 // 対応関係から画像を作成
                 $mosaicImage = self::makeMosaicImageByCorrAlbumImage($corrTwoDimension, $this->goalImage, $this->albumCalculationImageDataList);
 
-                // update内容
-                $data = [
-                        'id' => $goalImageId,
-                        'mosaic_path' => $filePath,
-                        'is_make_mosaic' => true
-                ];
-
                 // [サーバー上でコメント解除]
                 $container['repository.goalImage']->update($goalImageId, $filePath);
 
+                $old = umask(0002);
                 // ファイルの保存
+                var_dump($filePath); echo '<br>';
+                var_dump($old); echo '<br>';
                 imagepng($mosaicImage, $filePath);
                 imagedestroy($mosaicImage);
+
+                umask($old);
 
                 return $corrTwoDimension;
         }
@@ -131,8 +129,8 @@ class CreateMosaic
                 // ファイルの保存されるパーミッションを775変更する
                 $old = umask(0002);
                 // 対応するディレクトリを作成
-                $folderPath = 'resize_img/' . $goalImageId;
-                if(!is_dir($folderPath)) mkdir($folderPath);
+                $folderPath = 'img/resize_img/' . $goalImageId;
+                if(!is_dir($folderPath)) mkdir($folderPath, 0775);
                 foreach($albumImageInfosList as $albumId => $albumImageInfos)
                 {
                         for($i = 0, $n = count($this->albumSaveImageDataList[$albumId]); $i < $n; ++$i)
