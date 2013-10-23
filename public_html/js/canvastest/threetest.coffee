@@ -3,13 +3,36 @@ $ ->
     $('#closeModal').click ->
       $('#modal1').toggle('toggle')
 
+    #tooltip test
+    options =
+      placement:'top'
+      title:'くりっくしてね！'
+      triger:'hover'
+    $('#showModal').tooltip(options)
+
+    # modal画面の生成
+    $('#modal1 .modal-header')
+      .empty()
+      .append("<h3>members:xx,oo</h3>")
+    $('#modal1 .modal-body')
+      .empty()
+    $('#modal1 .modal-footer')
+      .empty()
+      .append('右クリックで保存できます ')
+      .append('<button id="fb_share" class="btni btn-primary">facebookでshare</button>')
+
+    $('#fb_share').click ->
+      alert "shareしたよ"
+
+
     #ajaxで取得するよ
     $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
       console.log data
-
+      
       # goalImgをmodalに追加
       mosaicContentsStr = "<img src=#{data.mosaicImage} alt='mosaicdayo'></img>"
-      $('#modal1 .modal-body').append(mosaicContentsStr)
+      $('#modal1 .modal-body')
+        .append(mosaicContentsStr)
 
       # レンダラの作成．追加
       width  = window.innerWidth
