@@ -44,6 +44,7 @@ $ ->#jquery使えるようにする
     square.x = x
     square.y = y 
     square.addEventListener "click", (e)->
+      # ajaxロード
       console.log("image clicked")
       $.getJSON "/common/mosaic_viewer_test/ajax", (data)->
         console.log data

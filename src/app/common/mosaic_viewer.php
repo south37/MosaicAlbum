@@ -8,20 +8,22 @@
 }
 
 ゴールIDをもとにアクセスされたときの処理:{
-  $app->get('/common/mosaic_viewer/:goalId', function($goalId) use ($app, $container){
+  $app->get('/common/mosaic_viewer', function() use ($app, $container){
 
     # 1:init
     #リポジトリの準備
     $FBRep = $container['FBHelper'];
     echo $FBRep->getUserId();
-  
+
+    $goalImageId = $container['session']->get('goalImageId');
+    echo "goal:".$goalImageId;
 
     # 2:user
     # opt:セキュリティ処理
 
 
     #参加ユーザリスト作成
-    
+
 
     #参加ユーザ：FBアイコンパス取得
 
@@ -40,8 +42,7 @@
     #画面レンダリング
 
 
-
-    $app->render('common/mosaic_viewer.html.twig',['goalId' => $goalId]);
+    $app->render('common/mosaic_viewer.html.twig',['goalId' => $goalImageId]);
   })
     ->name('mosaic_viewer')
     ;
