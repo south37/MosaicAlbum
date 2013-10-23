@@ -141,28 +141,29 @@ class FBHelperRepository
         return $images;
     }
 
-    public function getFriends()
-    {
-        $this->setAccessToken();
-        
-        try {
-            $fbFriends = $this->facebook->api('/'.$this->getUserId().'/friends')['data'];
-        } catch (FacebookApiException $e) {
-            return [];
-        }
 
-        $friends = [];
-        foreach($fbFriends as $fbFriend) {
-            $friend = [
-                'id'            => $fbFriend['id'],
-                'name'          => $fbFriend['name'],
-                'iconImagePath' => 'https://graph.facebook.com/'.$fbFriend['id'].'/picture',
-            ];
-            array_push($friends, $friend);
-        }
- 
-        return $friends;
-    }
+//    public function getFriends()
+//    {
+//        $this->setAccessToken();
+//        
+//        try {
+//            $fbFriends = $this->facebook->api('/'.$this->getUserId().'/friends')['data'];
+//        } catch (FacebookApiException $e) {
+//            return [];
+//        }
+//
+//        $friends = [];
+//        foreach($fbFriends as $fbFriend) {
+//            $friend = [
+//                'id'            => $fbFriend['id'],
+//                'name'          => $fbFriend['name'],
+//                'iconImagePath' => 'https://graph.facebook.com/'.$fbFriend['id'].'/picture',
+//            ];
+//            array_push($friends, $friend);
+//        }
+// 
+//        return $friends;
+//    }
 
       // facebook 埋め込みのページでないと通知は出来ない模様
 //    public function notify($friendId)
