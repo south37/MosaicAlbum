@@ -83,7 +83,7 @@ $(function() {
       return controlMode = "move";
     });
     $('canvas').mouseup(function() {
-      var _k, _results;
+      var movetime, _k, _results;
       controlMode = "none";
       _results = [];
       for (i = _k = 0; 0 <= col ? _k <= col : _k >= col; i = 0 <= col ? ++_k : --_k) {
@@ -91,7 +91,8 @@ $(function() {
           var _l, _results1;
           _results1 = [];
           for (j = _l = 0; 0 <= row ? _l <= row : _l >= row; j = 0 <= row ? ++_l : --_l) {
-            _results1.push(trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 500 + 100 * (Math.floor(Math.random() * (row + col)))));
+            movetime = 200 * Math.floor(Math.random() * (row + col));
+            _results1.push(trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 500 + movetime));
           }
           return _results1;
         })());
