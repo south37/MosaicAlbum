@@ -2,7 +2,7 @@
 $(function() {
   return window.addEventListener("DOMContentLoaded", function() {
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cnt, col, controlMode, delaytime, directioalLight, farClip, fov, geometry, height, materialNumbers, materials, movetime, nearClip, path, pathList, pclientX, pclientY, piece, piecedata, pieces, pieces_tween, position, projector, renderer, rendering, row, scene, sizeX, sizeY, target, tex, texlist, trackball, trans, twn, width, _i, _len, _ref;
+      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fov, geometry, height, isTweenInitiaized, lookTarget, materialNumbers, materials, movetime, nearClip, path, pathList, piece, piecedata, pieces, pieces_tween, position, projector, renderer, rendering, row, scene, sizeX, sizeY, target, tex, texlist, trackball, trans, twn, width, _i, _len, _ref;
       console.log(data);
       width = window.innerWidth;
       height = window.innerHeight;
@@ -16,21 +16,22 @@ $(function() {
       nearClip = 1;
       farClip = 10000;
       camera = new THREE.PerspectiveCamera(fov, aspect, nearClip, farClip);
-      target = new THREE.Vector3(0, 0, 0);
-      camera.position.set(0, 0, 1000);
+      lookTarget = new THREE.Vector3(0, 0, 0);
+      cameraPosition = new THREE.Vector3(0, 0, 1000);
+      camera.position.copy(cameraPosition);
       scene.add(camera);
-      camera.lookAt(target);
+      camera.lookAt(lookTarget);
       trackball = new THREE.TrackballControls(camera, renderer.domElement);
       directioalLight = new THREE.DirectionalLight(0xffffff, 3);
       directioalLight.position.z = 300;
       scene.add(directioalLight);
-      pathList = ["resize_0.png", "resize_1.png", "resize_2.png", "resize_3.png", "resize_4.png", "resize_5.png", "resize_6.png", "resize_7.png", "resize_8.png", "resize_9.jpg"];
+      pathList = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"];
       texlist = (function() {
         var _i, _len, _results;
         _results = [];
         for (_i = 0, _len = pathList.length; _i < _len; _i++) {
           path = pathList[_i];
-          _results.push(new THREE.ImageUtils.loadTexture('/img/resize_img/' + path));
+          _results.push(new THREE.ImageUtils.loadTexture('/img/resize_img/1/' + path));
         }
         return _results;
       })();
@@ -65,17 +66,6 @@ $(function() {
       geometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
       pieces = [];
       pieces_tween = [];
-      /*
-      for i in [0..col]
-        tmppieces = []
-        for j in [0..row]
-          piece = new THREE.Mesh(geometry,materials[(i+j)%10])
-          piece.position.set sizeX*i - 500, -600, 0
-          scene.add(piece)
-          tmppieces.push piece
-        pieces.push tmppieces
-      */
-
       cnt = 0;
       _ref = data.mosaicPieces;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -107,58 +97,56 @@ $(function() {
           return console.log("no clicked object");
         }
       });
-      controlMode = "none";
-      pclientX = 0;
-      pclientY = 0;
-      $('canvas').mousedown(function(e) {
-        return controlMode = "move";
-      });
-      $('canvas').mouseup(function() {
-        var _j, _len1, _results;
-        controlMode = "none";
-        /*
-        for i in [0..col]
-          for j in [0..row]
-            movetime = 200 * Math.floor( Math.random() * (row+col))
-            trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,500 + movetime)
-        */
+      /*
+      controlMode = "none"
+      pclientX = 0
+      pclientY = 0
+      isTweenInitiaized  = false
+      
+      $('canvas').mousedown (e)->
+        controlMode = "move"
+      */
 
-        _results = [];
-        for (_j = 0, _len1 = pieces_tween.length; _j < _len1; _j++) {
-          twn = pieces_tween[_j];
-          _results.push(twn.start());
+      isTweenInitiaized = false;
+      $('canvas').mouseup(function() {
+        var controlMode, _j, _len1;
+        controlMode = "none";
+        console.log("mouseup");
+        if (!isTweenInitiaized) {
+          console.log("tweenset");
+          for (_j = 0, _len1 = pieces_tween.length; _j < _len1; _j++) {
+            twn = pieces_tween[_j];
+            twn.start();
+          }
+          return isTweenInitiaized = true;
         }
-        return _results;
       });
-      $('canvas').mousemove(function(e) {
-        var diff;
-        switch (controlMode) {
-          case "move":
-            diff = new THREE.Vector3(-e.clientX + pclientX, e.clientY - pclientY, 0);
-            camera.position.add(diff);
-            break;
-          case "zoom":
-            diff = new THREE.Vector3(0, 0, e.clientY - pclientY);
-            camera.position.add(diff);
-            break;
-          case "target":
-            diff = new THREE.Vector3(-e.clientX + pclientX, e.clientY - pclientY, 0);
-            target.add(diff);
-            camera.lookAt(target);
-            break;
-          case "reset":
-            camera.position.set(0, 0, 500);
-            target.set(0, 0, 0);
-            camera.lookAt(target);
-            controlMode = "none";
-            break;
-          case "none":
-            console.log("none");
-        }
-        pclientX = e.clientX;
-        return pclientY = e.clientY;
-      });
+      /*
+      $('canvas').mousemove (e) ->
+        switch controlMode
+          when "move"
+            diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
+            camera.position.add diff
+          when "zoom"
+            diff = new THREE.Vector3( 0, 0, e.clientY - pclientY)
+            camera.position.add diff
+          when "target"
+            diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
+            target.add diff
+            camera.lookAt target
+          when "reset"
+            camera.position.set 0,0,500
+            target.set 0,0,0
+            camera.lookAt target
+            controlMode = "none"
+          when "none"
+            console.log "none"
+        pclientX = e.clientX
+        pclientY = e.clientY
+      */
+
       $(this).keypress(function(e) {
+        var controlMode;
         console.log(e.which);
         switch (e.which) {
           case 113:
@@ -168,7 +156,9 @@ $(function() {
           case 101:
             return controlMode = controlMode === "target" ? "none" : "target";
           case 97:
-            return controlMode = "reset";
+            controlMode = "reset";
+            camera.position.set(0, 0, 1000);
+            return camera.lookAt(THREE.Vector3(0, 0, 0));
           default:
             return controlMode = "none";
         }
