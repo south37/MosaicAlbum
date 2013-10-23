@@ -2,7 +2,7 @@
 $(function() {
   return window.addEventListener("DOMContentLoaded", function() {
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fov, geometry, height, isTweenInitiaized, lookTarget, materialNumbers, materials, movetime, nearClip, path, pathList, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, texlist, trackball, twn, width, _i, _len, _ref;
+      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fb_icon_materials, fov, geometry, height, isTweenInitiaized, lookTarget, materialNumbers, materials, movetime, nearClip, path, pathList, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, texlist, trackball, twn, width, _i, _len, _ref;
       console.log(data);
       width = window.innerWidth;
       height = window.innerHeight;
@@ -25,7 +25,9 @@ $(function() {
       directioalLight = new THREE.DirectionalLight(0xffffff, 3);
       directioalLight.position.z = 300;
       scene.add(directioalLight);
+      fb_icon_materials = data.userIcons;
       pathList = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"];
+      pathList = data.mosaicTextures;
       texlist = (function() {
         var _i, _len, _results;
         _results = [];

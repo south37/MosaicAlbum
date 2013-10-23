@@ -37,6 +37,10 @@ $ ->
       scene.add directioalLight
 
       # textureのロード
+      # FB-icon
+      fb_icon_materials = data.userIcons
+      
+      # mosaic piece
       # TODO:DBからpathlistが取得できるようになるはずです．
       pathList = [
         "1.png"
@@ -49,9 +53,11 @@ $ ->
         "8.png"
         "9.png"
       ]
+      pathList = data.mosaicTextures
 
       texlist = (new THREE.ImageUtils.loadTexture('/img/resize_img/1/'+path) for path in pathList)
       materials = (new THREE.MeshBasicMaterial {map:tex} for tex in texlist)
+
       materialNumbers =
         "img/resize_img/1/1.png":0
         "img/resize_img/1/2.png":1
