@@ -3,6 +3,9 @@ $ ->
     #ajaxで取得するよ
     $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
       console.log data
+      
+      #for piece in data.mosaicPieces
+        #console.log piece.x,":",piece.y
 
       # レンダラの作成．追加
       width  = window.innerWidth
@@ -49,14 +52,31 @@ $ ->
       ]
       texlist = (new THREE.ImageUtils.loadTexture('/img/resize_img/'+path) for path in pathList)
       materials = (new THREE.MeshBasicMaterial {map:tex} for tex in texlist)
+      materialNumbers =
+        "img/resize_img/1/1.png":0
+        "img/resize_img/1/2.png":1
+        "img/resize_img/1/3.png":2
+        "img/resize_img/1/4.png":3
+        "img/resize_img/1/5.png":4
+        "img/resize_img/1/6.png":5
+        "img/resize_img/1/7.png":6
+        "img/resize_img/1/8.png":7
+        "img/resize_img/1/9.png":8
+
+
+
 
       # ジオメトリの追加
       row = 80
       col = 60
       sizeX = 1000/col
       sizeY = 1000/row
+
+      sizeX = 10
+      sizeY = 10
       geometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
       pieces = []
+      ###
       for i in [0..col]
         tmppieces = []
         for j in [0..row]
@@ -65,6 +85,13 @@ $ ->
           scene.add(piece)
           tmppieces.push piece
         pieces.push tmppieces
+      ###
+      
+      for piecedata in data.mosaicPieces
+        piece = new THREE.Mesh( geometry, materials[ materialNumbers[piecedata.resize_image_path]])
+        piece.position.set(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
+        scene.add(piece)
+        
 
       # ray
       projector = new THREE.Projector()
