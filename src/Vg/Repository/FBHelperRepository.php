@@ -57,18 +57,6 @@ class FBHelperRepository
         return $loginUrl;
     }
 
-    public function getLoginUrlWithGoalImageId($goalImageId)
-    {
-        $params = [
-            'scope'        => 'user_photos,friends_photos',
-            'redirect_uri' => 'http://mosaicalbum.com/login_process?goalImageId='.$goalImageId,
-            'display'      => 'popup'
-        ];
-        $loginUrl = $this->facebook->getLoginUrl($params);
-        
-        return $loginUrl;
-    }
-
     public function getUserProfileForRegistration()
     {
         try {
