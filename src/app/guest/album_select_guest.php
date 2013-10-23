@@ -104,6 +104,9 @@ CreateMosaic:{
     ;
 
   function createMosaic($goalImageId, $goalImagePath, $albumImagePathList, $container){
+    // DEBUG
+    $goalImageId = 1;
+    
     # だっちのプログラムはここに移植
     $saveFilePath = 'img/mosaic_img/'.'mosaic'.$goalImageId.'.png';
 
@@ -120,9 +123,6 @@ CreateMosaic:{
     
     # 処理用変数
     // $fbGoalImageId = $goalImagePath['id'];
-
-    // DEBUG
-    $goalImageId = 1;
 
     ########
     # 処理 #
