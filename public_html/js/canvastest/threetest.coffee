@@ -24,7 +24,8 @@ $ ->
     scene.add camera
     camera.lookAt target
 
-
+    # traclball
+    trackball = new THREE.TrackballControls(camera, render.domElement)
 
     # lightの作成．追加
     directioalLight = new THREE.DirectionalLight(0xffffff,3)
@@ -94,7 +95,8 @@ $ ->
       controlMode = "none"
       for i in [0..col]
         for j in [0..row]
-          trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,500 + 100*(Math.floor(Math.random()*(row+col))))
+          movetime = 200 * Math.floor( Math.random() * (row+col))
+          trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,500 + movetime)
       
     $('canvas').mousemove (e) ->
       switch controlMode
@@ -123,19 +125,18 @@ $ ->
       switch e.which
         when 113 
           #q
-          controlMode = if controlMode == "move" then "none" else "move"   
+          controlMode = if controlMode == "move" then "none" else "move"
         when 119
           #w
           controlMode = if controlMode == "zoom" then "none" else "zoom"
         when 101
           #e
-          controlMode = if controlMode == "target" then "none" else "target"   
+          controlMode = if controlMode == "target" then "none" else "target"
         when 97
           #a
           controlMode = "reset"
         else
           controlMode = "none"
-
 
     # tween用関数
     rendering = ->
@@ -144,7 +145,6 @@ $ ->
     trans = (object, target, duration, delay) ->
       #TWEEN.removeAll()
       new TWEEN.Tween(object.position)
-        #.to({x:target.x , y:target.y , z:target.z} , duration)
         .to(target,duration)
         .delay(delay)
         .easing(TWEEN.Easing.Linear.None)
@@ -153,8 +153,9 @@ $ ->
     # animation設定
     anim = ->
       requestAnimationFrame anim
+      trackball.update()
       TWEEN.update()
-      render.render scene,camera
+      render.render(scene,camera)
 
     # main的なあれ
     render.render(scene,camera)

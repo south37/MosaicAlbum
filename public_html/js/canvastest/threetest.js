@@ -2,7 +2,7 @@
 $(function() {
   console.log("load threetest.coffee");
   return window.addEventListener("DOMContentLoaded", function() {
-    var anim, aspect, camera, col, controlMode, directioalLight, far, fov, geometry, height, i, j, materials, near, path, pathList, pclientX, pclientY, piece, pieces, projector, render, rendering, row, scene, sizeX, sizeY, target, tex, texlist, tmppieces, trans, width, _i, _j;
+    var anim, aspect, camera, col, controlMode, directioalLight, far, fov, geometry, height, i, j, materials, near, path, pathList, pclientX, pclientY, piece, pieces, projector, render, rendering, row, scene, sizeX, sizeY, target, tex, texlist, tmppieces, trackball, trans, width, _i, _j;
     width = window.innerWidth;
     height = window.innerHeight;
     render = new THREE.WebGLRenderer();
@@ -19,6 +19,7 @@ $(function() {
     camera.position.set(0, 0, 1000);
     scene.add(camera);
     camera.lookAt(target);
+    trackball = new THREE.TrackballControls(camera, render.domElement);
     directioalLight = new THREE.DirectionalLight(0xffffff, 3);
     directioalLight.position.z = 300;
     scene.add(directioalLight);
@@ -82,7 +83,7 @@ $(function() {
       return controlMode = "move";
     });
     $('canvas').mouseup(function() {
-      var _k, _results;
+      var movetime, _k, _results;
       controlMode = "none";
       _results = [];
       for (i = _k = 0; 0 <= col ? _k <= col : _k >= col; i = 0 <= col ? ++_k : --_k) {
@@ -90,7 +91,8 @@ $(function() {
           var _l, _results1;
           _results1 = [];
           for (j = _l = 0; 0 <= row ? _l <= row : _l >= row; j = 0 <= row ? ++_l : --_l) {
-            _results1.push(trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 500 + 100 * (Math.floor(Math.random() * (row + col)))));
+            movetime = 200 * Math.floor(Math.random() * (row + col));
+            _results1.push(trans(pieces[i][j], new THREE.Vector3(sizeX * i - 500, sizeY * j - 500, 0), 100, 500 + movetime));
           }
           return _results1;
         })());
@@ -148,6 +150,7 @@ $(function() {
     };
     anim = function() {
       requestAnimationFrame(anim);
+      trackball.update();
       TWEEN.update();
       return render.render(scene, camera);
     };
