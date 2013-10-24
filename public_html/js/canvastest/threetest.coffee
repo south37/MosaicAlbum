@@ -1,13 +1,13 @@
 $ ->
   window.addEventListener "DOMContentLoaded", ->
-      #tooltip test
-    options =
-      placement:'top'
-      title:'くりっくしてね！'
-      triger:'hover'
-    $('#showModal').tooltip(options)
+    #tooltip test
+    $('#showMosaic')
+      .tooltip
+        placement:'top'
+        title:'くりっくしてね'
+        triger:'hover'
 
-    # modal画面の生成
+    # modal画面のinit
     $('#modal1 .modal-header')
       .empty()
       .append("members:xx,oo")
@@ -44,15 +44,12 @@ $ ->
 
     $('#fb_share').click ->
       alert "shareしたよ"
-   
+
     #ajaxで取得するよ
     $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
       console.log data
-      
+
       # goalImgをmodalに追加
-      #mosaicContentsStr = "<img src=#{data.mosaicImage} alt='mosaicdayo'></img>"
-      #$('#modal1 .modal-body')
-        #.append(mosaicContentsStr)
       mosaicImagePath = data.mosaicImage
 
       # レンダラの作成．追加
