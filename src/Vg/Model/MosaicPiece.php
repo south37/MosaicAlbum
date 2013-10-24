@@ -7,7 +7,7 @@ class MosaicPiece
     public $x;
     public $y;
     public $fb_image_id;
-    public $resize_image_path;
+    public $image_id;
 
     public function __construct()
     {
@@ -15,7 +15,7 @@ class MosaicPiece
 
     public function setProperties($data)
     {
-        foreach (array('user_id', 'x', 'y', 'fb_image_id', 'resize_image_path') as $property) {
+        foreach (array('user_id', 'x', 'y', 'fb_image_id', 'image_id') as $property) {
             $this->{$property} = (isset($data[$property]))? $data[$property]: "";
         }
     }
