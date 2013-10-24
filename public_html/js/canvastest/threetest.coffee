@@ -135,13 +135,21 @@ $ ->
       projector = new THREE.Projector()
       $(renderer.domElement).bind 'mousedown',(e)->
         console.log "rendererclicked"
-        mouseX = ((e.pageX - e.target.offsetParent.offsetLeft) / renderer.domElement.width) * 2 - 1
-        mouseY = ((e.pageY - e.target.offsetParent.offsetTop) / renderer.domElement.height) * 2 - 1
-        vec = new THREE.Vector3 mouseX,mouseY,0
+        console.log e
+       
+        #画面上の位置
+        mouseX2D = e.clientX - e.target.clientLeft
+        mouseY2D = e.clientY - e.target.clientTop
+       
+        # 3D空間での位置．-1~1に正規化
+        mouseX3D = (mouseX2D / e.target.width) * 2 - 1
+        mouseY3D = (mouseY2D / e.target.height) * -2 + 1
+        
+        vec = new THREE.Vector3 mouseX3D,mouseY3D,-1
         projector.unprojectVector vec,camera
         
         ray = new THREE.Raycaster(camera.position, vec.sub(camera.position).normalize())
-        obj = ray.intersectObjects scene.children,true 
+        obj = ray.intersectObjects scene.children,true
     
         if obj.length > 0
           console.log "object clicked",obj[0].object.id
