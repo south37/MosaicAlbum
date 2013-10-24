@@ -212,6 +212,10 @@ $ ->
           else
             controlMode = "none"
 
+      
+      $(window).bind 'resize', ->
+        console.log "window resize"
+
       # animation設定.毎回呼ばれる．
       anim = ->
         requestAnimationFrame anim

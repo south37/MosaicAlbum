@@ -167,6 +167,9 @@ $(function() {
             return controlMode = "none";
         }
       });
+      $(window).bind('resize', function() {
+        return console.log("window resize");
+      });
       anim = function() {
         requestAnimationFrame(anim);
         trackball.update();
