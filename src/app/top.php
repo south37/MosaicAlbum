@@ -6,6 +6,10 @@ $app->get('/', function() use ($app, $container) {
     $input = $app->request()->get();
     $session = $container['session'];
 
+    if (array_key_exists('code', $input)) {
+        $app->redirect($app->urlFor('login_process'));
+    }
+
     if (array_key_exists('goalImageId', $input)) {
         $session->set('goalImageId', $input['goalImageId']);
     }
