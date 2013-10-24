@@ -30,13 +30,26 @@ ajax_mosaic画像リスト取得:{
 
     # 2.参加ユーザの画像リスト取得
     # 参加ユーザリスト作成
+    $userIdList = [
+      '2147483647' 
+      ];
 
     # 参加ユーザアイコン取得
+    #
     $userIconPathList = [
       '/img/test/miku1.jpg',
       '/img/test/miku2.jpg',
       '/img/test/miku3.jpg'
       ];
+
+    # userIDとiconPathのペアを返しましょう
+    $userInfo = [
+      [
+      'userID' => '2147483647',
+      'iconPath' => '/img/test/miku2.jpg',
+      ]
+      ];
+    
 
     # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
     $mosaicTextures = [
@@ -57,10 +70,10 @@ ajax_mosaic画像リスト取得:{
 
     # 5.ajax_return
     $response = [
-      "userIcons" => $userIconPathList,
-      "mosaicPieces" => $mosaicPieces,
-      "mosaicTextures"=>$mosaicTextures,
-      "mosaicImage"=>$mosaicImage
+      "userInfo"        => $userInfo,
+      "mosaicPieces"    => $mosaicPieces,
+      "mosaicTextures"  => $mosaicTextures,
+      "mosaicImage"     => $mosaicImage
       ];
     echo json_encode($response);
   })

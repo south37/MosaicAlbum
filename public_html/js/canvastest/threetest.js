@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconPathList, fbIconTexList, fov, height, isTweenInitiaized, lookTarget, material, materialNumbers, mosaicPieceGeometry, mosaicPieceMaterials, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, trackball, twn, width, _i, _j, _len, _len1, _ref;
+      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconTexList, fbUserInfo, fov, height, info, isTweenInitiaized, lookTarget, material, materialNumbers, mosaicPieceGeometry, mosaicPieceMaterials, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, trackball, twn, width, _i, _j, _len, _len1, _ref;
       console.log(data);
       mosaicImagePath = data.mosaicImage;
       width = window.innerWidth;
@@ -54,13 +54,13 @@ $(function() {
       directioalLight = new THREE.DirectionalLight(0xffffff, 3);
       directioalLight.position.z = 300;
       scene.add(directioalLight);
-      fbIconPathList = data.userIcons;
+      fbUserInfo = data.userInfo;
       fbIconTexList = (function() {
         var _i, _len, _results;
         _results = [];
-        for (_i = 0, _len = fbIconPathList.length; _i < _len; _i++) {
-          path = fbIconPathList[_i];
-          _results.push(new THREE.ImageUtils.loadTexture(path));
+        for (_i = 0, _len = fbUserInfo.length; _i < _len; _i++) {
+          info = fbUserInfo[_i];
+          _results.push(new THREE.ImageUtils.loadTexture(info.iconPath));
         }
         return _results;
       })();

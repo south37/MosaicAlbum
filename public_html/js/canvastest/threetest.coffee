@@ -94,8 +94,8 @@ $ ->
       # imgpath取得/texture化/material化
 
       # FB-icon
-      fbIconPathList  = data.userIcons
-      fbIconTexList   = (new THREE.ImageUtils.loadTexture(path) for path in fbIconPathList)
+      fbUserInfo  = data.userInfo
+      fbIconTexList   = (new THREE.ImageUtils.loadTexture(info.iconPath) for info in fbUserInfo)
       fbIconMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in fbIconTexList)
       
       # mosaic piece
