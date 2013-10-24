@@ -129,8 +129,6 @@ $ ->
         "125":7
         "126":8
 
-
-
       # ジオメトリの追加
       row = 80
       col = 60
@@ -149,9 +147,9 @@ $ ->
 
       pieces = []
       pieces_tween = []
+      
      
       # メッシュ(ジオメトリ＋マテリアル)の生成．これがシーンにaddされる．
-     
       # fb_icon
       cnt = 0
       for material in fbIconMaterials
@@ -169,7 +167,8 @@ $ ->
       # mosaic
       cnt = 0
       for piecedata in data.mosaicPieces
-        piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[ mosaicPieceMap[piecedata.image_id]])
+        #piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[ mosaicPieceMap[piecedata.image_id]])
+        piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials_[piecedata.image_id])
         
         # TODO:initial_positionの設定
         # 対応するユーザの位置を初期値にしましょう．

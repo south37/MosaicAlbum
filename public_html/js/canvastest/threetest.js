@@ -156,7 +156,7 @@ $(function() {
       _ref1 = data.mosaicPieces;
       for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
         piecedata = _ref1[_j];
-        piece = new THREE.Mesh(mosaicPieceGeometry, mosaicPieceMaterials[mosaicPieceMap[piecedata.image_id]]);
+        piece = new THREE.Mesh(mosaicPieceGeometry, mosaicPieceMaterials_[piecedata.image_id]);
         piece.position.copy(userPosList[piecedata.user_id]);
         piece.fb_image_id = piecedata.fb_image_id;
         scene.add(piece);
