@@ -85,13 +85,6 @@ $(function() {
         }
         return _results;
       })();
-      /*
-      fbIconMaterials_ = {}
-      for userInfo in fbUserInfoList
-        tmpTex = new THREE.ImageUtils.loadTexture(userInfo.iconPath)
-        fbIconMaterials_[userInfo.userID] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
-      */
-
       mosaicPiecePathList = data.mosaicTextures;
       mosaicPieceTexList = (function() {
         var _i, _len, _results;
@@ -114,13 +107,6 @@ $(function() {
         }
         return _results;
       })();
-      /*
-      mosaicPieceMaterials_ = {}
-      for texInfo in data.mosaicPieceMap
-        tmpTex = new THREE.ImageUtils.loadTexture(texInfo.path)
-        mosaicPieceMaterials_[texInfo.image_id] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
-      */
-
       mosaicPieceMap = {
         "118": 0,
         "119": 1,

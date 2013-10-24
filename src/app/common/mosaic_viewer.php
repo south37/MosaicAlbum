@@ -49,7 +49,8 @@ ajax_mosaic画像リスト取得:{
       'iconPath' => '/img/test/miku2.jpg',
       ]
       ];
-    
+
+    $userInfo_ = ['2147483647'=>'/img/test/miku2.jpg'];
 
     # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
     $mosaicTextures = [
@@ -65,7 +66,8 @@ ajax_mosaic画像リスト取得:{
       ];
     $mosaicPieces   = $mosaicPieceRep->getMosaicPieceList($goalImageId);
     $mosaicPieceMap = $mosaicPieceRep->getResizeImagePathList($goalImageId);
-    //$mosaicPieceMap = ['hoge'];
+    //$mosaicPieceMap = $mosaicPieceRep->getResizeImagePathList($goalImageId);
+    $mosaicPieceMap = ['123'=>'/img/test/miku1.jpg'];
     # 4.mosaic画像本体取得
     $mosaicImage = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
 
