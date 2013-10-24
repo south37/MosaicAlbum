@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconTexList, fbUserIdList, fbUserInfoList, fov, height, info, isTweenInitiaized, lookTarget, material, materialNumbers, mosaicPieceGeometry, mosaicPieceMaterials, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, trackball, twn, userPosList, width, _i, _j, _len, _len1, _ref;
+      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconTexList, fbUserIdList, fbUserInfoList, fov, height, info, isTweenInitiaized, lookTarget, material, mosaicPieceGeometry, mosaicPieceMap, mosaicPieceMaterials, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, trackball, twn, userPosList, width, _i, _j, _len, _len1, _ref;
       console.log(data);
       mosaicImagePath = data.mosaicImage;
       width = window.innerWidth;
@@ -107,7 +107,7 @@ $(function() {
         }
         return _results;
       })();
-      materialNumbers = {
+      mosaicPieceMap = {
         "img/resize_img/1/1.png": 0,
         "img/resize_img/1/2.png": 1,
         "img/resize_img/1/3.png": 2,
@@ -116,7 +116,16 @@ $(function() {
         "img/resize_img/1/6.png": 5,
         "img/resize_img/1/7.png": 6,
         "img/resize_img/1/8.png": 7,
-        "img/resize_img/1/9.png": 8
+        "img/resize_img/1/9.png": 8,
+        "118": 0,
+        "119": 1,
+        "120": 2,
+        "121": 3,
+        "122": 4,
+        "123": 5,
+        "124": 6,
+        "125": 7,
+        "126": 8
       };
       row = 80;
       col = 60;
@@ -146,7 +155,7 @@ $(function() {
       _ref = data.mosaicPieces;
       for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
         piecedata = _ref[_j];
-        piece = new THREE.Mesh(mosaicPieceGeometry, mosaicPieceMaterials[materialNumbers[piecedata.resize_image_path]]);
+        piece = new THREE.Mesh(mosaicPieceGeometry, mosaicPieceMaterials[mosaicPieceMap[piecedata.image_id]]);
         piece.position.copy(userPosList[piecedata.user_id]);
         piece.fb_image_id = piecedata.fb_image_id;
         scene.add(piece);
