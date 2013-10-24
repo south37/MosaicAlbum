@@ -40,15 +40,15 @@ ajax_mosaic画像リスト取得:{
 
     # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
     $mosaicTextures = [
-     '1.png', 
-     '2.png',
-     '3.png',
-     '4.png',
-     '5.png',
-     '6.png',
-     '7.png',
-     '8.png',
-     '9.png'
+     '/img/resize_img/1/1.png', 
+     '/img/resize_img/1/2.png',
+     '/img/resize_img/1/3.png',
+     '/img/resize_img/1/4.png',
+     '/img/resize_img/1/5.png',
+     '/img/resize_img/1/6.png',
+     '/img/resize_img/1/7.png',
+     '/img/resize_img/1/8.png',
+     '/img/resize_img/1/9.png'
       ];
     $mosaicPieces = $mosaicPieceRep->getMosaicPieceList($goalImageId);
 

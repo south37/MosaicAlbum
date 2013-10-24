@@ -101,10 +101,10 @@ $ ->
       # mosaic piece
       # TODO:DBからpathlistが取得できるようになるはずです．
       mosaicPiecePathList  = data.mosaicTextures
-      mosaicPieceTexList   = (new THREE.ImageUtils.loadTexture('/img/resize_img/1/'+path) for path in mosaicPiecePathList)
+      mosaicPieceTexList   = (new THREE.ImageUtils.loadTexture(path) for path in mosaicPiecePathList)
       mosaicPieceMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in mosaicPieceTexList)
 
-      # debug用．pathとmosaicPiecePathListを対応させている．
+      # debug用．pathとmosaicPieceMaterialsを対応させている．
       materialNumbers =
         "img/resize_img/1/1.png":0
         "img/resize_img/1/2.png":1
@@ -123,19 +123,40 @@ $ ->
       sizeX = 1000/col
       sizeY = 1000/row
 
+      sizeX = 100
+      sizeY = 100
+      fbIconGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1)
+
       sizeX = 10
       sizeY = 10
-      geometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
+      mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
+
       pieces = []
       pieces_tween = []
-      
+     
+      # メッシュ(ジオメトリ＋マテリアル)の生成．これがシーンにaddされる．
+     
+      # fb_icon
+      cnt = 0
+      for material in fbIconMaterials
+        piece = new THREE.Mesh( fbIconGeometry, material)
+
+        position = new THREE.Vector3( 100 * cnt, 200, 100)
+        piece.position.copy position
+        scene.add piece
+        cnt += 1
+
+      # mosaic
       cnt = 0
       for piecedata in data.mosaicPieces
-        # メッシュの作成
+        piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[ materialNumbers[piecedata.resize_image_path]])
+        
         # TODO:initial_positionの設定
-        piece = new THREE.Mesh( geometry, mosaicPieceMaterials[ materialNumbers[piecedata.resize_image_path]])
-        position = new THREE.Vector3(cnt-1000, -500, 0) 
+        # 対応するユーザの位置を初期値にしましょう．
+        position = new THREE.Vector3( sizeX * (cnt % 200) - 1000, -100 - 10 * (cnt / 200), 0) 
         piece.position.copy position
+        
+        # クリック時にfb_image_idを取得するための属性追加
         piece.fb_image_id = piecedata.fb_image_id
         scene.add(piece)
 
