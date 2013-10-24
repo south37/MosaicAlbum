@@ -42,4 +42,33 @@ class MosaicPieceRepository
         }
         return $mosaicPieces;
     }
+    
+    /**
+     * ゴールイメージIDで画像のパスを全て取得する
+     * @param  $goalImageId
+     * @return MosaicPiece[]
+     */
+    public function getResizeImagePathList($goalImageId)
+    {
+        $sql = <<< SQL
+            SELECT * FROM image
+                INNER JOIN album_image
+                    ON image.id = album_image.image_id
+            WHERE
+                album_image.is_latest = 1 AND
+                album_image.album_id IN
+                    (SELECT album.id FROM album
+                    WHERE album.goal_image_id = :goalImageId);
+SQL;
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        $sth->execute();
+        $resizeImagePathList = [];
+        while($data = $sth->fetch(\PDO::FETCH_ASSOC))
+        {
+            $resizeImagePath = $data['resize_image_path'];
+            array_push($resizeImagePathList, $resizeImagePath);
+        }
+        return $resizeImagePathList;
+    }
 }
