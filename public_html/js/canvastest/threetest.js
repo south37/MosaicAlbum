@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconTexList, fbUserIdList, fbUserInfoList, fov, height, info, isTweenInitiaized, lookTarget, material, mosaicPieceGeometry, mosaicPieceMap, mosaicPieceMaterials, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, trackball, twn, userPosList, width, _i, _j, _len, _len1, _ref;
+      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconMaterials_, fbIconTexList, fbUserIdList, fbUserInfoList, fov, height, info, isTweenInitiaized, lookTarget, material, mosaicPieceGeometry, mosaicPieceMap, mosaicPieceMaterials, mosaicPieceMaterials_, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, texInfo, tmpTex, trackball, twn, userInfo, userPosList, width, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1;
       console.log(data);
       mosaicImagePath = data.mosaicImage;
       width = window.innerWidth;
@@ -85,21 +85,30 @@ $(function() {
         }
         return _results;
       })();
+      fbIconMaterials_ = {};
+      for (_i = 0, _len = fbUserInfoList.length; _i < _len; _i++) {
+        userInfo = fbUserInfoList[_i];
+        tmpTex = new THREE.ImageUtils.loadTexture(userInfo.iconPath);
+        fbIconMaterials_[userInfo.userID] = new THREE.MeshBasicMaterial({
+          map: tmpTex,
+          side: THREE.DoubleSide
+        });
+      }
       mosaicPiecePathList = data.mosaicTextures;
       mosaicPieceTexList = (function() {
-        var _i, _len, _results;
+        var _j, _len1, _results;
         _results = [];
-        for (_i = 0, _len = mosaicPiecePathList.length; _i < _len; _i++) {
-          path = mosaicPiecePathList[_i];
+        for (_j = 0, _len1 = mosaicPiecePathList.length; _j < _len1; _j++) {
+          path = mosaicPiecePathList[_j];
           _results.push(new THREE.ImageUtils.loadTexture(path));
         }
         return _results;
       })();
       mosaicPieceMaterials = (function() {
-        var _i, _len, _results;
+        var _j, _len1, _results;
         _results = [];
-        for (_i = 0, _len = mosaicPieceTexList.length; _i < _len; _i++) {
-          tex = mosaicPieceTexList[_i];
+        for (_j = 0, _len1 = mosaicPieceTexList.length; _j < _len1; _j++) {
+          tex = mosaicPieceTexList[_j];
           _results.push(new THREE.MeshBasicMaterial({
             map: tex,
             side: THREE.DoubleSide
@@ -107,16 +116,17 @@ $(function() {
         }
         return _results;
       })();
+      mosaicPieceMaterials_ = {};
+      _ref = data.mosaicPieceMap;
+      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+        texInfo = _ref[_j];
+        tmpTex = new THREE.ImageUtils.loadTexture(texInfo.path);
+        mosaicPieceMaterials_[texInfo.image_id] = new THREE.MeshBasicMaterial({
+          map: tmpTex,
+          side: THREE.DoubleSide
+        });
+      }
       mosaicPieceMap = {
-        "img/resize_img/1/1.png": 0,
-        "img/resize_img/1/2.png": 1,
-        "img/resize_img/1/3.png": 2,
-        "img/resize_img/1/4.png": 3,
-        "img/resize_img/1/5.png": 4,
-        "img/resize_img/1/6.png": 5,
-        "img/resize_img/1/7.png": 6,
-        "img/resize_img/1/8.png": 7,
-        "img/resize_img/1/9.png": 8,
         "118": 0,
         "119": 1,
         "120": 2,
@@ -141,8 +151,8 @@ $(function() {
       pieces = [];
       pieces_tween = [];
       cnt = 0;
-      for (_i = 0, _len = fbIconMaterials.length; _i < _len; _i++) {
-        material = fbIconMaterials[_i];
+      for (_k = 0, _len2 = fbIconMaterials.length; _k < _len2; _k++) {
+        material = fbIconMaterials[_k];
         piece = new THREE.Mesh(fbIconGeometry, material);
         position = new THREE.Vector3(100 * cnt, -300, 100);
         piece.position.copy(position);
@@ -152,9 +162,9 @@ $(function() {
       }
       console.log(userPosList);
       cnt = 0;
-      _ref = data.mosaicPieces;
-      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-        piecedata = _ref[_j];
+      _ref1 = data.mosaicPieces;
+      for (_l = 0, _len3 = _ref1.length; _l < _len3; _l++) {
+        piecedata = _ref1[_l];
         piece = new THREE.Mesh(mosaicPieceGeometry, mosaicPieceMaterials[mosaicPieceMap[piecedata.image_id]]);
         piece.position.copy(userPosList[piecedata.user_id]);
         piece.fb_image_id = piecedata.fb_image_id;
@@ -191,11 +201,11 @@ $(function() {
       });
       isTweenInitiaized = false;
       $('canvas').mouseup(function() {
-        var _k, _len2;
+        var _len4, _m;
         if (!isTweenInitiaized) {
           console.log("tweenset");
-          for (_k = 0, _len2 = pieces_tween.length; _k < _len2; _k++) {
-            twn = pieces_tween[_k];
+          for (_m = 0, _len4 = pieces_tween.length; _m < _len4; _m++) {
+            twn = pieces_tween[_m];
             twn.start();
           }
           return isTweenInitiaized = true;
