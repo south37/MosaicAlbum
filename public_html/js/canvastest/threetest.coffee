@@ -53,11 +53,14 @@ $ ->
       mosaicImagePath = data.mosaicImage
 
       # レンダラの作成．追加
-      width  = window.innerWidth
+      width  = window.innerWidth 
       height = window.innerHeight - 100
+      width  = $('#container').innerWidth()
+      #height = $('#container').innerHeight()
       renderer = new THREE.WebGLRenderer()
       renderer.setSize(width,height)
-      $("#container").before(renderer.domElement)
+      #$("#container").before(renderer.domElement)
+      $('#forCanvas').append(renderer.domElement) 
       renderer.setClearColor(0x000000,1)
 
       # sceneの作成
@@ -208,6 +211,15 @@ $ ->
             camera.lookAt THREE.Vector3(0,0,0)
           else
             controlMode = "none"
+
+      
+      $(window).bind 'resize', ->
+        console.log "window resize"
+        width = $('#container').innerWidth()
+        height = window.innerHeight - 100
+        renderer.setSize width,height
+        camera.aspect = width / height
+        camera.updateProjectionMatrix()
 
       # animation設定.毎回呼ばれる．
       anim = ->
