@@ -50,7 +50,7 @@ ajax_mosaic画像リスト取得:{
       ]
       ];
 
-    $userInfo_ = ['2147483647'=>'/img/test/miku2.jpg'];
+    $userInfo = ['2147483647'=>'/img/test/miku2.jpg'];
 
     # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
     $mosaicTextures = [

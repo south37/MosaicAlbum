@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconTexList, fbUserIdList, fbUserInfoList, fov, height, info, isTweenInitiaized, key, lookTarget, material, mosaicPieceGeometry, mosaicPieceMap, mosaicPieceMaterials, mosaicPieceMaterials_, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, tmpTex, trackball, twn, userPosList, val, width, _i, _j, _len, _len1, _ref, _ref1;
+      var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, isTweenInitiaized, key, lookTarget, mosaicPieceGeometry, mosaicPieceMaterials, moveTime, nearClip, offsetTime, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn, userPosList, val, width, _i, _len, _ref, _ref1, _ref2;
       console.log(data);
       mosaicImagePath = data.mosaicImage;
       width = window.innerWidth;
@@ -54,84 +54,26 @@ $(function() {
       directioalLight = new THREE.DirectionalLight(0xffffff, 3);
       directioalLight.position.z = 300;
       scene.add(directioalLight);
-      fbUserInfoList = data.userInfo;
-      fbUserIdList = (function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = fbUserInfoList.length; _i < _len; _i++) {
-          info = fbUserInfoList[_i];
-          _results.push(info.userID);
-        }
-        return _results;
-      })();
-      fbIconTexList = (function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = fbUserInfoList.length; _i < _len; _i++) {
-          info = fbUserInfoList[_i];
-          _results.push(new THREE.ImageUtils.loadTexture(info.iconPath));
-        }
-        return _results;
-      })();
-      fbIconMaterials = (function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = fbIconTexList.length; _i < _len; _i++) {
-          tex = fbIconTexList[_i];
-          _results.push(new THREE.MeshBasicMaterial({
-            map: tex,
-            side: THREE.DoubleSide
-          }));
-        }
-        return _results;
-      })();
-      mosaicPiecePathList = data.mosaicTextures;
-      mosaicPieceTexList = (function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = mosaicPiecePathList.length; _i < _len; _i++) {
-          path = mosaicPiecePathList[_i];
-          _results.push(new THREE.ImageUtils.loadTexture(path));
-        }
-        return _results;
-      })();
-      mosaicPieceMaterials = (function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = mosaicPieceTexList.length; _i < _len; _i++) {
-          tex = mosaicPieceTexList[_i];
-          _results.push(new THREE.MeshBasicMaterial({
-            map: tex,
-            side: THREE.DoubleSide
-          }));
-        }
-        return _results;
-      })();
-      mosaicPieceMaterials_ = {};
-      _ref = data.mosaicPieceMap;
+      fbIconMaterials = {};
+      _ref = data.userInfo;
       for (key in _ref) {
         val = _ref[key];
-        tmpTex = new THREE.ImageUtils.loadTexture('/' + val);
-        mosaicPieceMaterials_[key] = new THREE.MeshBasicMaterial({
+        tmpTex = new THREE.ImageUtils.loadTexture(val);
+        fbIconMaterials[key] = new THREE.MeshBasicMaterial({
           map: tmpTex,
           side: THREE.DoubleSide
         });
       }
-      mosaicPieceMap = {
-        "118": 0,
-        "119": 1,
-        "120": 2,
-        "121": 3,
-        "122": 4,
-        "123": 5,
-        "124": 6,
-        "125": 7,
-        "126": 8
-      };
-      row = 80;
-      col = 60;
-      sizeX = 1000 / col;
-      sizeY = 1000 / row;
+      mosaicPieceMaterials = {};
+      _ref1 = data.mosaicPieceMap;
+      for (key in _ref1) {
+        val = _ref1[key];
+        tmpTex = new THREE.ImageUtils.loadTexture('/' + val);
+        mosaicPieceMaterials[key] = new THREE.MeshBasicMaterial({
+          map: tmpTex,
+          side: THREE.DoubleSide
+        });
+      }
       sizeX = 100;
       sizeY = 100;
       fbIconGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
@@ -139,37 +81,36 @@ $(function() {
       sizeX = 10;
       sizeY = 10;
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
-      pieces = [];
-      pieces_tween = [];
+      tweenList = [];
       cnt = 0;
-      for (_i = 0, _len = fbIconMaterials.length; _i < _len; _i++) {
-        material = fbIconMaterials[_i];
-        piece = new THREE.Mesh(fbIconGeometry, material);
+      for (key in fbIconMaterials) {
+        val = fbIconMaterials[key];
+        piece = new THREE.Mesh(fbIconGeometry, val);
         position = new THREE.Vector3(100 * cnt, -300, 100);
         piece.position.copy(position);
         scene.add(piece);
-        userPosList[fbUserIdList[cnt]] = position;
+        userPosList[key] = position;
         cnt += 1;
       }
       console.log(userPosList);
       cnt = 0;
-      _ref1 = data.mosaicPieces;
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        piecedata = _ref1[_j];
-        piece = new THREE.Mesh(mosaicPieceGeometry, mosaicPieceMaterials[mosaicPieceMap[piecedata.image_id]]);
+      _ref2 = data.mosaicPieces;
+      for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+        piecedata = _ref2[_i];
+        piece = new THREE.Mesh(mosaicPieceGeometry, mosaicPieceMaterials[piecedata.image_id]);
         piece.position.copy(userPosList[piecedata.user_id]);
         piece.fb_image_id = piecedata.fb_image_id;
         scene.add(piece);
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0);
-        movetime = 300;
-        delaytime = 100 + 10 * cnt;
-        twn = new TWEEN.Tween(piece.position).to(target, movetime).delay(delaytime);
-        pieces_tween.push(twn);
+        moveTime = 300;
+        offsetTime = 100 + 10 * cnt;
+        twn = new TWEEN.Tween(piece.position).to(target, moveTime).delay(offsetTime);
+        tweenList.push(twn);
         cnt += 1;
       }
       projector = new THREE.Projector();
       $(renderer.domElement).bind('mousedown', function(e) {
-        var mouseX2D, mouseX3D, mouseY2D, mouseY3D, obj, ray, tmp_id, vec;
+        var mouseX2D, mouseX3D, mouseY2D, mouseY3D, obj, path, ray, tmp_id, vec;
         console.log("rendererclicked");
         mouseX2D = e.clientX - e.target.clientLeft;
         mouseY2D = e.clientY - e.target.clientTop;
@@ -192,32 +133,13 @@ $(function() {
       });
       isTweenInitiaized = false;
       $('canvas').mouseup(function() {
-        var _k, _len2;
+        var _j, _len1;
         if (!isTweenInitiaized) {
-          console.log("tweenset");
-          for (_k = 0, _len2 = pieces_tween.length; _k < _len2; _k++) {
-            twn = pieces_tween[_k];
+          for (_j = 0, _len1 = tweenList.length; _j < _len1; _j++) {
+            twn = tweenList[_j];
             twn.start();
           }
           return isTweenInitiaized = true;
-        }
-      });
-      $('canvas').keypress(function(e) {
-        var controlMode;
-        console.log(e.which);
-        switch (e.which) {
-          case 113:
-            return controlMode = controlMode === "move" ? "none" : "move";
-          case 119:
-            return controlMode = controlMode === "zoom" ? "none" : "zoom";
-          case 101:
-            return controlMode = controlMode === "target" ? "none" : "target";
-          case 97:
-            controlMode = "reset";
-            camera.position.set(0, 0, 1000);
-            return camera.lookAt(THREE.Vector3(0, 0, 0));
-          default:
-            return controlMode = "none";
         }
       });
       $(window).bind('resize', function() {

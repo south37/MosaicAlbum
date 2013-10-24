@@ -45,6 +45,10 @@ $ ->
     $('#fb_share').click ->
       alert "shareしたよ"
 
+    # *************************** 
+    # three.jsの処理はこれ以降！
+    # ***************************
+    
     #ajaxで取得するよ
     $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
       console.log data
@@ -90,91 +94,72 @@ $ ->
 
 
       # 2:描画素材を準備
-      # material生成
-      # imgpath取得/texture化/material化
+      # マテリアル + ジオメトリ => メッシュ
+
+      # 2-1:マテリアル生成
+      # process:imgpath取得/texture化/material化
 
       # FB-icon
-      fbUserInfoList  = data.userInfo
-      fbUserIdList =(info.userID for info in fbUserInfoList)
-      fbIconTexList   = (new THREE.ImageUtils.loadTexture(info.iconPath) for info in fbUserInfoList)
-      fbIconMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in fbIconTexList)
-
-      #fbIconMaterials_ = {}
-      #for key,val of data.userInfo
-        ## key:val = userId:iconImgPath
-        #tmpTex = new THREE.ImageUtils.loadTexture(val)
-        #fbIconMaterials_[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
+      fbIconMaterials = {}
+      for key,val of data.userInfo
+        # key:val = userId:iconImgPath
+        tmpTex = new THREE.ImageUtils.loadTexture(val)
+        fbIconMaterials[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
       
       # mosaic piece
-      # TODO:DBからpathlistが取得できるようになるはずです．
-      mosaicPiecePathList  = data.mosaicTextures
-      mosaicPieceTexList   = (new THREE.ImageUtils.loadTexture(path) for path in mosaicPiecePathList)
-      mosaicPieceMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in mosaicPieceTexList)
-
-      mosaicPieceMaterials_ = {}
+      mosaicPieceMaterials = {}
       for key,val of data.mosaicPieceMap
         # key:val = image_id : image_path
         tmpTex = new THREE.ImageUtils.loadTexture('/' + val)
-        mosaicPieceMaterials_[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
-
-      # debug用．pathとmosaicPieceMaterialsを対応させている．
-      mosaicPieceMap =
-        "118":0
-        "119":1
-        "120":2
-        "121":3
-        "122":4
-        "123":5
-        "124":6
-        "125":7
-        "126":8
+        mosaicPieceMaterials[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
 
 
+      # 2-2:ジオメトリ作成
+      # process:種類とサイズを指定
 
-      # ジオメトリの追加
-      row = 80
-      col = 60
-      sizeX = 1000/col
-      sizeY = 1000/row
-
+      # fb-icon
       sizeX = 100
       sizeY = 100
       fbIconGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1)
 
       userPosList = {}
 
+      # mosaic-piece
       sizeX = 10
       sizeY = 10
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
 
-      pieces = []
-      pieces_tween = []
+      tweenList = []
+      
      
-      # メッシュ(ジオメトリ＋マテリアル)の生成．これがシーンにaddされる．
-     
+      # 2-3:メッシュ(ジオメトリ＋マテリアル)の生成．これがシーンにaddされる．
+      # process:
+      # メッシュインスタンス生成
+      # 位置指定
+      # シーンに追加
+      # tween設定
+
       # fb_icon
       cnt = 0
-      for material in fbIconMaterials
-        piece = new THREE.Mesh( fbIconGeometry, material)
+      for key,val of fbIconMaterials
+        piece = new THREE.Mesh( fbIconGeometry, val)
 
         position = new THREE.Vector3( 100 * cnt, -300, 100)
         piece.position.copy position
         scene.add piece
 
-        userPosList[fbUserIdList[cnt]] = position
+        userPosList[key] = position
         cnt += 1
 
       console.log userPosList
 
-      # mosaic
+      # mosaic-piece
       cnt = 0
       for piecedata in data.mosaicPieces
-        piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[ mosaicPieceMap[piecedata.image_id]])
+        piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[piecedata.image_id])
         
         # TODO:initial_positionの設定
         # 対応するユーザの位置を初期値にしましょう．
-        #position = new THREE.Vector3( sizeX * (cnt % 200) - 1000, -100 - 10 * (cnt / 200), 0) 
-        #piece.position.copy position
         piece.position.copy userPosList[piecedata.user_id]
 
         # クリック時にfb_image_idを取得するための属性追加
@@ -182,20 +167,24 @@ $ ->
         scene.add(piece)
 
         # tween設定
+        # 終了位置・移動時間・オフセット時間を指定
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
-        movetime = 300
-        delaytime = 100 + 10 * cnt
+        moveTime = 300
+        offsetTime = 100 + 10 * cnt
+
+        # tweenオブジェクト生成
         twn = new TWEEN.Tween(piece.position)
-          .to(target , movetime)
-          .delay(delaytime)
-        pieces_tween.push twn
+          .to(target , moveTime)
+          .delay(offsetTime)
+        tweenList.push twn
         cnt += 1
 
       # ray
       projector = new THREE.Projector()
       $(renderer.domElement).bind 'mousedown',(e)->
         console.log "rendererclicked"
-       
+      
+        #TODO:picker修復
         #画面上の位置
         mouseX2D = e.clientX - e.target.clientLeft
         mouseY2D = e.clientY - e.target.clientTop
@@ -224,32 +213,9 @@ $ ->
       isTweenInitiaized = false
       $('canvas').mouseup ->
         if not isTweenInitiaized
-          console.log "tweenset"
-          for twn in pieces_tween
+          for twn in tweenList
             twn.start()
           isTweenInitiaized = true
-
-      # キーボード入力：TODO:なんかこれ動いてないっぽい
-      $('canvas').keypress (e) ->
-        console.log e.which
-        switch e.which
-          when 113 
-            #q
-            controlMode = if controlMode == "move" then "none" else "move"
-          when 119
-            #w
-            controlMode = if controlMode == "zoom" then "none" else "zoom"
-          when 101
-            #e
-            controlMode = if controlMode == "target" then "none" else "target"
-          when 97
-            #a
-            controlMode = "reset"
-            camera.position.set 0,0,1000
-            camera.lookAt THREE.Vector3(0,0,0)
-          else
-            controlMode = "none"
-
       
       $(window).bind 'resize', ->
         console.log "window resize"
