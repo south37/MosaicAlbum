@@ -105,9 +105,8 @@ $(function() {
       }
       projector = new THREE.Projector();
       $(renderer.domElement).bind('mousedown', function(e) {
-        var mouseX2D, mouseX3D, mouseY2D, mouseY3D, obj, ray, vec;
+        var mouseX2D, mouseX3D, mouseY2D, mouseY3D, obj, ray, tmp_id, vec;
         console.log("rendererclicked");
-        console.log(e);
         mouseX2D = e.clientX - e.target.clientLeft;
         mouseY2D = e.clientY - e.target.clientTop;
         mouseX3D = (mouseX2D / e.target.width) * 2 - 1;
@@ -117,7 +116,12 @@ $(function() {
         ray = new THREE.Raycaster(camera.position, vec.sub(camera.position).normalize());
         obj = ray.intersectObjects(scene.children, true);
         if (obj.length > 0) {
-          return console.log("object clicked:fbId:", obj[0].fb_image_id);
+          tmp_id = obj[0].object.fb_image_id;
+          path = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id;
+          return $.getJSON(path, function(data) {
+            console.log(data);
+            return $('#modal1 .modal-body').empty().append("<img src=" + data.fb_image_path + "></img>");
+          });
         } else {
           return console.log("no clicked object");
         }

@@ -136,7 +136,6 @@ $ ->
       projector = new THREE.Projector()
       $(renderer.domElement).bind 'mousedown',(e)->
         console.log "rendererclicked"
-        console.log e
        
         #画面上の位置
         mouseX2D = e.clientX - e.target.clientLeft
@@ -147,14 +146,20 @@ $ ->
         mouseY3D = (mouseY2D / e.target.height) * -2 + 1
         
         vec = new THREE.Vector3 mouseX3D,mouseY3D,-1
+
         projector.unprojectVector vec,camera
-        
         ray = new THREE.Raycaster(camera.position, vec.sub(camera.position).normalize())
         obj = ray.intersectObjects scene.children,true
-    
+        
+        # クリックされたオブジェクトに対する処理
         if obj.length > 0
-          console.log "object clicked:fbId:",obj[0].fb_image_id
-          #TODO:ajaxでtmp画像取得
+          tmp_id = obj[0].object.fb_image_id
+          path = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
+          $.getJSON path, (data)->
+            console.log data
+            $('#modal1 .modal-body')
+              .empty()
+              .append("<img src=#{data.fb_image_path}></img>")
         else
           console.log "no clicked object"
       

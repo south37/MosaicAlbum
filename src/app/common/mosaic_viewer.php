@@ -10,7 +10,7 @@
 アクセスされたときの処理:{
   $app->get('/common/mosaic_viewer', function() use ($app, $container){
     # TODO:user認証いるかな？
-
+    $goalImageId = $container['session']->get('goalImageId');
 
     #画面レンダリング
     $app->render('common/mosaic_viewer.html.twig',['goalId' => $goalImageId]);
@@ -70,11 +70,12 @@ ajaxでFB_Image_DLしてリンク取得:{
     $FBHelper = $container['FBHelper'];
 
     # 2.画像パス取得
+    # TODO:fb_image_idから対応パスを取得しましょう
     $fb_image_path = "/img/miku.jpg";
 
     # 3.ajax_return
     $response = [
-      "fb_image_path":$fb_image_path
+      "fb_image_path"=>$fb_image_path
       ];
     echo json_encode($response);
   })
