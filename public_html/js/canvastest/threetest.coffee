@@ -94,8 +94,8 @@ $ ->
       # imgpath取得/texture化/material化
 
       # FB-icon
-      fbUserInfo  = data.userInfo
-      fbIconTexList   = (new THREE.ImageUtils.loadTexture(info.iconPath) for info in fbUserInfo)
+      fbUserInfoList  = data.userInfo
+      fbIconTexList   = (new THREE.ImageUtils.loadTexture(info.iconPath) for info in fbUserInfoList)
       fbIconMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in fbIconTexList)
       
       # mosaic piece
@@ -127,6 +127,8 @@ $ ->
       sizeY = 100
       fbIconGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1)
 
+      userPosList = []
+
       sizeX = 10
       sizeY = 10
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
@@ -141,9 +143,10 @@ $ ->
       for material in fbIconMaterials
         piece = new THREE.Mesh( fbIconGeometry, material)
 
-        position = new THREE.Vector3( 100 * cnt, 200, 100)
+        position = new THREE.Vector3( 100 * cnt, -300, 100)
         piece.position.copy position
         scene.add piece
+        userPosList.push position
         cnt += 1
 
       # mosaic
