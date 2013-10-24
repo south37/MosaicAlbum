@@ -10,7 +10,7 @@ $ ->
     # modal画面の生成
     $('#modal1 .modal-header')
       .empty()
-      .append("<h3>members:xx,oo</h3>")
+      .append("members:xx,oo")
       .append('<button id="closeModal" class="btn">x</button>')
     $('#modal1 .modal-body')
       .empty()
@@ -19,31 +19,41 @@ $ ->
       .append('右クリックで保存できます ')
       .append('<button id="fb_share" class="btni btn-primary">facebookでshare</button>')
 
-    mosaicContentsStr = ""
-    $('#showModal').click ->
-      $('#modal1').modal('toggle')
-      console.log mosaicContentsStr
+    # クリックイベント
+    # html
+    mosaicImagePath = ""
+    selectedImagePath = ""
 
+    $('#showMosaic').click ->
+      $('#modal1 .modal-body')
+        .empty()
+        .append("<img src=#{mosaicImagePath} alt='modaicImg'></img>")
+      $('#modal1').modal('toggle')
+      console.log mosaicImagePath
+
+    $('#showSelect').click ->
+      $('#modal1 .modal-body')
+        .empty()
+        .append("<img src=#{selectedImagePath} alt='selectedImg'></img>")
+      $('#modal1').modal('toggle')
+      console.log selectedImagePath
+
+    # modal
     $('#closeModal').click ->
       $('#modal1').modal('toggle')
 
     $('#fb_share').click ->
       alert "shareしたよ"
-
-    content = '<button id="modalBtn" class="btn">modal</button>'
-    $('body').append(content)
-    $('#modalBtn').click ->
-      $('#modal1').modal('toggle')
-
    
     #ajaxで取得するよ
     $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
       console.log data
       
       # goalImgをmodalに追加
-      mosaicContentsStr = "<img src=#{data.mosaicImage} alt='mosaicdayo'></img>"
-      $('#modal1 .modal-body')
-        .append(mosaicContentsStr)
+      #mosaicContentsStr = "<img src=#{data.mosaicImage} alt='mosaicdayo'></img>"
+      #$('#modal1 .modal-body')
+        #.append(mosaicContentsStr)
+      mosaicImagePath = data.mosaicImage
 
       # レンダラの作成．追加
       width  = window.innerWidth
@@ -168,10 +178,7 @@ $ ->
           path = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
           $.getJSON path, (data)->
             console.log data
-            mosaicContentsStr = data.fb_image_path
-            $('#modal1 .modal-body')
-              .empty()
-              .append("<img src=#{data.fb_image_path}></img>")
+            selectedImagePath = data.fb_image_path
         else
           console.log "no clicked object"
       
