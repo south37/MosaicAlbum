@@ -99,22 +99,26 @@ $ ->
       fbIconTexList   = (new THREE.ImageUtils.loadTexture(info.iconPath) for info in fbUserInfoList)
       fbIconMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in fbIconTexList)
 
+      ###
       fbIconMaterials_ = {}
       for userInfo in fbUserInfoList
         tmpTex = new THREE.ImageUtils.loadTexture(userInfo.iconPath)
         fbIconMaterials_[userInfo.userID] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
-      
+      ###
+
       # mosaic piece
       # TODO:DBからpathlistが取得できるようになるはずです．
       mosaicPiecePathList  = data.mosaicTextures
       mosaicPieceTexList   = (new THREE.ImageUtils.loadTexture(path) for path in mosaicPiecePathList)
       mosaicPieceMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in mosaicPieceTexList)
 
+      ###
       mosaicPieceMaterials_ = {}
       for texInfo in data.mosaicPieceMap
         tmpTex = new THREE.ImageUtils.loadTexture(texInfo.path)
         mosaicPieceMaterials_[texInfo.image_id] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
-
+      ###
+      
       # debug用．pathとmosaicPieceMaterialsを対応させている．
       mosaicPieceMap =
         "118":0

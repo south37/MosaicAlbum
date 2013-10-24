@@ -63,9 +63,9 @@ ajax_mosaic画像リスト取得:{
      '/img/resize_img/1/8.png',
      '/img/resize_img/1/9.png'
       ];
-    $mosaicPieces = $mosaicPieceRep->getMosaicPieceList($goalImageId);
-    //$mosaicPieceMap = $mosaicPieceRep->getResizeImagePathList($goalImageId);
-    $mosaicPieceMap = ['hoge'];
+    $mosaicPieces   = $mosaicPieceRep->getMosaicPieceList($goalImageId);
+    $mosaicPieceMap = $mosaicPieceRep->getResizeImagePathList($goalImageId);
+    //$mosaicPieceMap = ['hoge'];
     # 4.mosaic画像本体取得
     $mosaicImage = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
 
