@@ -23,7 +23,7 @@ class MosaicPieceRepository
                         album_image.x,
                         album_image.y,
                         image.fb_image_id,
-                        image.resize_image_path
+                        album_image.image_id
                 FROM    album,
                         album_image,
                         image
@@ -46,7 +46,7 @@ class MosaicPieceRepository
     /**
      * ゴールイメージIDで画像のパスを全て取得する
      * @param  $goalImageId
-     * @return MosaicPiece[]
+     * @return MosaicPiece[image_id => resize_image_path]
      */
     public function getResizeImagePathList($goalImageId)
     {
@@ -66,8 +66,13 @@ SQL;
         $resizeImagePathList = [];
         while($data = $sth->fetch(\PDO::FETCH_ASSOC))
         {
+            $resizeImageId = $data['image_id'];
             $resizeImagePath = $data['resize_image_path'];
-            array_push($resizeImagePathList, $resizeImagePath);
+            if(array_key_exists($resizeImageId) === FALSE)
+            {
+                $resizeImagePathList[$resizeImageId] = [];
+            }
+            array_push($resizeImagePathList[$resizeImageId], $resizeImagePath);
         }
         return $resizeImagePathList;
     }
