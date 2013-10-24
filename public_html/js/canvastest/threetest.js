@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fb_icon_materials, fov, geometry, height, isTweenInitiaized, lookTarget, materialNumbers, materials, movetime, nearClip, path, pathList, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, texlist, trackball, twn, width, _i, _len, _ref;
+      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconMaterials, fbIconPathList, fbIconTexList, fov, geometry, height, isTweenInitiaized, lookTarget, materialNumbers, mosaicPieceMaterials, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, trackball, twn, width, _i, _len, _ref;
       console.log(data);
       mosaicImagePath = data.mosaicImage;
       width = window.innerWidth;
@@ -54,23 +54,43 @@ $(function() {
       directioalLight = new THREE.DirectionalLight(0xffffff, 3);
       directioalLight.position.z = 300;
       scene.add(directioalLight);
-      fb_icon_materials = data.userIcons;
-      pathList = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png"];
-      pathList = data.mosaicTextures;
-      texlist = (function() {
+      fbIconPathList = data.userIcons;
+      fbIconTexList = (function() {
         var _i, _len, _results;
         _results = [];
-        for (_i = 0, _len = pathList.length; _i < _len; _i++) {
-          path = pathList[_i];
+        for (_i = 0, _len = fbIconPathList.length; _i < _len; _i++) {
+          path = fbIconPathList[_i];
+          _results.push(new THREE.ImageUtils.loadTexture(path));
+        }
+        return _results;
+      })();
+      fbIconMaterials = (function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = fbIconTexList.length; _i < _len; _i++) {
+          tex = fbIconTexList[_i];
+          _results.push(new THREE.MeshBasicMaterial({
+            map: tex,
+            side: THREE.DoubleSide
+          }));
+        }
+        return _results;
+      })();
+      mosaicPiecePathList = data.mosaicTextures;
+      mosaicPieceTexList = (function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = mosaicPiecePathList.length; _i < _len; _i++) {
+          path = mosaicPiecePathList[_i];
           _results.push(new THREE.ImageUtils.loadTexture('/img/resize_img/1/' + path));
         }
         return _results;
       })();
-      materials = (function() {
+      mosaicPieceMaterials = (function() {
         var _i, _len, _results;
         _results = [];
-        for (_i = 0, _len = texlist.length; _i < _len; _i++) {
-          tex = texlist[_i];
+        for (_i = 0, _len = mosaicPieceTexList.length; _i < _len; _i++) {
+          tex = mosaicPieceTexList[_i];
           _results.push(new THREE.MeshBasicMaterial({
             map: tex,
             side: THREE.DoubleSide
@@ -102,7 +122,7 @@ $(function() {
       _ref = data.mosaicPieces;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         piecedata = _ref[_i];
-        piece = new THREE.Mesh(geometry, materials[materialNumbers[piecedata.resize_image_path]]);
+        piece = new THREE.Mesh(geometry, mosaicPieceMaterials[materialNumbers[piecedata.resize_image_path]]);
         position = new THREE.Vector3(cnt - 1000, -500, 0);
         piece.position.copy(position);
         piece.fb_image_id = piecedata.fb_image_id;

@@ -32,7 +32,11 @@ ajax_mosaic画像リスト取得:{
     # 参加ユーザリスト作成
 
     # 参加ユーザアイコン取得
-    $userIconPathList = ['img/miku.jpg'];
+    $userIconPathList = [
+      '/img/test/miku1.jpg',
+      '/img/test/miku2.jpg',
+      '/img/test/miku3.jpg'
+      ];
 
     # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
     $mosaicTextures = [
@@ -69,7 +73,7 @@ ajaxでFB_Image_DLしてリンク取得:{
     # 1.repository用意
     $FBHelper = $container['FBHelper'];
 
-    # 2.画像パス取得
+    # 2.オリジナル画像パス取得
     # TODO:fb_image_idから対応パスを取得しましょう
     $fb_image_path = "/img/miku.jpg";
 

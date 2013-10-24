@@ -52,6 +52,7 @@ $ ->
       # goalImgをmodalに追加
       mosaicImagePath = data.mosaicImage
 
+      # 1.描画ベース(renderer / scene)の作成
       # レンダラの作成．追加
       width  = window.innerWidth 
       height = window.innerHeight - 100
@@ -87,28 +88,23 @@ $ ->
       directioalLight.position.z = 300
       scene.add directioalLight
 
-      # textureのロード
+
+      # 2:描画素材を準備
+      # material生成
+      # imgpath取得/texture化/material化
+
       # FB-icon
-      fb_icon_materials = data.userIcons
+      fbIconPathList  = data.userIcons
+      fbIconTexList   = (new THREE.ImageUtils.loadTexture(path) for path in fbIconPathList)
+      fbIconMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in fbIconTexList)
       
       # mosaic piece
       # TODO:DBからpathlistが取得できるようになるはずです．
-      pathList = [
-        "1.png"
-        "2.png"
-        "3.png"
-        "4.png"
-        "5.png"
-        "6.png"
-        "7.png"
-        "8.png"
-        "9.png"
-      ]
-      pathList = data.mosaicTextures
+      mosaicPiecePathList  = data.mosaicTextures
+      mosaicPieceTexList   = (new THREE.ImageUtils.loadTexture('/img/resize_img/1/'+path) for path in mosaicPiecePathList)
+      mosaicPieceMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in mosaicPieceTexList)
 
-      texlist = (new THREE.ImageUtils.loadTexture('/img/resize_img/1/'+path) for path in pathList)
-      materials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in texlist)
-
+      # debug用．pathとmosaicPiecePathListを対応させている．
       materialNumbers =
         "img/resize_img/1/1.png":0
         "img/resize_img/1/2.png":1
@@ -137,7 +133,7 @@ $ ->
       for piecedata in data.mosaicPieces
         # メッシュの作成
         # TODO:initial_positionの設定
-        piece = new THREE.Mesh( geometry, materials[ materialNumbers[piecedata.resize_image_path]])
+        piece = new THREE.Mesh( geometry, mosaicPieceMaterials[ materialNumbers[piecedata.resize_image_path]])
         position = new THREE.Vector3(cnt-1000, -500, 0) 
         piece.position.copy position
         piece.fb_image_id = piecedata.fb_image_id
