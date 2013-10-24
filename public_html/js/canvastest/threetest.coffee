@@ -1,18 +1,67 @@
 $ ->
   window.addEventListener "DOMContentLoaded", ->
+    #tooltip test
+    $('#showMosaic')
+      .tooltip
+        placement:'top'
+        title:'くりっくしてね'
+        triger:'hover'
+
+    # modal画面のinit
+    $('#modal1 .modal-header')
+      .empty()
+      .append("members:xx,oo")
+      .append('<button id="closeModal" class="btn">x</button>')
+    $('#modal1 .modal-body')
+      .empty()
+    $('#modal1 .modal-footer')
+      .empty()
+      .append('右クリックで保存できます ')
+      .append('<button id="fb_share" class="btni btn-primary">facebookでshare</button>')
+
+    # クリックイベント
+    # html
+    mosaicImagePath = ""
+    selectedImagePath = ""
+
+    $('#showMosaic').click ->
+      $('#modal1 .modal-body')
+        .empty()
+        .append("<img src=#{mosaicImagePath} alt='modaicImg'></img>")
+      $('#modal1').modal('toggle')
+      console.log mosaicImagePath
+
+    $('#showSelect').click ->
+      $('#modal1 .modal-body')
+        .empty()
+        .append("<img src=#{selectedImagePath} alt='selectedImg'></img>")
+      $('#modal1').modal('toggle')
+      console.log selectedImagePath
+
+    # modal
+    $('#closeModal').click ->
+      $('#modal1').modal('toggle')
+
+    $('#fb_share').click ->
+      alert "shareしたよ"
+
     #ajaxで取得するよ
     $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
       console.log data
-      
-      #for piece in data.mosaicPieces
-        #console.log piece.x,":",piece.y
 
+      # goalImgをmodalに追加
+      mosaicImagePath = data.mosaicImage
+
+      # 1.描画ベース(renderer / scene)の作成
       # レンダラの作成．追加
-      width  = window.innerWidth
-      height = window.innerHeight
+      width  = window.innerWidth 
+      height = window.innerHeight - 100
+      width  = $('#container').innerWidth()
+      #height = $('#container').innerHeight()
       renderer = new THREE.WebGLRenderer()
       renderer.setSize(width,height)
-      $("#container").before(renderer.domElement)
+      #$("#container").before(renderer.domElement)
+      $('#forCanvas').append(renderer.domElement) 
       renderer.setClearColor(0x000000,1)
 
       # sceneの作成
@@ -24,12 +73,14 @@ $ ->
       nearClip = 1
       farClip = 10000
       camera = new THREE.PerspectiveCamera(fov,aspect,nearClip,farClip)
-      target = new THREE.Vector3(0,0,0)
-      camera.position.set(0,0,1000)
-      scene.add camera
-      camera.lookAt target
+      lookTarget = new THREE.Vector3(0,0,0)
+      cameraPosition = new THREE.Vector3(0,0,1000)
+      camera.position.copy cameraPosition
 
-      # traclball:
+      scene.add camera
+      camera.lookAt lookTarget
+
+      # traclball
       trackball = new THREE.TrackballControls(camera, renderer.domElement)
 
       # lightの作成．追加
@@ -37,22 +88,25 @@ $ ->
       directioalLight.position.z = 300
       scene.add directioalLight
 
-      # textureのロード
-      pathList = [
-        "resize_0.png"
-        "resize_1.png"
-        "resize_2.png"
-        "resize_3.png"
-        "resize_4.png"
-        "resize_5.png"
-        "resize_6.png"
-        "resize_7.png"
-        "resize_8.png"
-        "resize_9.jpg"
-      ]
-      texlist = (new THREE.ImageUtils.loadTexture('/img/resize_img/'+path) for path in pathList)
-      materials = (new THREE.MeshBasicMaterial {map:tex} for tex in texlist)
-      materialNumbers =
+
+      # 2:描画素材を準備
+      # material生成
+      # imgpath取得/texture化/material化
+
+      # FB-icon
+      fbUserInfoList  = data.userInfo
+      fbUserIdList =(info.userID for info in fbUserInfoList)
+      fbIconTexList   = (new THREE.ImageUtils.loadTexture(info.iconPath) for info in fbUserInfoList)
+      fbIconMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in fbIconTexList)
+      
+      # mosaic piece
+      # TODO:DBからpathlistが取得できるようになるはずです．
+      mosaicPiecePathList  = data.mosaicTextures
+      mosaicPieceTexList   = (new THREE.ImageUtils.loadTexture(path) for path in mosaicPiecePathList)
+      mosaicPieceMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in mosaicPieceTexList)
+
+      # debug用．pathとmosaicPieceMaterialsを対応させている．
+      mosaicPieceMap =
         "img/resize_img/1/1.png":0
         "img/resize_img/1/2.png":1
         "img/resize_img/1/3.png":2
@@ -62,7 +116,15 @@ $ ->
         "img/resize_img/1/7.png":6
         "img/resize_img/1/8.png":7
         "img/resize_img/1/9.png":8
-
+        "118":0
+        "119":1
+        "120":2
+        "121":3
+        "122":4
+        "123":5
+        "124":6
+        "125":7
+        "126":8
 
 
 
@@ -72,34 +134,55 @@ $ ->
       sizeX = 1000/col
       sizeY = 1000/row
 
+      sizeX = 100
+      sizeY = 100
+      fbIconGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1)
+
+      userPosList = {}
+
       sizeX = 10
       sizeY = 10
-      geometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
+      mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
+
       pieces = []
       pieces_tween = []
-      ###
-      for i in [0..col]
-        tmppieces = []
-        for j in [0..row]
-          piece = new THREE.Mesh(geometry,materials[(i+j)%10])
-          piece.position.set sizeX*i - 500, -600, 0
-          scene.add(piece)
-          tmppieces.push piece
-        pieces.push tmppieces
-      ###
      
+      # メッシュ(ジオメトリ＋マテリアル)の生成．これがシーンにaddされる．
+     
+      # B
+      # fb_icon
+      cnt = 0
+      for material in fbIconMaterials
+        piece = new THREE.Mesh( fbIconGeometry, material)
+
+        position = new THREE.Vector3( 100 * cnt, -300, 100)
+        piece.position.copy position
+        scene.add piece
+
+        userPosList[fbUserIdList[cnt]] = position
+        cnt += 1
+
+      console.log userPosList
+
+      # mosaic
       cnt = 0
       for piecedata in data.mosaicPieces
-        # メッシュの作成
-        piece = new THREE.Mesh( geometry, materials[ materialNumbers[piecedata.resize_image_path]])
-        position = new THREE.Vector3(cnt-1000, -500, 0) 
-        piece.position.copy position
+        piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[ mosaicPieceMap[piecedata.image_id]])
+        
+        # TODO:initial_positionの設定
+        # 対応するユーザの位置を初期値にしましょう．
+        #position = new THREE.Vector3( sizeX * (cnt % 200) - 1000, -100 - 10 * (cnt / 200), 0) 
+        #piece.position.copy position
+        piece.position.copy userPosList[piecedata.user_id]
+
+        # クリック時にfb_image_idを取得するための属性追加
+        piece.fb_image_id = piecedata.fb_image_id
         scene.add(piece)
 
         # tween設定
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
         movetime = 300
-        delaytime = 500 + 10 * cnt
+        delaytime = 100 + 10 * cnt
         twn = new TWEEN.Tween(piece.position)
           .to(target , movetime)
           .delay(delaytime)
@@ -110,63 +193,42 @@ $ ->
       projector = new THREE.Projector()
       $(renderer.domElement).bind 'mousedown',(e)->
         console.log "rendererclicked"
-        mouseX = ((e.pageX - e.target.offsetParent.offsetLeft) / renderer.domElement.width) * 2 - 1
-        mouseY = ((e.pageY - e.target.offsetParent.offsetTop) / renderer.domElement.height) * 2 - 1
-        vec = new THREE.Vector3 mouseX,mouseY,0
-        projector.unprojectVector vec,camera
+       
+        #画面上の位置
+        mouseX2D = e.clientX - e.target.clientLeft
+        mouseY2D = e.clientY - e.target.clientTop
+       
+        # 3D空間での位置．-1~1に正規化
+        mouseX3D = (mouseX2D / e.target.width) * 2 - 1
+        mouseY3D = (mouseY2D / e.target.height) * -2 + 1
         
+        vec = new THREE.Vector3 mouseX3D,mouseY3D,-1
+
+        projector.unprojectVector vec,camera
         ray = new THREE.Raycaster(camera.position, vec.sub(camera.position).normalize())
-        obj = ray.intersectObjects scene.children,true 
-    
+        obj = ray.intersectObjects scene.children,true
+        
+        # クリックされたオブジェクトに対する処理
         if obj.length > 0
-          console.log "object clicked",obj[0].object.id
+          tmp_id = obj[0].object.fb_image_id
+          path = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
+          $.getJSON path, (data)->
+            console.log data
+            selectedImagePath = data.fb_image_path
         else
           console.log "no clicked object"
-     
-      #event
-      controlMode = "none"
-      pclientX = 0
-      pclientY = 0 
       
-      $('canvas').mousedown (e)->
-        #console.log "mousedown:", e
-        controlMode = "move"
-
+      # マウスイベント：クリック：tweenスタート！
+      isTweenInitiaized = false
       $('canvas').mouseup ->
-        #console.log "mouseup"
-        controlMode = "none"
-        ###
-        for i in [0..col]
-          for j in [0..row]
-            movetime = 200 * Math.floor( Math.random() * (row+col))
-            trans(pieces[i][j],new THREE.Vector3(sizeX*i-500,sizeY*j-500,0),100,500 + movetime)
-        ###
-        for twn in pieces_tween
-          twn.start()
+        if not isTweenInitiaized
+          console.log "tweenset"
+          for twn in pieces_tween
+            twn.start()
+          isTweenInitiaized = true
 
-      $('canvas').mousemove (e) ->
-        switch controlMode
-          when "move"
-            diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
-            camera.position.add diff
-          when "zoom"
-            diff = new THREE.Vector3( 0, 0, e.clientY - pclientY)
-            camera.position.add diff
-          when "target"
-            diff = new THREE.Vector3( - e.clientX + pclientX, e.clientY - pclientY, 0)
-            target.add diff
-            camera.lookAt target
-          when "reset"
-            camera.position.set 0,0,500
-            target.set 0,0,0
-            camera.lookAt target
-            controlMode = "none"
-          when "none"
-            console.log "none"
-        pclientX = e.clientX
-        pclientY = e.clientY
-
-      $(this).keypress (e) ->
+      # キーボード入力：TODO:なんかこれ動いてないっぽい
+      $('canvas').keypress (e) ->
         console.log e.which
         switch e.which
           when 113 
@@ -181,22 +243,21 @@ $ ->
           when 97
             #a
             controlMode = "reset"
+            camera.position.set 0,0,1000
+            camera.lookAt THREE.Vector3(0,0,0)
           else
             controlMode = "none"
 
-      # tween用関数
-      rendering = ->
-        renderer.render(scene,camera)
+      
+      $(window).bind 'resize', ->
+        console.log "window resize"
+        width = $('#container').innerWidth()
+        height = window.innerHeight - 100
+        renderer.setSize width,height
+        camera.aspect = width / height
+        camera.updateProjectionMatrix()
 
-      trans = (object, target, duration, delay) ->
-        #TWEEN.removeAll()
-        new TWEEN.Tween(object.position)
-          .to(target,duration)
-          .delay(delay)
-          .easing(TWEEN.Easing.Linear.None)
-          .start()
-       
-      # animation設定
+      # animation設定.毎回呼ばれる．
       anim = ->
         requestAnimationFrame anim
         trackball.update()

@@ -9,7 +9,18 @@
 <!--<div id="canvas_group" class="text-center">-->
   <!--<canvas id ="cvs1" width="800" height="600"></canvas>-->
 <!--</div>-->
+<!--<a id="showModal" class="btn" href="#modal1" data-toggle="modal">完成画像をダウンロード</a>-->
 
+<p>画面上をクリックすると，モザイク画像が生成されます．</p>
+
+<div id="forCanvas">
+</div>
+
+<button id="showMosaic" class="btn btn-primary">モザイク画増ダウンロード</button>
+<button id="showSelect" class="btn btn-primary">選択画像表示</button>
+<!-- FaceBook Share Button -->
+<div id="fb-root"></div>
+<div class="fb-like" data-href="http://mosaicalbum.com" data-width="The pixel width of the plugin" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="true" data-send="false"></div>          
 {% endblock %}
 
 
@@ -18,4 +29,12 @@
 <script type="text/javascript" src="{{ asset('/js/canvastest/threetest.js') }}"></script>
 <script type="x-shader/x-vertex" src="{{ asset('/shader/test.vert') }}"></script>
 <script type="x-shader/x-fragment" src="{{ asset('/shader/test.frag') }}"></script>
+<!-- FaceBook Share Button Script -->
+<script>(function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1&appId=638792116141666";
+                fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));</script>
 {% endblock%}

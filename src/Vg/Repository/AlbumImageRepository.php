@@ -27,7 +27,8 @@ class AlbumImageRepository
                     image_id = :imageId,
                     x = :x,
                     y = :y,
-                    is_used_mosaic = :isUsedMosaic";
+                    is_used_mosaic = :isUsedMosaic,
+                    is_latest = 0";
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':albumId', $albumId, \PDO::PARAM_INT);
         $sth->bindValue(':imageId', $imageId, \PDO::PARAM_INT);

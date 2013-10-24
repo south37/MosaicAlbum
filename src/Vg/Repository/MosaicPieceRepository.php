@@ -23,7 +23,7 @@ class MosaicPieceRepository
                         album_image.x,
                         album_image.y,
                         image.fb_image_id,
-                        image.resize_image_path
+                        album_image.image_id
                 FROM    album,
                         album_image,
                         image
@@ -41,5 +41,39 @@ class MosaicPieceRepository
             array_push($mosaicPieces, $mosaicPiece);
         }
         return $mosaicPieces;
+    }
+    
+    /**
+     * ゴールイメージIDで画像のパスを全て取得する
+     * @param  $goalImageId
+     * @return MosaicPiece[image_id => resize_image_path]
+     */
+    public function getResizeImagePathList($goalImageId)
+    {
+        $sql = <<< SQL
+            SELECT * FROM image
+                INNER JOIN album_image
+                    ON image.id = album_image.image_id
+            WHERE
+                album_image.album_id IN
+                    (SELECT album.id FROM album
+                    WHERE album.goal_image_id = :goalImageId);
+SQL;
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        $sth->execute();
+        $resizeImagePathList = [];
+        while($data = $sth->fetch(\PDO::FETCH_ASSOC))
+        {
+            print_r($data); echo '<br>';
+            $resizeImageId = $data['image_id'];
+            $resizeImagePath = $data['resize_image_path'];
+            if(array_key_exists($resizeImageId, $resizeImagePathList) === FALSE)
+            {
+                $resizeImagePathList[$resizeImageId] = [];
+            }
+            array_push($resizeImagePathList[$resizeImageId], $resizeImagePath);
+        }
+        return $resizeImagePathList;
     }
 }

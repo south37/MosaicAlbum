@@ -205,4 +205,11 @@ class FBHelperRepository
         return $this->downloadImage($imagePath);
     }
 
+    //add by 1000ch
+    public function getImagePath($fbImageId)
+    {
+      $r = $this->facebook->api('/'.$fbImageId);
+      return $r['source'];
+    }
+
 }
