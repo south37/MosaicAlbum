@@ -92,7 +92,14 @@ class GoalImageRepository
         $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
         $sth->execute();
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
-        return ['path'=>$data['mosaic_path'], 'id'=>$data['fb_goal_image_id']];
+        return [
+            'path'=>$data['mosaic_path'],
+            'id'=>$data['fb_goal_image_id'],
+            'tate_division' => $date['tate_division'],
+            'yoko_division' => $date['yoko_division'],
+            'split_width' => 640 / $date['tate_division'],
+            'split_height' => 640 / $date['yoko_division']
+        ];
     }
 
     /**
