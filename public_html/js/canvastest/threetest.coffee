@@ -111,11 +111,11 @@ $ ->
       mosaicPieceTexList   = (new THREE.ImageUtils.loadTexture(path) for path in mosaicPiecePathList)
       mosaicPieceMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in mosaicPieceTexList)
 
-      #mosaicPieceMaterials_ = {}
-      #for key,val of data.mosaicPieceMap
-        ## key:val = image_id : image_path
-        #tmpTex = new THREE.ImageUtils.loadTexture(val)
-        #mosaicPieceMaterials_[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
+      mosaicPieceMaterials_ = {}
+      for key,val of data.mosaicPieceMap
+        # key:val = image_id : image_path
+        tmpTex = new THREE.ImageUtils.loadTexture('/' + val)
+        mosaicPieceMaterials_[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
 
       # debug用．pathとmosaicPieceMaterialsを対応させている．
       mosaicPieceMap =
@@ -152,7 +152,6 @@ $ ->
      
       # メッシュ(ジオメトリ＋マテリアル)の生成．これがシーンにaddされる．
      
-      # B
       # fb_icon
       cnt = 0
       for material in fbIconMaterials

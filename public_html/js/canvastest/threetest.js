@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconTexList, fbUserIdList, fbUserInfoList, fov, height, info, isTweenInitiaized, lookTarget, material, mosaicPieceGeometry, mosaicPieceMap, mosaicPieceMaterials, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, trackball, twn, userPosList, width, _i, _j, _len, _len1, _ref;
+      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconTexList, fbUserIdList, fbUserInfoList, fov, height, info, isTweenInitiaized, key, lookTarget, material, mosaicPieceGeometry, mosaicPieceMap, mosaicPieceMaterials, mosaicPieceMaterials_, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, tmpTex, trackball, twn, userPosList, val, width, _i, _j, _len, _len1, _ref, _ref1;
       console.log(data);
       mosaicImagePath = data.mosaicImage;
       width = window.innerWidth;
@@ -107,6 +107,16 @@ $(function() {
         }
         return _results;
       })();
+      mosaicPieceMaterials_ = {};
+      _ref = data.mosaicPieceMap;
+      for (key in _ref) {
+        val = _ref[key];
+        tmpTex = new THREE.ImageUtils.loadTexture('/' + val);
+        mosaicPieceMaterials_[key] = new THREE.MeshBasicMaterial({
+          map: tmpTex,
+          side: THREE.DoubleSide
+        });
+      }
       mosaicPieceMap = {
         "118": 0,
         "119": 1,
@@ -143,9 +153,9 @@ $(function() {
       }
       console.log(userPosList);
       cnt = 0;
-      _ref = data.mosaicPieces;
-      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-        piecedata = _ref[_j];
+      _ref1 = data.mosaicPieces;
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        piecedata = _ref1[_j];
         piece = new THREE.Mesh(mosaicPieceGeometry, mosaicPieceMaterials[mosaicPieceMap[piecedata.image_id]]);
         piece.position.copy(userPosList[piecedata.user_id]);
         piece.fb_image_id = piecedata.fb_image_id;

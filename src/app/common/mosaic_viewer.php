@@ -66,8 +66,8 @@ ajax_mosaic画像リスト取得:{
       ];
     $mosaicPieces   = $mosaicPieceRep->getMosaicPieceList($goalImageId);
     $mosaicPieceMap = $mosaicPieceRep->getResizeImagePathList($goalImageId);
-    //$mosaicPieceMap = $mosaicPieceRep->getResizeImagePathList($goalImageId);
-    $mosaicPieceMap = ['123'=>'/img/test/miku1.jpg'];
+    //$mosaicPieceMap = ['123'=>'/img/test/miku1.jpg'];
+    
     # 4.mosaic画像本体取得
     $mosaicImage = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
 
