@@ -34,9 +34,10 @@ $(function() {
       mosaicImagePath = data.mosaicImage;
       width = window.innerWidth;
       height = window.innerHeight - 100;
+      width = $('#container').innerWidth();
       renderer = new THREE.WebGLRenderer();
       renderer.setSize(width, height);
-      $("#container").before(renderer.domElement);
+      $('#forCanvas').append(renderer.domElement);
       renderer.setClearColor(0x000000, 1);
       scene = new THREE.Scene();
       fov = 80;

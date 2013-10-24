@@ -53,11 +53,14 @@ $ ->
       mosaicImagePath = data.mosaicImage
 
       # レンダラの作成．追加
-      width  = window.innerWidth
+      width  = window.innerWidth 
       height = window.innerHeight - 100
+      width  = $('#container').innerWidth()
+      #height = $('#container').innerHeight()
       renderer = new THREE.WebGLRenderer()
       renderer.setSize(width,height)
-      $("#container").before(renderer.domElement)
+      #$("#container").before(renderer.domElement)
+      $('#forCanvas').append(renderer.domElement) 
       renderer.setClearColor(0x000000,1)
 
       # sceneの作成
