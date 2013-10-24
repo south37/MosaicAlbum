@@ -57,6 +57,11 @@ $container['repository.albumImage'] = $container->share(function($c){
         return new \Vg\Repository\AlbumImageRepository($c['db']);
     });
 
+// アルバムユーザーリポジトリ
+$container['repository.albumUser'] = $container->share(function($c){
+        return new \Vg\Repository\AlbumUserRepository($c['db']);
+    });
+
 // イメージリポジトリ
 $container['repository.image'] = $container->share(function($c){
         return new \Vg\Repository\ImageRepository($c['db']);

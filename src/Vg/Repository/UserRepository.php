@@ -92,7 +92,7 @@ class UserRepository
      * @param  $userId
      * @return fbIconUrl[]
      */
-    public function getUserIconImgPathList($userId)
+    public function getUserIconImgUrlList($userId)
     {
         $sql = "SELECT * FROM user WHERE id = :userId";
         $sth = $this->db->prepare($sql);
