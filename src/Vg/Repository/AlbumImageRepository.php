@@ -28,7 +28,7 @@ class AlbumImageRepository
                     x = :x,
                     y = :y,
                     is_used_mosaic = :isUsedMosaic,
-                    is_latest = 0";
+                    is_latest = 1";
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':albumId', $albumId, \PDO::PARAM_INT);
         $sth->bindValue(':imageId', $imageId, \PDO::PARAM_INT);
@@ -73,5 +73,20 @@ class AlbumImageRepository
             array_push($imageIds, $data['image_id']);
         }
         return $imageIds;
+    }
+
+    /**
+    * mosaic_viewerで表示する対象になっている画像を非対象にする
+    * @return {boolean} updateが成功ならtrue, 失敗ならfalse
+    */
+    public function modifyIsLatest()
+    {
+        $sql = <<< SQL
+            UPDATE album_image SET 
+                is_latest = 0
+            WHERE is_latest = 1;
+SQL;
+        $sth = $this->db->prepare($sql);
+        return $sth->execute();
     }
 }
