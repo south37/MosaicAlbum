@@ -94,6 +94,7 @@ $(function() {
         piece = new THREE.Mesh(geometry, materials[materialNumbers[piecedata.resize_image_path]]);
         position = new THREE.Vector3(cnt - 1000, -500, 0);
         piece.position.copy(position);
+        piece.fb_image_id = piecedata.fb_image_id;
         scene.add(piece);
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0);
         movetime = 300;
@@ -116,7 +117,7 @@ $(function() {
         ray = new THREE.Raycaster(camera.position, vec.sub(camera.position).normalize());
         obj = ray.intersectObjects(scene.children, true);
         if (obj.length > 0) {
-          return console.log("object clicked", obj[0].object.id);
+          return console.log("object clicked:fbId:", obj[0].fb_image_id);
         } else {
           return console.log("no clicked object");
         }
