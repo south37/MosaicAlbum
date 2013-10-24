@@ -51,10 +51,11 @@ class MosaicPieceRepository
     public function getResizeImagePathList($goalImageId)
     {
         $sql = <<< SQL
-            SELECT * FROM image
+            SELECT DISTINCT album_image.image_id, resize_image_path FROM image
                 INNER JOIN album_image
-                    ON image.id = album_image.image_id
+                    ON image_id = image.id
             WHERE
+                is_used_mosaic = 1 AND
                 album_image.album_id IN
                     (SELECT album.id FROM album
                     WHERE album.goal_image_id = :goalImageId);
@@ -65,14 +66,9 @@ SQL;
         $resizeImagePathList = [];
         while($data = $sth->fetch(\PDO::FETCH_ASSOC))
         {
-            print_r($data); echo '<br>';
             $resizeImageId = $data['image_id'];
             $resizeImagePath = $data['resize_image_path'];
-            if(array_key_exists($resizeImageId, $resizeImagePathList) === FALSE)
-            {
-                $resizeImagePathList[$resizeImageId] = [];
-            }
-            array_push($resizeImagePathList[$resizeImageId], $resizeImagePath);
+            $resizeImagePathList[$resizeImageId] = $resizeImagePath;
         }
         return $resizeImagePathList;
     }
