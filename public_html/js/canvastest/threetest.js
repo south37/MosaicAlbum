@@ -168,7 +168,12 @@ $(function() {
         }
       });
       $(window).bind('resize', function() {
-        return console.log("window resize");
+        console.log("window resize");
+        width = $('#container').innerWidth();
+        height = window.innerHeight - 100;
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        return camera.updateProjectionMatrix();
       });
       anim = function() {
         requestAnimationFrame(anim);

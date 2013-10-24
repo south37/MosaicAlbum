@@ -215,6 +215,11 @@ $ ->
       
       $(window).bind 'resize', ->
         console.log "window resize"
+        width = $('#container').innerWidth()
+        height = window.innerHeight - 100
+        renderer.setSize width,height
+        camera.aspect = width / height
+        camera.updateProjectionMatrix()
 
       # animation設定.毎回呼ばれる．
       anim = ->
