@@ -48,7 +48,7 @@ $ ->
     # *************************** 
     # three.jsの処理はこれ以降！
     # ***************************
-    #
+    
     #ajaxで取得するよ
     $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
       console.log data
@@ -94,17 +94,12 @@ $ ->
 
 
       # 2:描画素材を準備
-      # material生成
-      # imgpath取得/texture化/material化
+      # マテリアル + ジオメトリ => メッシュ
+
+      # 2-1:マテリアル生成
+      # process:imgpath取得/texture化/material化
 
       # FB-icon
-      fbUserInfoList  = data.userInfo
-      #fbUserIdList =(info.userID for info in fbUserInfoList)
-      fbUserIdList =(key for key,val of fbUserInfoList)
-      console.log fbUserIdList
-      #fbIconTexList   = (new THREE.ImageUtils.loadTexture(info.iconPath) for info in fbUserInfoList)
-      #fbIconMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in fbIconTexList)
-
       fbIconMaterials = {}
       for key,val of data.userInfo
         # key:val = userId:iconImgPath
@@ -119,27 +114,31 @@ $ ->
         mosaicPieceMaterials[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
 
 
-      # ジオメトリの追加
-      row = 80
-      col = 60
-      sizeX = 1000/col
-      sizeY = 1000/row
+      # 2-2:ジオメトリ作成
+      # process:種類とサイズを指定
 
+      # fb-icon
       sizeX = 100
       sizeY = 100
       fbIconGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1)
 
       userPosList = {}
 
+      # mosaic-piece
       sizeX = 10
       sizeY = 10
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
 
-      pieces = []
-      pieces_tween = []
+      tweenList = []
       
      
-      # メッシュ(ジオメトリ＋マテリアル)の生成．これがシーンにaddされる．
+      # 2-3:メッシュ(ジオメトリ＋マテリアル)の生成．これがシーンにaddされる．
+      # process:
+      # メッシュインスタンス生成
+      # 位置指定
+      # シーンに追加
+      # tween設定
+
       # fb_icon
       cnt = 0
       for key,val of fbIconMaterials
@@ -154,7 +153,7 @@ $ ->
 
       console.log userPosList
 
-      # mosaic
+      # mosaic-piece
       cnt = 0
       for piecedata in data.mosaicPieces
         piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[piecedata.image_id])
@@ -168,13 +167,16 @@ $ ->
         scene.add(piece)
 
         # tween設定
+        # 終了位置・移動時間・オフセット時間を指定
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
-        movetime = 300
-        delaytime = 100 + 10 * cnt
+        moveTime = 300
+        offsetTime = 100 + 10 * cnt
+
+        # tweenオブジェクト生成
         twn = new TWEEN.Tween(piece.position)
-          .to(target , movetime)
-          .delay(delaytime)
-        pieces_tween.push twn
+          .to(target , moveTime)
+          .delay(offsetTime)
+        tweenList.push twn
         cnt += 1
 
       # ray
@@ -211,8 +213,7 @@ $ ->
       isTweenInitiaized = false
       $('canvas').mouseup ->
         if not isTweenInitiaized
-          console.log "tweenset"
-          for twn in pieces_tween
+          for twn in tweenList
             twn.start()
           isTweenInitiaized = true
       

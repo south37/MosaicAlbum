@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbUserIdList, fbUserInfoList, fov, height, isTweenInitiaized, key, lookTarget, mosaicPieceGeometry, mosaicPieceMaterials, movetime, nearClip, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tmpTex, trackball, twn, userPosList, val, width, _i, _len, _ref, _ref1, _ref2;
+      var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, isTweenInitiaized, key, lookTarget, mosaicPieceGeometry, mosaicPieceMaterials, moveTime, nearClip, offsetTime, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn, userPosList, val, width, _i, _len, _ref, _ref1, _ref2;
       console.log(data);
       mosaicImagePath = data.mosaicImage;
       width = window.innerWidth;
@@ -54,17 +54,6 @@ $(function() {
       directioalLight = new THREE.DirectionalLight(0xffffff, 3);
       directioalLight.position.z = 300;
       scene.add(directioalLight);
-      fbUserInfoList = data.userInfo;
-      fbUserIdList = (function() {
-        var _results;
-        _results = [];
-        for (key in fbUserInfoList) {
-          val = fbUserInfoList[key];
-          _results.push(key);
-        }
-        return _results;
-      })();
-      console.log(fbUserIdList);
       fbIconMaterials = {};
       _ref = data.userInfo;
       for (key in _ref) {
@@ -85,10 +74,6 @@ $(function() {
           side: THREE.DoubleSide
         });
       }
-      row = 80;
-      col = 60;
-      sizeX = 1000 / col;
-      sizeY = 1000 / row;
       sizeX = 100;
       sizeY = 100;
       fbIconGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
@@ -96,8 +81,7 @@ $(function() {
       sizeX = 10;
       sizeY = 10;
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
-      pieces = [];
-      pieces_tween = [];
+      tweenList = [];
       cnt = 0;
       for (key in fbIconMaterials) {
         val = fbIconMaterials[key];
@@ -118,10 +102,10 @@ $(function() {
         piece.fb_image_id = piecedata.fb_image_id;
         scene.add(piece);
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0);
-        movetime = 300;
-        delaytime = 100 + 10 * cnt;
-        twn = new TWEEN.Tween(piece.position).to(target, movetime).delay(delaytime);
-        pieces_tween.push(twn);
+        moveTime = 300;
+        offsetTime = 100 + 10 * cnt;
+        twn = new TWEEN.Tween(piece.position).to(target, moveTime).delay(offsetTime);
+        tweenList.push(twn);
         cnt += 1;
       }
       projector = new THREE.Projector();
@@ -151,9 +135,8 @@ $(function() {
       $('canvas').mouseup(function() {
         var _j, _len1;
         if (!isTweenInitiaized) {
-          console.log("tweenset");
-          for (_j = 0, _len1 = pieces_tween.length; _j < _len1; _j++) {
-            twn = pieces_tween[_j];
+          for (_j = 0, _len1 = tweenList.length; _j < _len1; _j++) {
+            twn = tweenList[_j];
             twn.start();
           }
           return isTweenInitiaized = true;
