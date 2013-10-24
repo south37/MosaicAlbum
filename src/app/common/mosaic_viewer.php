@@ -9,39 +9,10 @@
 
 アクセスされたときの処理:{
   $app->get('/common/mosaic_viewer', function() use ($app, $container){
-
-    # 1:init
-    #リポジトリの準備
-    $FBRep = $container['FBHelper'];
-    //echo $FBRep->getUserId();
-
-    $goalImageId = $container['session']->get('goalImageId');
-    //echo "goal:".$goalImageId;
-
-    # 2:user
-    # opt:セキュリティ処理
+    # TODO:user認証いるかな？
 
 
-    #参加ユーザリスト作成
-
-
-    #参加ユーザ：FBアイコンパス取得
-
-
-    # 3:mosaic
-    # モザイクオリジナル画像取得
-
-
-    #モザイク画像取得
-
-
-    #モザイクピースのリストを取得
-
-
-    # 4:render
     #画面レンダリング
-
-
     $app->render('common/mosaic_viewer.html.twig',['goalId' => $goalImageId]);
   })
     ->name('mosaic_viewer')
@@ -52,12 +23,15 @@ ajax_mosaic画像リスト取得:{
   $app->get('/common/mosaic_viewer/ajax_list', function() use ($app, $container){
     # 1.リポジトリ，必要変数の確保 
     $FBRep = $container['FBHelper'];
-    $goalImageId = 1; 
-    //$goalImageId = $container['session']->get('goalImageId');
+    $goalImageId = $container['session']->get('goalImageId');
+    $goalImageId = 1;
 
     $mosaicPieceRep = $container['repository.mosaicPiece'];
 
     # 2.参加ユーザの画像リスト取得
+    # 参加ユーザリスト作成
+
+    # 参加ユーザアイコン取得
     $userIconPathList = ['img/miku.jpg'];
 
     # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
@@ -89,6 +63,25 @@ ajax_mosaic画像リスト取得:{
     ->name('get mosaiclist')
     ;
 }
+
+ajaxでFB_Image_DLしてリンク取得:{
+  $app->get('/common/mosaic_viewer/ajax_fb_image/:fb_image_id', function($fb_image_id) use ($app,$container){
+    # 1.repository用意
+    $FBHelper = $container['FBHelper'];
+
+    # 2.画像パス取得
+    $fb_image_path = "/img/miku.jpg";
+
+    # 3.ajax_return
+    $response = [
+      "fb_image_path":$fb_image_path
+      ];
+    echo json_encode($response);
+  })
+    ->name('get fbimage')
+    ;
+}
+
 
 ajaxのてすと:{
   $app->get('/common/mosaic_viewer/ajax', function() use ($app){
