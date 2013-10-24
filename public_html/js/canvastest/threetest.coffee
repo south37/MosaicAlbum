@@ -95,6 +95,7 @@ $ ->
 
       # FB-icon
       fbUserInfoList  = data.userInfo
+      fbUserIdList =(info.userID for info in fbUserInfoList)
       fbIconTexList   = (new THREE.ImageUtils.loadTexture(info.iconPath) for info in fbUserInfoList)
       fbIconMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in fbIconTexList)
       
@@ -127,7 +128,7 @@ $ ->
       sizeY = 100
       fbIconGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1)
 
-      userPosList = []
+      userPosList = {}
 
       sizeX = 10
       sizeY = 10
@@ -138,6 +139,7 @@ $ ->
      
       # メッシュ(ジオメトリ＋マテリアル)の生成．これがシーンにaddされる．
      
+      # B
       # fb_icon
       cnt = 0
       for material in fbIconMaterials
@@ -146,8 +148,11 @@ $ ->
         position = new THREE.Vector3( 100 * cnt, -300, 100)
         piece.position.copy position
         scene.add piece
-        userPosList.push position
+
+        userPosList[fbUserIdList[cnt]] = position
         cnt += 1
+
+      console.log userPosList
 
       # mosaic
       cnt = 0
@@ -156,9 +161,10 @@ $ ->
         
         # TODO:initial_positionの設定
         # 対応するユーザの位置を初期値にしましょう．
-        position = new THREE.Vector3( sizeX * (cnt % 200) - 1000, -100 - 10 * (cnt / 200), 0) 
-        piece.position.copy position
-        
+        #position = new THREE.Vector3( sizeX * (cnt % 200) - 1000, -100 - 10 * (cnt / 200), 0) 
+        #piece.position.copy position
+        piece.position.copy userPosList[piecedata.user_id]
+
         # クリック時にfb_image_idを取得するための属性追加
         piece.fb_image_id = piecedata.fb_image_id
         scene.add(piece)

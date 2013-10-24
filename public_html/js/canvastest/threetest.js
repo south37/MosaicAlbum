@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconTexList, fbUserInfoList, fov, height, info, isTweenInitiaized, lookTarget, material, materialNumbers, mosaicPieceGeometry, mosaicPieceMaterials, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, trackball, twn, userPosList, width, _i, _j, _len, _len1, _ref;
+      var anim, aspect, camera, cameraPosition, cnt, col, delaytime, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fbIconTexList, fbUserIdList, fbUserInfoList, fov, height, info, isTweenInitiaized, lookTarget, material, materialNumbers, mosaicPieceGeometry, mosaicPieceMaterials, mosaicPiecePathList, mosaicPieceTexList, movetime, nearClip, path, piece, piecedata, pieces, pieces_tween, position, projector, renderer, row, scene, sizeX, sizeY, target, tex, trackball, twn, userPosList, width, _i, _j, _len, _len1, _ref;
       console.log(data);
       mosaicImagePath = data.mosaicImage;
       width = window.innerWidth;
@@ -55,6 +55,15 @@ $(function() {
       directioalLight.position.z = 300;
       scene.add(directioalLight);
       fbUserInfoList = data.userInfo;
+      fbUserIdList = (function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = fbUserInfoList.length; _i < _len; _i++) {
+          info = fbUserInfoList[_i];
+          _results.push(info.userID);
+        }
+        return _results;
+      })();
       fbIconTexList = (function() {
         var _i, _len, _results;
         _results = [];
@@ -116,7 +125,7 @@ $(function() {
       sizeX = 100;
       sizeY = 100;
       fbIconGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
-      userPosList = [];
+      userPosList = {};
       sizeX = 10;
       sizeY = 10;
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
@@ -129,16 +138,16 @@ $(function() {
         position = new THREE.Vector3(100 * cnt, -300, 100);
         piece.position.copy(position);
         scene.add(piece);
-        userPosList.push(position);
+        userPosList[fbUserIdList[cnt]] = position;
         cnt += 1;
       }
+      console.log(userPosList);
       cnt = 0;
       _ref = data.mosaicPieces;
       for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
         piecedata = _ref[_j];
         piece = new THREE.Mesh(mosaicPieceGeometry, mosaicPieceMaterials[materialNumbers[piecedata.resize_image_path]]);
-        position = new THREE.Vector3(sizeX * (cnt % 200) - 1000, -100 - 10 * (cnt / 200), 0);
-        piece.position.copy(position);
+        piece.position.copy(userPosList[piecedata.user_id]);
         piece.fb_image_id = piecedata.fb_image_id;
         scene.add(piece);
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0);
