@@ -1,9 +1,6 @@
 $ ->
   window.addEventListener "DOMContentLoaded", ->
-    $('#closeModal').click ->
-      $('#modal1').toggle('toggle')
-
-    #tooltip test
+      #tooltip test
     options =
       placement:'top'
       title:'くりっくしてね！'
@@ -14,6 +11,7 @@ $ ->
     $('#modal1 .modal-header')
       .empty()
       .append("<h3>members:xx,oo</h3>")
+      .append('<button id="closeModal" class="btn">x</button>')
     $('#modal1 .modal-body')
       .empty()
     $('#modal1 .modal-footer')
@@ -21,10 +19,23 @@ $ ->
       .append('右クリックで保存できます ')
       .append('<button id="fb_share" class="btni btn-primary">facebookでshare</button>')
 
+    mosaicContentsStr = ""
+    $('#showModal').click ->
+      $('#modal1').modal('toggle')
+      console.log mosaicContentsStr
+
+    $('#closeModal').click ->
+      $('#modal1').modal('toggle')
+
     $('#fb_share').click ->
       alert "shareしたよ"
 
+    content = '<button id="modalBtn" class="btn">modal</button>'
+    $('body').append(content)
+    $('#modalBtn').click ->
+      $('#modal1').modal('toggle')
 
+   
     #ajaxで取得するよ
     $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
       console.log data
@@ -157,6 +168,7 @@ $ ->
           path = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
           $.getJSON path, (data)->
             console.log data
+            mosaicContentsStr = data.fb_image_path
             $('#modal1 .modal-body')
               .empty()
               .append("<img src=#{data.fb_image_path}></img>")
