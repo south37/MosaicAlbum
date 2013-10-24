@@ -106,7 +106,7 @@ $ ->
       mosaicPieceMaterials = (new THREE.MeshBasicMaterial {map:tex, side:THREE.DoubleSide} for tex in mosaicPieceTexList)
 
       # debug用．pathとmosaicPieceMaterialsを対応させている．
-      materialNumbers =
+      mosaicPieceMap =
         "img/resize_img/1/1.png":0
         "img/resize_img/1/2.png":1
         "img/resize_img/1/3.png":2
@@ -116,6 +116,16 @@ $ ->
         "img/resize_img/1/7.png":6
         "img/resize_img/1/8.png":7
         "img/resize_img/1/9.png":8
+        "118":0
+        "119":1
+        "120":2
+        "121":3
+        "122":4
+        "123":5
+        "124":6
+        "125":7
+        "126":8
+
 
 
       # ジオメトリの追加
@@ -157,7 +167,7 @@ $ ->
       # mosaic
       cnt = 0
       for piecedata in data.mosaicPieces
-        piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[ materialNumbers[piecedata.resize_image_path]])
+        piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[ mosaicPieceMap[piecedata.image_id]])
         
         # TODO:initial_positionの設定
         # 対応するユーザの位置を初期値にしましょう．
