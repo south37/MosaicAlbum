@@ -40,12 +40,20 @@ class GoalImageRepository
 	 * @param  $goalImageId
      * @param  $mosaicPath
      */
-    public function update($goalImageId, $mosaicPath)
+    public function update($goalImageId, $mosaicPath, $tateDivision, $yokoDivision)
     {
-        $sql = "UPDATE goal_image SET mosaic_path = :mosaicPath, is_make_mosaic = :isMakeMosaic WHERE id = :goalImageId";
+        $sql = "UPDATE goal_image SET
+            mosaic_path = :mosaicPath,
+            is_make_mosaic = :isMakeMosaic,
+            tate_division = :tateDivision,
+            yoko_division = :yokoDivision
+            WHERE id = :goalImageId";
         $sth = $this->db->prepare($sql);
+        var_dump($sth);
         $sth->bindValue(':mosaicPath', $mosaicPath, \PDO::PARAM_STR);
         $sth->bindValue(':isMakeMosaic', 1, \PDO::PARAM_INT);
+        $sth->bindValue(':tateDivision', $tateDivision, \PDO::PARAM_INT);
+        $sth->bindValue(':yokoDivision', $yokoDivision, \PDO::PARAM_INT);
         $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
         $sth->execute();
     }

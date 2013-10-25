@@ -55,7 +55,7 @@ class CreateMosaic
                 $mosaicImage = self::makeMosaicImageByCorrAlbumImage($corrTwoDimension, $this->goalImage, $this->albumCalculationImageDataList);
 
                 // [サーバー上でコメント解除]
-                $container['repository.goalImage']->update($goalImageId, $filePath);
+                $container['repository.goalImage']->update($goalImageId, $filePath, $this->splitX, $this->splitY);
 
                 $old = umask(0002);
                 // ファイルの保存
