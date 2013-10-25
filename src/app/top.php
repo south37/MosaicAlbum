@@ -2,7 +2,7 @@
 /**
  * トップページ
  */
-$app->get('/top', function() use ($app, $container) {
+$app->get('/', function() use ($app, $container) {
     $input = $app->request()->get();
     $session = $container['session'];
 
