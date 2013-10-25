@@ -35,6 +35,7 @@ class UsedImageRepository
                 // リストに追加
                 $albumId2imageId_fbImageId[$albumId][] = ["path"=>$imagePath, "id"=>$fbImageId];
             }
+        }
         return $albumId2imageId_fbImageId;
     }
 }
