@@ -29,7 +29,8 @@ class MosaicPieceRepository
                         image
                 WHERE   album.goal_image_id = :goalImageId AND 
                         album.id = album_image.album_id AND 
-                        album_image.image_id = image.id";
+                        album_image.image_id = image.id AND
+                        album_image.is_latest = 1";
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
         $sth->execute();
@@ -56,6 +57,7 @@ class MosaicPieceRepository
                     ON image_id = image.id
             WHERE
                 is_used_mosaic = 1 AND
+                album_image.is_latest = 1 AND
                 album_image.album_id IN
                     (SELECT album.id FROM album
                     WHERE album.goal_image_id = :goalImageId);
