@@ -21,52 +21,42 @@
 
 ajax_mosaic画像リスト取得:{
   $app->get('/common/mosaic_viewer/ajax_list', function() use ($app, $container){
+    # @return
+    # userInfo(hash):
+    #   userId => userIconPath
+    #
+    # mosaicPiece(array):
+    #   mosaicpiece:
+    #     x
+    #     y
+    #     imageId
+    #     userId
+    #     fb_image_id
+    #
+    # mosaicPieceMap(hash):
+    #   image_id => resizeImgPath
+    #
+    # mosaicImage:
+    #   mosaicImagePath
+    # 
+    # test
+    #
+
     # 1.リポジトリ，必要変数の確保 
     $FBRep = $container['FBHelper'];
     $goalImageId = $container['session']->get('goalImageId');
     $goalImageId = 1;
 
     $mosaicPieceRep = $container['repository.mosaicPiece'];
+    $AlbumUserRep   = $container['repository.albumUser'];
 
     # 2.参加ユーザの画像リスト取得
     # 参加ユーザリスト作成
-    $userIdList = [
-      '2147483647' 
-      ];
-
-    # 参加ユーザアイコン取得
-    #
-    $userIconPathList = [
-      '/img/test/miku1.jpg',
-      '/img/test/miku2.jpg',
-      '/img/test/miku3.jpg'
-      ];
-
-    # userIDとiconPathのペアを返しましょう
-    $userInfo = [
-      [
-      'userID' => '2147483647',
-      'iconPath' => '/img/test/miku2.jpg',
-      ]
-      ];
-
     $userInfo = ['2147483647'=>'/img/test/miku2.jpg'];
 
     # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
-    $mosaicTextures = [
-     '/img/resize_img/1/1.png', 
-     '/img/resize_img/1/2.png',
-     '/img/resize_img/1/3.png',
-     '/img/resize_img/1/4.png',
-     '/img/resize_img/1/5.png',
-     '/img/resize_img/1/6.png',
-     '/img/resize_img/1/7.png',
-     '/img/resize_img/1/8.png',
-     '/img/resize_img/1/9.png'
-      ];
     $mosaicPieces   = $mosaicPieceRep->getMosaicPieceList($goalImageId);
     $mosaicPieceMap = $mosaicPieceRep->getResizeImagePathList($goalImageId);
-    //$mosaicPieceMap = ['123'=>'/img/test/miku1.jpg'];
     
     # 4.mosaic画像本体取得
     $mosaicImage = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
@@ -76,8 +66,8 @@ ajax_mosaic画像リスト取得:{
       "userInfo"        => $userInfo,
       "mosaicPieces"    => $mosaicPieces,
       "mosaicPieceMap"  => $mosaicPieceMap,
-      "mosaicTextures"  => $mosaicTextures,
-      "mosaicImage"     => $mosaicImage
+      "mosaicImage"     => $mosaicImage,
+      //"test"            => $userIconPathList
       ];
     echo json_encode($response);
   })
