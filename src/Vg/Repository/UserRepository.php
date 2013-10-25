@@ -96,9 +96,9 @@ class UserRepository
     {
         $sql = "SELECT * FROM user WHERE id = :userId";
         $sth = $this->db->prepare($sql);
-        $sth->bindValue(':id', $userId, \PDO::PARAM_INT);
+        $sth->bindValue(':userId', $userId, \PDO::PARAM_INT);
         $sth->execute();
-        $data = $sth->fetch(\PDO::FETCH_ASSOC))
+        $data = $sth->fetch(\PDO::FETCH_ASSOC));
         return $data['fb_icon_url'];
     }
 }
