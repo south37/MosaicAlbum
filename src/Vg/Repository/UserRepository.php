@@ -98,11 +98,7 @@ class UserRepository
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':id', $userId, \PDO::PARAM_INT);
         $sth->execute();
-        $fbIconUrls = [];
-        while($data = $sth->fetch(\PDO::FETCH_ASSOC))
-        {
-            array_push($fbIconUrls, $data['fb_icon_url']);
-        }
-        return $fbIconUrls;
+        $data = $sth->fetch(\PDO::FETCH_ASSOC))
+        return $data['fb_icon_url'];
     }
 }
