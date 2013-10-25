@@ -186,13 +186,18 @@ $ ->
       
         #TODO:picker修復
         #画面上の位置
-        mouseX2D = e.clientX - e.target.clientLeft
-        mouseY2D = e.clientY - e.target.clientTop
+        #
+        console.log "client:",e
+        
+        mouseX2D = e.clientX - e.target.offsetLeft
+        mouseY2D = e.clientY - e.target.offsetTop
        
         # 3D空間での位置．-1~1に正規化
         mouseX3D = (mouseX2D / e.target.width) * 2 - 1
         mouseY3D = (mouseY2D / e.target.height) * -2 + 1
         
+        console.log "mouseX:",mouseX3D,"mouseY:",mouseY3D
+
         vec = new THREE.Vector3 mouseX3D,mouseY3D,-1
 
         projector.unprojectVector vec,camera
