@@ -68,6 +68,21 @@ class AlbumRepository
     }
 
     /**
+     * アルバムIDでFacebookアルバムIDを検索
+     * @param  $albumId
+     * @return fbAlbumId
+     */
+    public function getFbAlbumId($albumId)
+    {
+        $sql = "SELECT * FROM album WHERE id = :albumId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':albumId', $albumId, \PDO::PARAM_INT);
+        $sth->execute();
+        $data = $sth->fetch(\PDO::FETCH_ASSOC);
+        return $data['fb_album_id'];
+    }
+
+    /**
      * ゴールイメージIDでFacebookアルバムIDを検索
      * @param  $goalImageId
      * @return fbAlbumId[]
