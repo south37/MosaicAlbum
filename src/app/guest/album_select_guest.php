@@ -60,7 +60,7 @@ CreateMosaic:{
 	$fbGoalId = $GoalImageRep->getFbGoalImageId($goalImageId);
 	//$goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
         //[DEUBG @ datch]
-        $goalPath = 'img/resource_img/ism/miku.jpg';
+        $goalPath = 'img/resource_img/ism/miku3.jpg';
 	$goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalId];
     #####$goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
 
@@ -84,6 +84,16 @@ CreateMosaic:{
             ['path' => 'img/resource_img/ism/figure007.png', 'id' => 7],
             ['path' => 'img/resource_img/ism/figure008.png', 'id' => 8],
             ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
+        ],
+        4 =>[
+            ['path' => 'img/resource_img/ism/miku1.jpg', 'id' => 10],
+            ['path' => 'img/resource_img/ism/miku2.jpg', 'id' => 11],
+            ['path' => 'img/resource_img/ism/miku3.jpg', 'id' => 12],
+            ['path' => 'img/resource_img/ism/miku4.jpg', 'id' => 13],
+            ['path' => 'img/resource_img/ism/miku5.jpg', 'id' => 14],
+            ['path' => 'img/resource_img/ism/rin1.jpg', 'id' => 15],
+            ['path' => 'img/resource_img/ism/len1.jpg', 'id' => 16]
+
         ]
     ];
     
