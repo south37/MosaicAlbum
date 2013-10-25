@@ -33,7 +33,7 @@ class UsedImageRepository
                 // FacebookイメージIDからイメージPathを取得
                 $imagePath = $fbHelper->downloadImageFromFbId($fbImage['id']);
                 // リストに追加
-                $albumId2imageId_fbImageId[$albumId][] = ["path"=>$imagePath, "id"=>$fbImageId];
+                $albumId2imageId_fbImageId[$albumId][] = ["path"=>$imagePath, "id"=>$fbImage['id']];
             }
         }
         return $albumId2imageId_fbImageId;

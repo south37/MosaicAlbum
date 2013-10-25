@@ -57,18 +57,29 @@ CreateMosaic:{
 
     # 2:prepare target & src
     # ゴールイメージ取得
-	$fbGoalId = $GoalImageRep->getFbGoalImageId($goalImageId);
-	//$goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
-        //[DEUBG @ datch]
-        $goalPath = 'img/resource_img/ism/miku.jpg';
-	$goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalId];
-    #####$goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
+    $fbGoalImageId = $GoalImageRep->getFbGoalImageId($goalImageId);
+    $goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
+    $goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalImageId];
 
     # アルバムid取得
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
     # albumImagePathList[albumId][imageNo]=>[path, id]
-    //$albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
-    // [DEBUG @ datch]
+    $albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
+    /*
+    $albumImagePathList = [
+        1 => [
+            ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],
+            ['path' => 'img/resource_img/ism/figure002.png', 'id' => 2],
+            ['path' => 'img/resource_img/ism/figure003.png', 'id' => 3],
+            ['path' => 'img/resource_img/ism/figure004.png', 'id' => 4],
+            ['path' => 'img/resource_img/ism/figure005.png', 'id' => 5],
+            ['path' => 'img/resource_img/ism/figure006.png', 'id' => 6],
+            ['path' => 'img/resource_img/ism/figure007.png', 'id' => 7],
+            ['path' => 'img/resource_img/ism/figure008.png', 'id' => 8],
+            ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
+        ]
+    ];
+    
     $albumImagePathList = [
         1 => [
             ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],
@@ -86,7 +97,7 @@ CreateMosaic:{
             ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
         ]
     ];
-    
+    */
 
     # 3.process
     # だっちプログラムにtarget/srcListなげる
@@ -120,9 +131,6 @@ CreateMosaic:{
 
     $splitWidth = $goalResizeWidth / $splitX;
     $splitHeight = $goalResizeHeight / $splitY;
-    
-    # 処理用変数
-    // $fbGoalImageId = $goalImagePath['id'];
 
     ########
     # 処理 #
