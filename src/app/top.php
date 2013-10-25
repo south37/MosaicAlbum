@@ -2,7 +2,7 @@
 /**
  * トップページ
  */
-$app->get('/', function() use ($app, $container) {
+$app->get('/top', function() use ($app, $container) {
     $input = $app->request()->get();
     $session = $container['session'];
 
@@ -78,7 +78,7 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
     $container['session']->set('isLogin', true);
     $container['session']->set('userId', $userId);
 
-    $app->redirect($app->urlFor('select_goal'));
+    $app->redirect($app->urlFor('select'));
 })
     ->name('login_process')
     ;

@@ -10,7 +10,7 @@
     {% if loginUrl != '' %}
     <a href="{{ loginUrl }}" class="btn btn-primary">facebookログイン</a>
     {% elseif goalImageId == NULL %}
-    <a href="{{ urlFor('select_goal') }}" class="btn btn-primary">スタート</a>
+    <a href="{{ urlFor('select') }}" class="btn btn-primary">スタート</a>
     {% else %}
     <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary">スタート</a>
     {% endif %}

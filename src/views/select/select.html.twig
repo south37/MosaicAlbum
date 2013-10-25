@@ -3,7 +3,7 @@
 {% block contents %}
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="hero-unit">
-      <h1>select_goal</h1>
+      <h1>select</h1>
       <p>This is a start page of MosaicAlbum.</p>
     </div>
 
@@ -13,7 +13,7 @@
     <div>
         <img src="http://www.sankou-mw.jp/option/img/pic_no-photo.jpg" alt="ゴール写真" id="goalImage">
     </div>
-    <form action="{{ urlFor('select_goal_post') }}" method="post">
+    <form action="{{ urlFor('select_post') }}" method="post">
         <input type="hidden" id="goalImageId" name="goalImageId" value="" />
         <button type="submit" class="btn btn-primary">この画像に決定</button>
     </form>
