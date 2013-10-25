@@ -88,6 +88,21 @@ class UserRepository
     }
 
     /**
+     * facebookユーザーIDでユーザーIDを検索する
+     * @param $fbUserId
+     * @return $userId
+     */
+    public function getUserIdFromFbUserId($fbUserId)
+    {
+        $sql = "SELECT * FROM user WHERE fb_user_id = :fbUserId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':fbUserId', $fbUserId, \PDO::PARAM_STR);
+        $sth->execute();
+        $data = $sth->fetch(\PDO::FETCH_ASSOC);
+        return $date['id'];
+    }
+
+    /**
      * ユーザーIDでアイコンURLを検索する
      * @param  $userId
      * @return fbIconUrl[]
