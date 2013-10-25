@@ -21,7 +21,11 @@
 
 ajax_mosaic画像リスト取得:{
   $app->get('/common/mosaic_viewer/ajax_list', function() use ($app, $container){
-    # @return
+
+    ########################
+    # ajax_list:仕様メモ
+    ########################
+    #
     # userInfo(hash):
     #   userId => userIconPath
     #

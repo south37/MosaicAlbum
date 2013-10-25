@@ -112,12 +112,10 @@ $(function() {
       $(renderer.domElement).bind('mousedown', function(e) {
         var mouseX2D, mouseX3D, mouseY2D, mouseY3D, obj, path, ray, tmp_id, vec;
         console.log("rendererclicked");
-        console.log("client:", e);
         mouseX2D = e.clientX - e.target.offsetLeft;
         mouseY2D = e.clientY - e.target.offsetTop;
         mouseX3D = (mouseX2D / e.target.width) * 2 - 1;
         mouseY3D = (mouseY2D / e.target.height) * -2 + 1;
-        console.log("mouseX:", mouseX3D, "mouseY:", mouseY3D);
         vec = new THREE.Vector3(mouseX3D, mouseY3D, -1);
         projector.unprojectVector(vec, camera);
         ray = new THREE.Raycaster(camera.position, vec.sub(camera.position).normalize());
