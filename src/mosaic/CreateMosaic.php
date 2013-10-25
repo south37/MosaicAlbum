@@ -131,6 +131,10 @@ class CreateMosaic
                 // 対応するディレクトリを作成
                 $folderPath = 'img/resize_img/' . $goalImageId;
                 if(!is_dir($folderPath)) mkdir($folderPath, 0775);
+                // [サーバー上でコメント解除]
+                $albumImageRepository = $container['repository.albumImage'];
+                // album_image.is_latestを0にする
+                $albumImageRepository->resetIsLatest($goalImageId);
                 foreach($albumImageInfosList as $albumId => $albumImageInfos)
                 {
                         for($i = 0, $n = count($this->albumSaveImageDataList[$albumId]); $i < $n; ++$i)
@@ -177,8 +181,6 @@ class CreateMosaic
                                                 }
                                         }
 
-                                        // [サーバー上でコメント解除]
-                                        $albumImageRepository = $container['repository.albumImage'];
                                         // 使用されていない場合
                                         // モザイクに使用されない情報を持たせて保存する
                                         if(count($usingImagePos) === 0)

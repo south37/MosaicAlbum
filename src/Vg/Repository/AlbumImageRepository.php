@@ -77,16 +77,20 @@ class AlbumImageRepository
 
     /**
     * mosaic_viewerで表示する対象になっている画像を非対象にする
+    * @param {int} $goalImageId goal_image.id
     * @return {boolean} updateが成功ならtrue, 失敗ならfalse
     */
-    public function modifyIsLatest()
+    public function resetIsLatest($goalImageId)
     {
         $sql = <<< SQL
-            UPDATE album_image SET 
-                is_latest = 0
-            WHERE is_latest = 1;
+            UPDATE album_image 
+            INNER JOIN album
+                ON album_image.album_id = album.id
+            SET is_latest = 0
+            WHERE is_latest = 1 AND album.goal_image_id = :goalImageId;
 SQL;
         $sth = $this->db->prepare($sql);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
         return $sth->execute();
     }
 }

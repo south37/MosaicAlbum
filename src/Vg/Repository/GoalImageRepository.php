@@ -29,7 +29,7 @@ class GoalImageRepository
         $sth->bindValue(':tateDivision', 100, \PDO::PARAM_INT);
         $sth->bindValue(':yokoDivision', 100, \PDO::PARAM_INT);
         $sth->bindValue(':isMakeMosaic', 0, \PDO::PARAM_INT);
-        var_dump($sth->execute());
+        $sth->execute();
         // insertされたカラムのIDを取得する
         $goalImageId = $this->getLatestId();
         return $goalImageId;
@@ -49,7 +49,6 @@ class GoalImageRepository
             yoko_division = :yokoDivision
             WHERE id = :goalImageId";
         $sth = $this->db->prepare($sql);
-        var_dump($sth);
         $sth->bindValue(':mosaicPath', $mosaicPath, \PDO::PARAM_STR);
         $sth->bindValue(':isMakeMosaic', 1, \PDO::PARAM_INT);
         $sth->bindValue(':tateDivision', $tateDivision, \PDO::PARAM_INT);
