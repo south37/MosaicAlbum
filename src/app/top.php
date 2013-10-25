@@ -25,6 +25,20 @@ $app->get('/', function() use ($app, $container) {
   ->name('top')
   ;
 
+$app->post('/', function() use ($app, $container) {
+    $session = $container['session'];
+
+    if ($session->get('isLogin') === true) {
+        $loginUrl = '';
+    } else {
+        $loginUrl = $container['FBHelper']->getLoginUrl();
+    }
+
+  $app->render('top/index.html.twig', ['loginUrl' => $loginUrl, 'goalImageId' => $session->get('goalImageId')]);
+})
+  ->name('top_post')
+  ;
+
 /**
  * ログインしていない場合はtop画面にリダイレクト
  *
