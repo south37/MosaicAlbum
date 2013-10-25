@@ -76,7 +76,7 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
     }
 
     $container['session']->set('isLogin', true);
-    $container['session']->set('userId', $userId);
+    $container['session']->set('userId', $user->id);
 
     $app->redirect($app->urlFor('select'));
 })
