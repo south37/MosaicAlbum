@@ -54,7 +54,7 @@ $ ->
       console.log data
 
       # goalImgをmodalに追加
-      mosaicImagePath = data.mosaicImage
+      mosaicImagePath = data.mosaicInfo.mosaicPath
 
       # 1.描画ベース(renderer / scene)の作成
       # レンダラの作成．追加
@@ -140,6 +140,8 @@ $ ->
       # tween設定
 
       # fb_icon
+      userNum = fbIconMaterials.length
+      console.log "usernum:",userNum
       cnt = 0
       for key,val of fbIconMaterials
         piece = new THREE.Mesh( fbIconGeometry, val)

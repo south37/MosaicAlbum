@@ -29,9 +29,9 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, isTweenInitiaized, key, lookTarget, mosaicPieceGeometry, mosaicPieceMaterials, moveTime, nearClip, offsetTime, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn, userPosList, val, width, _i, _len, _ref, _ref1, _ref2;
+      var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, isTweenInitiaized, key, lookTarget, mosaicPieceGeometry, mosaicPieceMaterials, moveTime, nearClip, offsetTime, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn, userNum, userPosList, val, width, _i, _len, _ref, _ref1, _ref2;
       console.log(data);
-      mosaicImagePath = data.mosaicImage;
+      mosaicImagePath = data.mosaicInfo.mosaicPath;
       width = window.innerWidth;
       height = window.innerHeight - 100;
       width = $('#container').innerWidth();
@@ -82,6 +82,8 @@ $(function() {
       sizeY = 10;
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
       tweenList = [];
+      userNum = fbIconMaterials.length;
+      console.log("usernum:", userNum);
       cnt = 0;
       for (key in fbIconMaterials) {
         val = fbIconMaterials[key];
