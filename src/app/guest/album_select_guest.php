@@ -64,6 +64,7 @@ CreateMosaic:{
         // 作成されているなら処理を終了する
         exit;
     }
+
     // モザイク画像を作成済みにする
     $GoalImageRep->setIsMakeMosaic(1, $goalImageId);
 

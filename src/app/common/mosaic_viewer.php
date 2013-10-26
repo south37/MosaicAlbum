@@ -1,6 +1,11 @@
 <?php
 ページ読み込みテスト:{
-  $app->get('/common/mosaic_viewer/test', function() use ($app) {
+  $app->get('/common/mosaic_viewer/test', function() use ($app,$container) {
+    # DBアクセステスト
+    print_r($container['session']->get('goalImageId'));
+
+    print_r($container['repository.albumUser']->getFbIconPathList(3,$container));
+
     $app->render('common/mosaic_viewer.html.twig');
   })
     ->name('mosaic_viewer_test')
@@ -48,8 +53,10 @@ ajax_mosaic画像リスト取得:{
 
     # 1.リポジトリ，必要変数の確保 
     $FBRep = $container['FBHelper'];
-    $goalImageId = $container['session']->get('goalImageId');
+
     $goalImageId = 1;
+    #TODO:goalimageidをsessionから取得
+    //$goalImageId = $container['session']->get('goalImageId');
 
     $mosaicPieceRep = $container['repository.mosaicPiece'];
     $AlbumUserRep   = $container['repository.albumUser'];
@@ -57,6 +64,9 @@ ajax_mosaic画像リスト取得:{
     # 2.参加ユーザの画像リスト取得
     # 参加ユーザリスト作成
     $userInfo = ['2147483647'=>'/img/test/miku2.jpg'];
+
+    #TODO:userInfoの取得
+    //$userInfo = $AlbumUserRep->getFbIconPathList($goalImageId,$container);
 
     # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
     $mosaicPieces   = $mosaicPieceRep->getMosaicPieceList($goalImageId);
