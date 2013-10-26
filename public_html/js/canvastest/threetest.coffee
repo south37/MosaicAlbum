@@ -54,12 +54,12 @@ $ ->
       console.log data
 
       # goalImgをmodalに追加
-      mosaicImagePath = data.mosaicImage
+      mosaicImagePath = data.mosaicInfo.mosaicPath
 
       # 1.描画ベース(renderer / scene)の作成
       # レンダラの作成．追加
       width  = window.innerWidth 
-      height = window.innerHeight - 100
+      height = window.innerHeight - 180
       width  = $('#container').innerWidth()
       #height = $('#container').innerHeight()
       renderer = new THREE.WebGLRenderer()
@@ -117,6 +117,8 @@ $ ->
       # 2-2:ジオメトリ作成
       # process:種類とサイズを指定
 
+      #TODO:適切なジオメトリサイズをDB情報から取得
+
       # fb-icon
       sizeX = 100
       sizeY = 100
@@ -125,8 +127,8 @@ $ ->
       userPosList = {}
 
       # mosaic-piece
-      sizeX = 10
-      sizeY = 10
+      sizeX = 15
+      sizeY = 15
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
 
       tweenList = []
@@ -140,11 +142,17 @@ $ ->
       # tween設定
 
       # fb_icon
+
+      # userpos用変数
+      # TODO:ユーザ初期位置設定．現状は直線上.ハードコーディングなので，widthとか取ってきて割合指定にしよう．
+      userNum = data.mosaicInfo.userNum
+      userPosMin  =  new THREE.Vector3  -width * 0.6, -height * 0.7, 100 
+      userPosMax  =  new THREE.Vector3   width * 0.6, -height * 0.7, 100
+
       cnt = 0
       for key,val of fbIconMaterials
         piece = new THREE.Mesh( fbIconGeometry, val)
-        # TODO:userIconの位置設定
-        position = new THREE.Vector3( 100 * cnt, -300, 100)
+        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax,cnt/(userNum-1))
         piece.position.copy position
         scene.add piece
 
@@ -154,11 +162,24 @@ $ ->
       console.log userPosList
 
       # mosaic-piece
+     
+      
+      mosaicLeftPct  = -0.5 
+      mosaicRightPct = 0.5
+      mosaicWidth    = sizeX * data.mosaicInfo.splitX
+      mosaicHeight   = sizeY * data.mosaicInfo.splitY
+      mosaicLeft     = - mosaicWidth/2
+      mosaicRight    =   mosaicWidth/2
+
+
+      moveTimeMin = 300
+      moveTImeMax = 600
+      offsetTimeMax = 5000
+     
       cnt = 0
       for piecedata in data.mosaicPieces
         piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[piecedata.image_id])
         
-        # TODO:initial_positionの設定
         # 対応するユーザの位置を初期値にしましょう．
         piece.position.copy userPosList[piecedata.user_id]
 
@@ -168,9 +189,11 @@ $ ->
 
         # tween設定
         # 終了位置・移動時間・オフセット時間を指定
-        target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
-        moveTime = 300
-        offsetTime = 100 + 10 * cnt
+
+        #TODO:適切な終了位置をDB情報から計算
+        target = new THREE.Vector3(piecedata.x * sizeX + mosaicLeft, 500 - piecedata.y * sizeY, 0)
+        moveTime =moveTimeMin + Math.floor(Math.random() * (moveTImeMax-moveTimeMin)) 
+        offsetTime = 100 + 10 * Math.floor(Math.random()*offsetTimeMax) 
 
         # tweenオブジェクト生成
         twn = new TWEEN.Tween(piece.position)
@@ -191,6 +214,8 @@ $ ->
         # 3D空間での位置．-1~1に正規化
         mouseX3D = (mouseX2D / e.target.width) * 2 - 1
         mouseY3D = (mouseY2D / e.target.height) * -2 + 1
+       
+        console.log "click:",mouseX3D,":",mouseY3D
         
         vec = new THREE.Vector3 mouseX3D,mouseY3D,-1
 
