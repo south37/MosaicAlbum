@@ -79,23 +79,18 @@ CreateMosaic:{
     $albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
 
     # 3.process
-    # だっちプログラムにtarget/srcListなげる
     createMosaic($goalImageId, $goalImagePath, $albumImagePathList, $container);
 
     # 4.notification
     # モザイク作成されたことをお知らせする
     //createNotif($container);
 
-    $app->redirect($link);
+    //$app->redirect($link);
   })
     ->name('create_mosaic')
     ;
 
   function createMosaic($goalImageId, $goalImagePath, $albumImagePathList, $container){
-    // DEBUG
-    $goalImageId = 1;
-    
-    # だっちのプログラムはここに移植
     $saveFilePath = 'img/mosaic_img/'.'mosaic'.$goalImageId.'.png';
 
     # モザイク処理設定
