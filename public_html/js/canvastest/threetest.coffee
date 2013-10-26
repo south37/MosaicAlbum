@@ -163,7 +163,9 @@ $ ->
 
       # mosaic-piece
       cnt = 0
-      offsetTimeMax = 3000
+      moveTimeMin = 300
+      moveTImeMax = 600
+      offsetTimeMax = 5000
 
       for piecedata in data.mosaicPieces
         piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[piecedata.image_id])
@@ -180,7 +182,7 @@ $ ->
 
         #TODO:適切な終了位置をDB情報から計算
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
-        moveTime = 300
+        moveTime =moveTimeMin + Math.floor(Math.random() * (moveTImeMax-moveTimeMin)) 
         offsetTime = 100 + 10 * Math.floor(Math.random()*offsetTimeMax) 
 
         # tweenオブジェクト生成
