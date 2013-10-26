@@ -144,15 +144,15 @@ $ ->
       # fb_icon
 
       # userpos用変数
-      # TODO:ユーザ初期位置設定．現状は直線上
+      # TODO:ユーザ初期位置設定．現状は直線上.ハードコーディングなので，widthとか取ってきて割合指定にしよう．
       userNum = data.mosaicInfo.userNum
-      userPosMin  =  new THREE.Vector3 -500, -300, 100 
-      userPosMax  =  new THREE.Vector3  500, -300, 100
+      userPosMin  =  new THREE.Vector3  -500, -300, 100 
+      userPosMax  =  new THREE.Vector3   500, -300, 100
 
       cnt = 0
       for key,val of fbIconMaterials
         piece = new THREE.Mesh( fbIconGeometry, val)
-        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax,cnt/userNum)
+        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax,cnt/(userNum-1))
         piece.position.copy position
         scene.add piece
 
@@ -163,6 +163,8 @@ $ ->
 
       # mosaic-piece
       cnt = 0
+      offsetTimeMax = 3000
+
       for piecedata in data.mosaicPieces
         piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[piecedata.image_id])
         
@@ -179,7 +181,7 @@ $ ->
         #TODO:適切な終了位置をDB情報から計算
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
         moveTime = 300
-        offsetTime = 100 + 10 * Math.floor(Math.random()*3000) 
+        offsetTime = 100 + 10 * Math.floor(Math.random()*offsetTimeMax) 
 
         # tweenオブジェクト生成
         twn = new TWEEN.Tween(piece.position)
@@ -200,6 +202,8 @@ $ ->
         # 3D空間での位置．-1~1に正規化
         mouseX3D = (mouseX2D / e.target.width) * 2 - 1
         mouseY3D = (mouseY2D / e.target.height) * -2 + 1
+       
+        console.log "click:",mouseX3D,":",mouseY3D
         
         vec = new THREE.Vector3 mouseX3D,mouseY3D,-1
 
