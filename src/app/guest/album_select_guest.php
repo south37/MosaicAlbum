@@ -60,7 +60,8 @@ CreateMosaic:{
 	$fbGoalId = $GoalImageRep->getFbGoalImageId($goalImageId);
 	//$goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
         //[DEUBG @ datch]
-        $goalPath = 'img/resource_img/ism/miku3.jpg';
+    $goalPath = 'img/resource_img/ism/miku3.jpg';
+    //$goalPath = 'img/masa.jpg';
 	$goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalId];
     #####$goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
 
