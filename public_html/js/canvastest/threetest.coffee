@@ -143,7 +143,7 @@ $ ->
       cnt = 0
       for key,val of fbIconMaterials
         piece = new THREE.Mesh( fbIconGeometry, val)
-
+        # TODO:userIconの位置設定
         position = new THREE.Vector3( 100 * cnt, -300, 100)
         piece.position.copy position
         scene.add piece
