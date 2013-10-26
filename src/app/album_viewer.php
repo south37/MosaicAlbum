@@ -14,7 +14,7 @@ $app->get('/album_viewer', function() use ($app, $container) {
 			# DBに登録
 			$imageID = $container['repository.image']->insert($image['id']);
 			# イメージパスリストにイメージパスを保存
-			array_push($imagePathList, $image['imagePath']);
+			array_push($imagePathList, $image['thumbnailPath']);
 		}
 	}
 	$app->render('album_viewer/album_viewer.html.twig', ["imagePathList"=>$imagePathList]);
