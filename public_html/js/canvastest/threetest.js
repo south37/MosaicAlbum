@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, isTweenInitiaized, key, lookTarget, mosaicHeight, mosaicLeft, mosaicLeftPct, mosaicPieceGeometry, mosaicPieceMaterials, mosaicRight, mosaicRightPct, mosaicWidth, moveTImeMax, moveTime, moveTimeMin, nearClip, offsetTime, offsetTimeMax, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn, userNum, userPosList, userPosMax, userPosMin, val, width, _i, _len, _ref, _ref1, _ref2;
+      var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, isTweenInitiaized, key, lookTarget, mosaicHeight, mosaicLeft, mosaicLeftPct, mosaicPieceGeometry, mosaicPieceMaterials, mosaicRight, mosaicRightPct, mosaicWidth, moveTImeMax, moveTime, moveTimeMin, nearClip, offsetTime, offsetTimeMax, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn_target, twn_zoom, userNum, userPosList, userPosMax, userPosMin, val, width, zoomVector, zoompos, _i, _len, _ref, _ref1, _ref2;
       console.log(data);
       mosaicImagePath = data.mosaicInfo.mosaicPath;
       width = window.innerWidth;
@@ -83,8 +83,8 @@ $(function() {
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
       tweenList = [];
       userNum = data.mosaicInfo.userNum;
-      userPosMin = new THREE.Vector3(-width * 0.6, -height * 0.7, 100);
-      userPosMax = new THREE.Vector3(width * 0.6, -height * 0.7, 100);
+      userPosMin = new THREE.Vector3(-width * 0.6, -height * 0.9, 100);
+      userPosMax = new THREE.Vector3(width * 0.6, -height * 0.9, 100);
       cnt = 0;
       for (key in fbIconMaterials) {
         val = fbIconMaterials[key];
@@ -102,6 +102,7 @@ $(function() {
       mosaicHeight = sizeY * data.mosaicInfo.splitY;
       mosaicLeft = -mosaicWidth / 2;
       mosaicRight = mosaicWidth / 2;
+      zoomVector = new THREE.Vector3(0, 0, 1000);
       moveTimeMin = 300;
       moveTImeMax = 600;
       offsetTimeMax = 5000;
@@ -113,11 +114,15 @@ $(function() {
         piece.position.copy(userPosList[piecedata.user_id]);
         piece.fb_image_id = piecedata.fb_image_id;
         scene.add(piece);
-        target = new THREE.Vector3(piecedata.x * sizeX + mosaicLeft, 500 - piecedata.y * sizeY, 0);
+        target = new THREE.Vector3(piecedata.x * sizeX + mosaicLeft, height * 0.9 - piecedata.y * sizeY, 0);
+        zoompos = new THREE.Vector3().copy(piece.position).lerp(target, 0.1).lerp(zoomVector, 0.95 * Math.random());
+        console.log(zoompos);
         moveTime = moveTimeMin + Math.floor(Math.random() * (moveTImeMax - moveTimeMin));
         offsetTime = 100 + 10 * Math.floor(Math.random() * offsetTimeMax);
-        twn = new TWEEN.Tween(piece.position).to(target, moveTime).delay(offsetTime);
-        tweenList.push(twn);
+        twn_zoom = new TWEEN.Tween(piece.position).to(zoompos, moveTime * 5).easing(TWEEN.Easing.Quintic.Out).delay(offsetTime);
+        twn_target = new TWEEN.Tween(piece.position).to(target, moveTime * 5);
+        twn_zoom.chain(twn_target);
+        tweenList.push(twn_zoom);
         cnt += 1;
       }
       projector = new THREE.Projector();
@@ -146,7 +151,7 @@ $(function() {
       });
       isTweenInitiaized = false;
       $('canvas').mouseup(function() {
-        var _j, _len1;
+        var twn, _j, _len1;
         if (!isTweenInitiaized) {
           for (_j = 0, _len1 = tweenList.length; _j < _len1; _j++) {
             twn = tweenList[_j];

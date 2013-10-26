@@ -146,8 +146,8 @@ $ ->
       # userpos用変数
       # TODO:ユーザ初期位置設定．現状は直線上.ハードコーディングなので，widthとか取ってきて割合指定にしよう．
       userNum = data.mosaicInfo.userNum
-      userPosMin  =  new THREE.Vector3  -width * 0.6, -height * 0.7, 100 
-      userPosMax  =  new THREE.Vector3   width * 0.6, -height * 0.7, 100
+      userPosMin  =  new THREE.Vector3  -width * 0.6, -height * 0.9, 100 
+      userPosMax  =  new THREE.Vector3   width * 0.6, -height * 0.9, 100
 
       cnt = 0
       for key,val of fbIconMaterials
@@ -163,7 +163,6 @@ $ ->
 
       # mosaic-piece
      
-      
       mosaicLeftPct  = -0.5 
       mosaicRightPct = 0.5
       mosaicWidth    = sizeX * data.mosaicInfo.splitX
@@ -171,6 +170,7 @@ $ ->
       mosaicLeft     = - mosaicWidth/2
       mosaicRight    =   mosaicWidth/2
 
+      zoomVector     = new THREE.Vector3 0,0,1000
 
       moveTimeMin = 300
       moveTImeMax = 600
@@ -191,15 +191,25 @@ $ ->
         # 終了位置・移動時間・オフセット時間を指定
 
         #TODO:適切な終了位置をDB情報から計算
-        target = new THREE.Vector3(piecedata.x * sizeX + mosaicLeft, 500 - piecedata.y * sizeY, 0)
+        target = new THREE.Vector3(piecedata.x * sizeX + mosaicLeft, height * 0.9- piecedata.y * sizeY, 0)
+        zoompos = new THREE.Vector3().copy(piece.position).lerp(target,0.1).lerp(zoomVector,0.95 * Math.random())
+        console.log zoompos
+
         moveTime =moveTimeMin + Math.floor(Math.random() * (moveTImeMax-moveTimeMin)) 
-        offsetTime = 100 + 10 * Math.floor(Math.random()*offsetTimeMax) 
+        offsetTime = 100 + 10 * Math.floor(Math.random() * offsetTimeMax) 
 
         # tweenオブジェクト生成
-        twn = new TWEEN.Tween(piece.position)
-          .to(target , moveTime)
+        twn_zoom = new TWEEN.Tween(piece.position)
+          .to(zoompos , moveTime * 5)
+          .easing(TWEEN.Easing.Quintic.Out)
           .delay(offsetTime)
-        tweenList.push twn
+
+        twn_target = new TWEEN.Tween(piece.position)
+          .to(target , moveTime * 5 )
+
+        twn_zoom.chain(twn_target)
+
+        tweenList.push twn_zoom
         cnt += 1
 
       # ray
