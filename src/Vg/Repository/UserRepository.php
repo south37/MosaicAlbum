@@ -99,7 +99,7 @@ class UserRepository
         $sth->bindValue(':fbUserId', $fbUserId, \PDO::PARAM_STR);
         $sth->execute();
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
-        return $date['id'];
+        return $data['id'];
     }
 
     /**
