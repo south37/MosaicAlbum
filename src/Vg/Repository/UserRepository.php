@@ -99,7 +99,7 @@ class UserRepository
         $sth->bindValue(':fbUserId', $fbUserId, \PDO::PARAM_STR);
         $sth->execute();
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
-        return $date['id'];
+        return $data['id'];
     }
 
     /**
@@ -107,7 +107,7 @@ class UserRepository
      * @param  $userId
      * @return fbIconUrl[]
      */
-    public function getUserIconImgUrlList($userId)
+    public function getUserIconImgUrl($userId)
     {
         $sql = "SELECT * FROM user WHERE id = :userId";
         $sth = $this->db->prepare($sql);

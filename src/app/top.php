@@ -6,25 +6,34 @@ $app->get('/', function() use ($app, $container) {
     $input = $app->request()->get();
     $session = $container['session'];
 
+    // getパラメータとしてcodeを受け取っていれば、facebook認証後のリダイレクトと判定
     if (array_key_exists('code', $input)) {
         $app->redirect($app->urlFor('login_process'));
     }
 
+    // getパラメータとしてgoalImageIdを受け取っていればguest、そうでなければhostと判定
     if (array_key_exists('goalImageId', $input)) {
         $session->set('goalImageId', $input['goalImageId']);
-    }
-
-    if ($session->get('isLogin') === true) {
-        $loginUrl = '';
+        $isHost = false;
     } else {
-        $loginUrl = $container['FBHelper']->getLoginUrl();
+        $isHost = true;
     }
 
-  $app->render('top/index.html.twig', ['loginUrl' => $loginUrl, 'goalImageId' => $session->get('goalImageId')]);
+    // ログイン判定
+    if ($session->get('isLogin') !== true) {
+        $loginUrl = $container['FBHelper']->getLoginUrl();
+    } else {
+        $loginUrl = '';
+    }
+
+  $app->render('top/index.html.twig', ['loginUrl' => $loginUrl, 'goalImageId' => $session->get('goalImageId'), 'isHost' => $isHost]);
 })
   ->name('top')
   ;
 
+/**
+ * facebookに埋め込まれると、最初にpostリクエストが送られるため、このページが見られる
+ */
 $app->post('/', function() use ($app, $container) {
     $session = $container['session'];
 
