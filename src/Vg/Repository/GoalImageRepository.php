@@ -123,4 +123,22 @@ class GoalImageRepository
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
         return $data['is_make_mosaic'];
     }
+
+    /**
+    * @param $isMakeMosaic
+    * @param $goalImageId
+    * @return {Boolean}
+    */
+    public function setIsMakeMosaic($isMakeMosaic, $goalImageId)
+    {
+        $sql = <<< SQL
+            UPDATE goal_image
+            SET is_make_mosaic = :isMakeMosaic
+            WHERE id = :goalImageId;
+SQL;
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':isMakeMosaic', $isMakeMosaic, \PDO::PARAM_INT);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        return $sth->execute();
+    }
 }

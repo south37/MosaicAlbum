@@ -44,7 +44,7 @@ $app->post('/guest/album_select_guest', function() use ($app, $container) {
 
 CreateMosaic:{
   $app->get('/guest/album_select_guest/create', function() use ($app, $container){
-
+    $link = '/common/mosaic_viewer';
     # 1:init
     # repository準備
     $goalImageId = $container['session']->get('goalImageId');
@@ -54,6 +54,18 @@ CreateMosaic:{
     $AlbumImageRep = $container['repository.albumImage'];
     $UsedImageRep = $container['repository.usedImage'];
     $FBHelper = $container['FBHelper'];
+
+    # 既に現在の状態のモザイク画で作成されているかを調べる
+    $isMakedMosaic = $GoalImageRep->isMakeMosaic($goalImageId);
+    if($isMakedMosaic == 1)
+    {
+        // 直接アクセスした場合はこちらでリダイレクトを行う
+        $app->redirect($link);
+        // 作成されているなら処理を終了する
+        exit;
+    }
+    // モザイク画像を作成済みにする
+    $GoalImageRep->setIsMakeMosaic(1, $goalImageId);
 
     # 2:prepare target & src
     # ゴールイメージ取得
@@ -65,39 +77,6 @@ CreateMosaic:{
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
     # albumImagePathList[albumId][imageNo]=>[path, id]
     $albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
-    /*
-    $albumImagePathList = [
-        1 => [
-            ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],
-            ['path' => 'img/resource_img/ism/figure002.png', 'id' => 2],
-            ['path' => 'img/resource_img/ism/figure003.png', 'id' => 3],
-            ['path' => 'img/resource_img/ism/figure004.png', 'id' => 4],
-            ['path' => 'img/resource_img/ism/figure005.png', 'id' => 5],
-            ['path' => 'img/resource_img/ism/figure006.png', 'id' => 6],
-            ['path' => 'img/resource_img/ism/figure007.png', 'id' => 7],
-            ['path' => 'img/resource_img/ism/figure008.png', 'id' => 8],
-            ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
-        ]
-    ];
-    
-    $albumImagePathList = [
-        1 => [
-            ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],
-            ['path' => 'img/resource_img/ism/figure002.png', 'id' => 2],
-            ['path' => 'img/resource_img/ism/figure003.png', 'id' => 3],
-            ['path' => 'img/resource_img/ism/figure004.png', 'id' => 4]
-        ],
-        2 => [
-            ['path' => 'img/resource_img/ism/figure005.png', 'id' => 5],
-            ['path' => 'img/resource_img/ism/figure006.png', 'id' => 6]
-        ],
-        3 => [
-            ['path' => 'img/resource_img/ism/figure007.png', 'id' => 7],
-            ['path' => 'img/resource_img/ism/figure008.png', 'id' => 8],
-            ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
-        ]
-    ];
-    */
 
     # 3.process
     # だっちプログラムにtarget/srcListなげる
@@ -107,9 +86,7 @@ CreateMosaic:{
     # モザイク作成されたことをお知らせする
     //createNotif($container);
 
-    $link = '/common/mosaic_viewer';
     $app->redirect($link);
-
   })
     ->name('create_mosaic')
     ;
