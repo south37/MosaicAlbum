@@ -71,12 +71,44 @@ CreateMosaic:{
     # ゴールイメージ取得
     $fbGoalImageId = $GoalImageRep->getFbGoalImageId($goalImageId);
     $goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
+    //$goalPath = 'img/resource_img/ism/miku3.jpg';
     $goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalImageId];
 
     # アルバムid取得
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
-    # albumImagePathList[albumId][imageNo]=>[path, id]
+ 
     $albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
+    
+    // [DEBUG @ datch]
+    /*
+    $albumImagePathList = [
+        1 => [
+            ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],
+            ['path' => 'img/resource_img/ism/figure002.png', 'id' => 2],
+            ['path' => 'img/resource_img/ism/figure003.png', 'id' => 3],
+            ['path' => 'img/resource_img/ism/figure004.png', 'id' => 4]
+        ],
+        2 => [
+            ['path' => 'img/resource_img/ism/figure005.png', 'id' => 5],
+            ['path' => 'img/resource_img/ism/figure006.png', 'id' => 6]
+        ],
+        3 => [
+            ['path' => 'img/resource_img/ism/figure007.png', 'id' => 7],
+            ['path' => 'img/resource_img/ism/figure008.png', 'id' => 8],
+            ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
+        ],
+        4 =>[
+            ['path' => 'img/resource_img/ism/miku1.jpg', 'id' => 10],
+            ['path' => 'img/resource_img/ism/miku2.jpg', 'id' => 11],
+            ['path' => 'img/resource_img/ism/miku3.jpg', 'id' => 12],
+            ['path' => 'img/resource_img/ism/miku4.jpg', 'id' => 13],
+            ['path' => 'img/resource_img/ism/miku5.jpg', 'id' => 14],
+            ['path' => 'img/resource_img/ism/rin1.jpg', 'id' => 15],
+            ['path' => 'img/resource_img/ism/len1.jpg', 'id' => 16]
+
+        ]
+        ];
+     //*/
 
     # 3.process
     # だっちプログラムにtarget/srcListなげる
