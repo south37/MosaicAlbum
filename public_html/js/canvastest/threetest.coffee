@@ -127,8 +127,8 @@ $ ->
       userPosList = {}
 
       # mosaic-piece
-      sizeX = 15
-      sizeY = 15
+      sizeX = 20
+      sizeY = 20
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
 
       tweenList = []
@@ -146,8 +146,8 @@ $ ->
       # userpos用変数
       # TODO:ユーザ初期位置設定．現状は直線上.ハードコーディングなので，widthとか取ってきて割合指定にしよう．
       userNum = data.mosaicInfo.userNum
-      userPosMin  =  new THREE.Vector3  -width * 0.6, -height * 0.9, 100 
-      userPosMax  =  new THREE.Vector3   width * 0.6, -height * 0.9, 100
+      userPosMin  =  new THREE.Vector3  -width * 0.6, -height * 0.9, 200 
+      userPosMax  =  new THREE.Vector3   width * 0.6, -height * 0.9, 200
 
       cnt = 0
       for key,val of fbIconMaterials
@@ -191,7 +191,7 @@ $ ->
         # 終了位置・移動時間・オフセット時間を指定
 
         #TODO:適切な終了位置をDB情報から計算
-        target = new THREE.Vector3(piecedata.x * sizeX + mosaicLeft, height * 0.9- piecedata.y * sizeY, 0)
+        target = new THREE.Vector3(piecedata.x * sizeX + mosaicLeft, height - piecedata.y * sizeY, 0)
         zoompos = new THREE.Vector3().copy(piece.position).lerp(target,0.1).lerp(zoomVector,0.95 * Math.random())
         console.log zoompos
 
@@ -201,11 +201,12 @@ $ ->
         # tweenオブジェクト生成
         twn_zoom = new TWEEN.Tween(piece.position)
           .to(zoompos , moveTime * 5)
-          .easing(TWEEN.Easing.Quintic.Out)
+          .easing(TWEEN.Easing.Quadratic.Out)
           .delay(offsetTime)
 
         twn_target = new TWEEN.Tween(piece.position)
           .to(target , moveTime * 5 )
+          .easing(TWEEN.Easing.Quadratic.In)
 
         twn_zoom.chain(twn_target)
 
