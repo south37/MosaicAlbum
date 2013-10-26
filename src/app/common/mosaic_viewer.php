@@ -6,11 +6,11 @@
 
     $userIdList =$container['repository.album']->getUserIdList(1);
     print_r($userIdList);
-    $userIconPathList = $container['repository.user']->getUserIconImgUrlList($userIdList[0]);
+    $userIconPathList = $container['repository.user']->getUserIconImgUrl($userIdList[0]);
     print_r($userIconPathList);
 
-    //$mosaicImage = $container['repository.goalImage']->getMosaicImg(1);
-    //print_r($mosaicImage);
+    $mosaicImage = $container['repository.goalImage']->getMosaicImg(1);
+    print_r($mosaicImage);
     //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
     //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
 
@@ -101,12 +101,12 @@ ajax_mosaic画像リスト取得:{
     # 4.mosaiInfoつくる
     #
     # TODO:DBからデータをひろう
-    $mosaicImage = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
-    //$mosaicImage   = $goalImageRep->getMosaicImg($goalImageId); 
+    $mosaicPath    = '/img/mosaic_img/osaic'.$goalImageId.'.png';
+    $mosaicImage   = $goalImageRep->getMosaicImg($goalImageId);
     $originalImage = '/img/test/miku3.jpg';
 
     $mosaicInfo = [
-      "mosaicPath"  => $mosaicImage,
+      "mosaicPath"   => $mosaicPath,
       "originalPath" => $originalImage,
       "userNum" => $userNum,
       "splitX" => 80,
