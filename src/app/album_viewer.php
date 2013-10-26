@@ -37,6 +37,8 @@ $app->post('/album_viewer', function() use ($app, $container) {
         'fb_album_id'   => $fbAlbumId,
     ]);
     $container['repository.album']->insert($album);
+    // アルバムを追加したので、モザイク画を未作成の状態にする
+    $container['repository.goalImage']->setIsMakeMosaic(0, $goalImageId);
 	#アルバムビューアへ戻る
 	$app->redirect($app->urlFor('album_viewer', ['goalImageId' => $goalImageId]));
 })

@@ -15,11 +15,28 @@
          <img src="{{ imagePath }}"></option>
     {% endfor %}
    
-    <div>
-      <a href="{{ urlFor('mosaic_viewer') }}" class="btn btn-primary btn-large">モザイクを作成する</a>
+    <div id="buttons">
+      <!-- <a href="{{ urlFor('mosaic_viewer') }}" class="btn btn-primary btn-large">モザイクを作成する</a> -->
+      <button id="createMosaic" onclick="create();" class="btn btn-primary btn-large">モザイクを作成する</button><br>
     </div>
 {% endblock %}
 
 {% block javascript%}
 <script type="text/javascript" src="{{ asset('/js/album_viewer/select_album.js') }}"></script>
+<script type="text/javascript">
+function create()
+{
+    alert('モザイク画の作成を開始しました。\n完成したらFaceBookからお知らせが来るので、しばらくお待ち下さい。');
+    $("#createMosaic").attr('disabled', 'disabled');
+    $.ajax({
+        type:"GET",
+        url:"{{ urlFor('create_mosaic') }}",
+        success: function(arr)
+        {
+            alert('モザイク画が作成されました');
+            $("#buttons").append('<a href="{{ urlFor('mosaic_viewer') }}" class="btn btn-primary btn-large">作成されたモザイクを見る</a><br>');
+        }
+    });
+}
+</script>
 {% endblock%}
