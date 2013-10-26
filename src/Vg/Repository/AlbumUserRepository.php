@@ -31,7 +31,7 @@ class AlbumUserRepository
         $userIdList = $albumRepository->getUserIdList($goalImageId);
         foreach ($userIdList as $userId) {
             # ユーザIDでFacebookアイコンURLを取得
-            $fbIconUrl = $userRepository->getUserIconImgUrlList($userId);
+            $fbIconUrl = $userRepository->getUserIconImgUrl($userId);
             # FacebookアイコンURLからFacebookアイコンパスを取得
             $fbIconPath = $fbHelper->downloadImage($fbIconUrl);
             # FacebookアイコンパスをFacebookアイコンパスリストに追加
