@@ -108,7 +108,10 @@ ajax_mosaic画像リスト取得:{
     $mosaicInfo = [
       "mosaicPath"  => $mosaicImage,
       "originalPath" => $originalImage,
-      "userNum" => $userNum
+      "userNum" => $userNum,
+      "splitX" => 80,
+      "splitY" => 60
+
       ];
 
     # 5.ajax_return

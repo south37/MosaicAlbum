@@ -59,7 +59,7 @@ $ ->
       # 1.描画ベース(renderer / scene)の作成
       # レンダラの作成．追加
       width  = window.innerWidth 
-      height = window.innerHeight - 100
+      height = window.innerHeight - 180
       width  = $('#container').innerWidth()
       #height = $('#container').innerHeight()
       renderer = new THREE.WebGLRenderer()
@@ -127,8 +127,8 @@ $ ->
       userPosList = {}
 
       # mosaic-piece
-      sizeX = 10
-      sizeY = 10
+      sizeX = 15
+      sizeY = 15
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX,sizeY,1,1)
 
       tweenList = []
@@ -146,8 +146,8 @@ $ ->
       # userpos用変数
       # TODO:ユーザ初期位置設定．現状は直線上.ハードコーディングなので，widthとか取ってきて割合指定にしよう．
       userNum = data.mosaicInfo.userNum
-      userPosMin  =  new THREE.Vector3  -500, -300, 100 
-      userPosMax  =  new THREE.Vector3   500, -300, 100
+      userPosMin  =  new THREE.Vector3  -width * 0.6, -height * 0.7, 100 
+      userPosMax  =  new THREE.Vector3   width * 0.6, -height * 0.7, 100
 
       cnt = 0
       for key,val of fbIconMaterials
@@ -162,11 +162,21 @@ $ ->
       console.log userPosList
 
       # mosaic-piece
-      cnt = 0
+     
+      
+      mosaicLeftPct  = -0.5 
+      mosaicRightPct = 0.5
+      mosaicWidth    = sizeX * data.mosaicInfo.splitX
+      mosaicHeight   = sizeY * data.mosaicInfo.splitY
+      mosaicLeft     = - mosaicWidth/2
+      mosaicRight    =   mosaicWidth/2
+
+
       moveTimeMin = 300
       moveTImeMax = 600
       offsetTimeMax = 5000
-
+     
+      cnt = 0
       for piecedata in data.mosaicPieces
         piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[piecedata.image_id])
         
@@ -181,7 +191,7 @@ $ ->
         # 終了位置・移動時間・オフセット時間を指定
 
         #TODO:適切な終了位置をDB情報から計算
-        target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
+        target = new THREE.Vector3(piecedata.x * sizeX + mosaicLeft, 500 - piecedata.y * sizeY, 0)
         moveTime =moveTimeMin + Math.floor(Math.random() * (moveTImeMax-moveTimeMin)) 
         offsetTime = 100 + 10 * Math.floor(Math.random()*offsetTimeMax) 
 
