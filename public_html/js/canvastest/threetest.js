@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, isTweenInitiaized, key, lookTarget, mosaicPieceGeometry, mosaicPieceMaterials, moveTime, nearClip, offsetTime, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn, userNum, userPosList, val, width, _i, _len, _ref, _ref1, _ref2;
+      var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, isTweenInitiaized, key, lookTarget, mosaicPieceGeometry, mosaicPieceMaterials, moveTime, nearClip, offsetTime, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn, userNum, userPosList, userPosMax, userPosMin, val, width, _i, _len, _ref, _ref1, _ref2;
       console.log(data);
       mosaicImagePath = data.mosaicInfo.mosaicPath;
       width = window.innerWidth;
@@ -82,13 +82,14 @@ $(function() {
       sizeY = 10;
       mosaicPieceGeometry = new THREE.PlaneGeometry(sizeX, sizeY, 1, 1);
       tweenList = [];
-      userNum = fbIconMaterials.length;
-      console.log("usernum:", userNum);
+      userNum = data.mosaicInfo.userNum;
+      userPosMin = new THREE.Vector3(-500, -300, 100);
+      userPosMax = new THREE.Vector3(500, -300, 100);
       cnt = 0;
       for (key in fbIconMaterials) {
         val = fbIconMaterials[key];
         piece = new THREE.Mesh(fbIconGeometry, val);
-        position = new THREE.Vector3(100 * cnt, -300, 100);
+        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax, cnt / userNum);
         piece.position.copy(position);
         scene.add(piece);
         userPosList[key] = position;
@@ -105,7 +106,7 @@ $(function() {
         scene.add(piece);
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0);
         moveTime = 300;
-        offsetTime = 100 + 10 * cnt;
+        offsetTime = 100 + 10 * Math.floor(Math.random() * 3000);
         twn = new TWEEN.Tween(piece.position).to(target, moveTime).delay(offsetTime);
         tweenList.push(twn);
         cnt += 1;

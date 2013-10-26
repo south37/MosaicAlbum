@@ -84,35 +84,39 @@ ajax_mosaic画像リスト取得:{
     # 参加ユーザリスト作成
     $userInfo = [
       '2147483647'=>'/img/test/miku1.jpg',
-      '123'=>'/img/test/miku2.jpg',
-      '456'=>'/img/test/miku3.jpg'
+      '456'=>'/img/test/miku2.jpg',
+      '123'=>'/img/test/miku3.jpg'
       ];
-    $userNum = count($userInfo);
 
     #TODO:userInfoの取得
     //$userInfo = $AlbumUserRep->getFbIconPathList($goalImageId,$container);
+
+    # 参加ユーザ数取得
+    $userNum = count($userInfo);
 
     # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
     $mosaicPieces   = $mosaicPieceRep->getMosaicPieceList($goalImageId);
     $mosaicPieceMap = $mosaicPieceRep->getResizeImagePathList($goalImageId);
     
-    # 4.mosaic画像本体取得
+    # 4.mosaiInfoつくる
+    #
+    # TODO:DBからデータをひろう
     $mosaicImage = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
     //$mosaicImage   = $goalImageRep->getMosaicImg($goalImageId); 
-    
-    //$originalImage =  
+    $originalImage = '/img/test/miku3.jpg';
 
-    # 5.mosaicInfo
     $mosaicInfo = [
-      "mosaicPath"  => $mosaicImage
+      "mosaicPath"  => $mosaicImage,
+      "originalPath" => $originalImage,
+      "userNum" => $userNum
       ];
 
-    # 6.ajax_return
+    # 5.ajax_return
     $response = [
       "userInfo"        => $userInfo,
       "mosaicPieces"    => $mosaicPieces,
       "mosaicPieceMap"  => $mosaicPieceMap,
-      "mosaicImage"     => $mosaicImage,
+      //"mosaicImage"     => $mosaicImage,
       "mosaicInfo"      => $mosaicInfo
       ];
     echo json_encode($response);

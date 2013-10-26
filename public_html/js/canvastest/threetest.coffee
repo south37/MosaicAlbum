@@ -117,6 +117,8 @@ $ ->
       # 2-2:ジオメトリ作成
       # process:種類とサイズを指定
 
+      #TODO:適切なジオメトリサイズをDB情報から取得
+
       # fb-icon
       sizeX = 100
       sizeY = 100
@@ -140,13 +142,17 @@ $ ->
       # tween設定
 
       # fb_icon
-      userNum = fbIconMaterials.length
-      console.log "usernum:",userNum
+
+      # userpos用変数
+      # TODO:ユーザ初期位置設定．現状は直線上
+      userNum = data.mosaicInfo.userNum
+      userPosMin  =  new THREE.Vector3 -500, -300, 100 
+      userPosMax  =  new THREE.Vector3  500, -300, 100
+
       cnt = 0
       for key,val of fbIconMaterials
         piece = new THREE.Mesh( fbIconGeometry, val)
-        # TODO:userIconの位置設定
-        position = new THREE.Vector3( 100 * cnt, -300, 100)
+        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax,cnt/userNum)
         piece.position.copy position
         scene.add piece
 
@@ -160,7 +166,6 @@ $ ->
       for piecedata in data.mosaicPieces
         piece    = new THREE.Mesh( mosaicPieceGeometry, mosaicPieceMaterials[piecedata.image_id])
         
-        # TODO:initial_positionの設定
         # 対応するユーザの位置を初期値にしましょう．
         piece.position.copy userPosList[piecedata.user_id]
 
@@ -170,9 +175,11 @@ $ ->
 
         # tween設定
         # 終了位置・移動時間・オフセット時間を指定
+
+        #TODO:適切な終了位置をDB情報から計算
         target = new THREE.Vector3(piecedata.x * sizeX - 500, 500 - piecedata.y * sizeY, 0)
         moveTime = 300
-        offsetTime = 100 + 10 * cnt
+        offsetTime = 100 + 10 * Math.floor(Math.random()*3000) 
 
         # tweenオブジェクト生成
         twn = new TWEEN.Tween(piece.position)
