@@ -47,13 +47,13 @@ CreateMosaic:{
     $link = '/common/mosaic_viewer';
     # 1:init
     # repository準備
-    $goalImageId = $container['session']->get('goalImageId');
+    $goalImageId   = $container['session']->get('goalImageId');
 
-    $GoalImageRep = $container['repository.goalImage'];
-    $AlbumRep = $container['repository.album'];
+    $GoalImageRep  = $container['repository.goalImage'];
+    $AlbumRep      = $container['repository.album'];
     $AlbumImageRep = $container['repository.albumImage'];
-    $UsedImageRep = $container['repository.usedImage'];
-    $FBHelper = $container['FBHelper'];
+    $UsedImageRep  = $container['repository.usedImage'];
+    $FBHelper      = $container['FBHelper'];
 
     # 既に現在の状態のモザイク画で作成されているかを調べる
     $isMakedMosaic = $GoalImageRep->isMakeMosaic($goalImageId);
@@ -71,17 +71,17 @@ CreateMosaic:{
     # 2:prepare target & src
     # ゴールイメージ取得
     $fbGoalImageId = $GoalImageRep->getFbGoalImageId($goalImageId);
-    $goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
-    //$goalPath = 'img/resource_img/ism/miku3.jpg';
+    //$goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
+    $goalPath = 'img/resource_img/ism/miku3.jpg';
     $goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalImageId];
 
     # アルバムid取得
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
  
-    $albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
+    //$albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
     
     // [DEBUG @ datch]
-    /*
+    //*
     $albumImagePathList = [
         1 => [
             ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],

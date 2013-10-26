@@ -4,7 +4,12 @@
     # DBアクセステスト
     print_r($container['session']->get('goalImageId'));
 
-    print_r($container['repository.albumUser']->getFbIconPathList(3,$container));
+    $userIdList =$container['repository.album']->getUserIdList(1);
+    print_r($userIdList);
+    $userIconPathList = $container['repository.user']->getUserIconImgUrlList($userIdList[0]);
+    print_r($userIconPathList);
+    //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
+    //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
 
     $app->render('common/mosaic_viewer.html.twig');
   })
@@ -63,7 +68,11 @@ ajax_mosaic画像リスト取得:{
 
     # 2.参加ユーザの画像リスト取得
     # 参加ユーザリスト作成
-    $userInfo = ['2147483647'=>'/img/test/miku2.jpg'];
+    $userInfo = [
+      '2147483647'=>'/img/test/miku1.jpg',
+      '123'=>'/img/test/miku2.jpg',
+      '456'=>'/img/test/miku3.jpg'
+      ];
 
     #TODO:userInfoの取得
     //$userInfo = $AlbumUserRep->getFbIconPathList($goalImageId,$container);
