@@ -1,6 +1,19 @@
 <?php
 ページ読み込みテスト:{
-  $app->get('/common/mosaic_viewer/test', function() use ($app) {
+  $app->get('/common/mosaic_viewer/test', function() use ($app,$container) {
+    # DBアクセステスト
+    print_r($container['session']->get('goalImageId'));
+
+    $userIdList =$container['repository.album']->getUserIdList(1);
+    print_r($userIdList);
+    $userIconPathList = $container['repository.user']->getUserIconImgUrlList($userIdList[0]);
+    print_r($userIconPathList);
+
+    //$mosaicImage = $container['repository.goalImage']->getMosaicImg(1);
+    //print_r($mosaicImage);
+    //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
+    //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
+
     $app->render('common/mosaic_viewer.html.twig');
   })
     ->name('mosaic_viewer_test')
@@ -26,11 +39,21 @@ ajax_mosaic画像リスト取得:{
     # ajax_list:仕様メモ
     ########################
     #
+    # mosaicInfo(obj):
+    #   userNum:
+    #   splitX
+    #   splitY
+    #   goalResizeWidth
+    #   goalResizeHeight
+    #   album
+    #   mosaicPath
+    #   goalPath
+    #
     # userInfo(hash):
     #   userId => userIconPath
     #
     # mosaicPiece(array):
-    #   mosaicpiece:
+    #   mosaicpiece(obj):
     #     x
     #     y
     #     imageId
@@ -48,30 +71,56 @@ ajax_mosaic画像リスト取得:{
 
     # 1.リポジトリ，必要変数の確保 
     $FBRep = $container['FBHelper'];
-    $goalImageId = $container['session']->get('goalImageId');
+
     $goalImageId = 1;
+    #TODO:goalimageidをsessionから取得
+    //$goalImageId = $container['session']->get('goalImageId');
 
     $mosaicPieceRep = $container['repository.mosaicPiece'];
     $AlbumUserRep   = $container['repository.albumUser'];
+    $goalImageRep   = $container['repository.goalImage'];
 
     # 2.参加ユーザの画像リスト取得
     # 参加ユーザリスト作成
-    $userInfo = ['2147483647'=>'/img/test/miku2.jpg'];
+    $userInfo = [
+      '2147483647'=>'/img/test/miku1.jpg',
+      '456'=>'/img/test/miku2.jpg',
+      '123'=>'/img/test/miku3.jpg'
+      ];
+
+    #TODO:userInfoの取得
+    //$userInfo = $AlbumUserRep->getFbIconPathList($goalImageId,$container);
+
+    # 参加ユーザ数取得
+    $userNum = count($userInfo);
 
     # 3.mosaic画像リスト取得(テクスチャリスト/ピースマップ)
     $mosaicPieces   = $mosaicPieceRep->getMosaicPieceList($goalImageId);
     $mosaicPieceMap = $mosaicPieceRep->getResizeImagePathList($goalImageId);
     
-    # 4.mosaic画像本体取得
+    # 4.mosaiInfoつくる
+    #
+    # TODO:DBからデータをひろう
     $mosaicImage = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
+    //$mosaicImage   = $goalImageRep->getMosaicImg($goalImageId); 
+    $originalImage = '/img/test/miku3.jpg';
+
+    $mosaicInfo = [
+      "mosaicPath"  => $mosaicImage,
+      "originalPath" => $originalImage,
+      "userNum" => $userNum,
+      "splitX" => 80,
+      "splitY" => 60
+
+      ];
 
     # 5.ajax_return
     $response = [
       "userInfo"        => $userInfo,
       "mosaicPieces"    => $mosaicPieces,
       "mosaicPieceMap"  => $mosaicPieceMap,
-      "mosaicImage"     => $mosaicImage,
-      //"test"            => $userIconPathList
+      //"mosaicImage"     => $mosaicImage,
+      "mosaicInfo"      => $mosaicInfo
       ];
     echo json_encode($response);
   })
