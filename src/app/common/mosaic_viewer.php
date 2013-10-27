@@ -6,12 +6,14 @@
 
     $userIdList =$container['repository.album']->getUserIdList(1);
     print_r($userIdList);
-    $userIconPathList = $container['repository.user']->getUserIconImgUrlList($userIdList[0]);
+    $userIconPathList = $container['repository.user']->getUserIconImgUrl($userIdList[0]);
     print_r($userIconPathList);
 
     //$mosaicImage = $container['repository.goalImage']->getMosaicImg(1);
     //print_r($mosaicImage);
-    //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
+
+    
+    print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
     //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
 
     $app->render('common/mosaic_viewer.html.twig');
@@ -72,9 +74,9 @@ ajax_mosaic画像リスト取得:{
     # 1.リポジトリ，必要変数の確保 
     $FBRep = $container['FBHelper'];
 
-    $goalImageId = 1;
+    //$goalImageId = 1;
     #TODO:goalimageidをsessionから取得
-    //$goalImageId = $container['session']->get('goalImageId');
+    $goalImageId = $container['session']->get('goalImageId');
 
     $mosaicPieceRep = $container['repository.mosaicPiece'];
     $AlbumUserRep   = $container['repository.albumUser'];
@@ -85,7 +87,7 @@ ajax_mosaic画像リスト取得:{
     $userInfo = [
       '2147483647'=>'/img/test/miku1.jpg',
       '456'=>'/img/test/miku2.jpg',
-      '123'=>'/img/test/miku3.jpg'
+      '1'=>'/img/test/miku3.jpg'
       ];
 
     #TODO:userInfoの取得
@@ -101,12 +103,12 @@ ajax_mosaic画像リスト取得:{
     # 4.mosaiInfoつくる
     #
     # TODO:DBからデータをひろう
-    $mosaicImage = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
-    //$mosaicImage   = $goalImageRep->getMosaicImg($goalImageId); 
+    $mosaicPath    = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
+    //$mosaicImage   = $goalImageRep->getMosaicImg($goalImageId,$container);
     $originalImage = '/img/test/miku3.jpg';
 
     $mosaicInfo = [
-      "mosaicPath"  => $mosaicImage,
+      "mosaicPath"   => $mosaicPath,
       "originalPath" => $originalImage,
       "userNum" => $userNum,
       "splitX" => 80,
