@@ -8,6 +8,15 @@ $app->get('/select', function() use ($app, $container) {
     ->name('select')
     ;
 
+$app->get('/select/test', function() use ($app, $container) {
+    echo "here";
+    print_r("session_user_id:".$container['session']->get('userId'));
+    $app->render('select/select.html.twig');
+})
+    ->name('select/test')
+    ;
+
+
 /**
  * ゴールイメージ submit後
  */
