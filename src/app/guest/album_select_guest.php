@@ -71,48 +71,49 @@ CreateMosaic:{
     # 2:prepare target & src
     # ゴールイメージ取得
     $fbGoalImageId = $GoalImageRep->getFbGoalImageId($goalImageId);
-    //$goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
-    $goalPath = 'img/resource_img/ism/miku3.jpg';
+    $goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
+    //$goalPath = 'img/resource_img/ism/miku3.jpg';
     $goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalImageId];
 
     # アルバムid取得
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
  
-    //$albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
-    
-    // [DEBUG @ datch]
-    //*
+    $albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
+
+    /*
     $albumImagePathList = [
-        1 => [
-            ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],
-            ['path' => 'img/resource_img/ism/figure002.png', 'id' => 2],
-            ['path' => 'img/resource_img/ism/figure003.png', 'id' => 3],
-            ['path' => 'img/resource_img/ism/figure004.png', 'id' => 4]
-        ],
-        2 => [
-            ['path' => 'img/resource_img/ism/figure005.png', 'id' => 5],
-            ['path' => 'img/resource_img/ism/figure006.png', 'id' => 6]
-        ],
-        3 => [
-            ['path' => 'img/resource_img/ism/figure007.png', 'id' => 7],
-            ['path' => 'img/resource_img/ism/figure008.png', 'id' => 8],
-            ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
-        ],
-        4 =>[
-            ['path' => 'img/resource_img/ism/miku1.jpg', 'id' => 10],
-            ['path' => 'img/resource_img/ism/miku2.jpg', 'id' => 11],
-            ['path' => 'img/resource_img/ism/miku3.jpg', 'id' => 12],
-            ['path' => 'img/resource_img/ism/miku4.jpg', 'id' => 13],
-            ['path' => 'img/resource_img/ism/miku5.jpg', 'id' => 14],
-            ['path' => 'img/resource_img/ism/rin1.jpg', 'id' => 15],
-            ['path' => 'img/resource_img/ism/len1.jpg', 'id' => 16]
-
-        ]
-        ];
-     //*/
-
+            1 => [
+                ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],
+                ['path' => 'img/resource_img/ism/figure002.png', 'id' => 2],
+                ['path' => 'img/resource_img/ism/figure003.png', 'id' => 3],
+                ['path' => 'img/resource_img/ism/figure004.png', 'id' => 4]
+            ],
+            2 => [
+                ['path' => 'img/resource_img/ism/figure005.png', 'id' => 5],
+                ['path' => 'img/resource_img/ism/figure006.png', 'id' => 6]
+            ],
+            3 => [
+                ['path' => 'img/resource_img/ism/figure007.png', 'id' => 7],
+                ['path' => 'img/resource_img/ism/figure008.png', 'id' => 8],
+                ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
+            ],
+            4 =>[
+                ['path' => 'img/resource_img/ism/miku1.jpg', 'id' => 10],
+                ['path' => 'img/resource_img/ism/miku2.jpg', 'id' => 11],
+                ['path' => 'img/resource_img/ism/miku3.jpg', 'id' => 12],
+                ['path' => 'img/resource_img/ism/miku4.jpg', 'id' => 13],
+                ['path' => 'img/resource_img/ism/miku5.jpg', 'id' => 14],
+                ['path' => 'img/resource_img/ism/rin1.jpg', 'id' => 15],
+                ['path' => 'img/resource_img/ism/len1.jpg', 'id' => 16]
+    
+            ]
+    ];
+    */
     # 3.process
     createMosaic($goalImageId, $goalImagePath, $albumImagePathList, $container);
+    
+    // img/resource_img/以下のデータを全て削除
+    deleteDirectoryData('img/resource_img');
 
     # 4.notification
     # モザイク作成されたことをお知らせする
@@ -173,5 +174,27 @@ CreateMosaic:{
     # FBヘルパー使ってお知らせ
     $FBHelper = $container['FBHelper'];
     $FBHelper->notifCreateMosaic();
+  }
+
+  function deleteDirectoryData($dirPath)
+  {
+    if($dirHandle = opendir($dirPath))
+    {
+        while(($underPath = readdir($dirHandle)) !== FALSE)
+        {
+            if($underPath == '.' || $underPath == '..' || $underPath == 'ism') continue;
+            $fullPath = $dirPath.'/'.$underPath;
+            if(is_dir($fullPath) === TRUE)
+            {
+                deleteDirectoryData($fullPath);
+                rmdir($fullPath);
+            }
+            else
+            {
+                unlink($fullPath);
+            }
+        }
+        closedir($dirHandle);
+    }
   }
 }
