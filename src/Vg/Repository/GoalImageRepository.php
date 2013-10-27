@@ -26,8 +26,8 @@ class GoalImageRepository
                     is_make_mosaic = :isMakeMosaic";
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':fbGoalImageId', $fbGoalImageId, \PDO::PARAM_STR);
-        $sth->bindValue(':tateDivision', 100, \PDO::PARAM_INT);
-        $sth->bindValue(':yokoDivision', 100, \PDO::PARAM_INT);
+        $sth->bindValue(':tateDivision', 80, \PDO::PARAM_INT);
+        $sth->bindValue(':yokoDivision', 60, \PDO::PARAM_INT);
         $sth->bindValue(':isMakeMosaic', 0, \PDO::PARAM_INT);
         $sth->execute();
         // insertされたカラムのIDを取得する
@@ -102,10 +102,10 @@ class GoalImageRepository
         return [
             'path'=>$data['mosaic_path'],
             'id'=>$data['fb_goal_image_id'],
-            'tate_division' => $date['tate_division'],
-            'yoko_division' => $date['yoko_division'],
-            'split_width' => 640 / $date['tate_division'],
-            'split_height' => 640 / $date['yoko_division']
+            'tate_division' => $data['tate_division'],
+            'yoko_division' => $data['yoko_division'],
+            'split_width' => 640 / $data['tate_division'],
+            'split_height' => 640 / $data['yoko_division']
         ];
     }
 
@@ -122,5 +122,23 @@ class GoalImageRepository
         $sth->execute();
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
         return $data['is_make_mosaic'];
+    }
+
+    /**
+    * @param $isMakeMosaic
+    * @param $goalImageId
+    * @return {Boolean}
+    */
+    public function setIsMakeMosaic($isMakeMosaic, $goalImageId)
+    {
+        $sql = <<< SQL
+            UPDATE goal_image
+            SET is_make_mosaic = :isMakeMosaic
+            WHERE id = :goalImageId;
+SQL;
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':isMakeMosaic', $isMakeMosaic, \PDO::PARAM_INT);
+        $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
+        return $sth->execute();
     }
 }

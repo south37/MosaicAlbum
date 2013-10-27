@@ -44,70 +44,87 @@ $app->post('/guest/album_select_guest', function() use ($app, $container) {
 
 CreateMosaic:{
   $app->get('/guest/album_select_guest/create', function() use ($app, $container){
-
+    $link = '/common/mosaic_viewer';
     # 1:init
     # repository準備
-    $goalImageId = $container['session']->get('goalImageId');
+    $goalImageId   = $container['session']->get('goalImageId');
 
-    $GoalImageRep = $container['repository.goalImage'];
-    $AlbumRep = $container['repository.album'];
+    $GoalImageRep  = $container['repository.goalImage'];
+    $AlbumRep      = $container['repository.album'];
     $AlbumImageRep = $container['repository.albumImage'];
-    $UsedImageRep = $container['repository.usedImage'];
-    $FBHelper = $container['FBHelper'];
+    $UsedImageRep  = $container['repository.usedImage'];
+    $FBHelper      = $container['FBHelper'];
+
+    # 既に現在の状態のモザイク画で作成されているかを調べる
+    $isMakedMosaic = $GoalImageRep->isMakeMosaic($goalImageId);
+    if($isMakedMosaic == 1)
+    {
+        // 直接アクセスした場合はこちらでリダイレクトを行う
+        $app->redirect($link);
+        // 作成されているなら処理を終了する
+        exit;
+    }
+
+    // モザイク画像を作成済みにする
+    $GoalImageRep->setIsMakeMosaic(1, $goalImageId);
 
     # 2:prepare target & src
     # ゴールイメージ取得
-	$fbGoalId = $GoalImageRep->getFbGoalImageId($goalImageId);
-	//$goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
-        //[DEUBG @ datch]
-        $goalPath = 'img/resource_img/ism/miku.jpg';
-	$goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalId];
-    #####$goalImagePath = $GoalImageRep->getMosaicImg($goalImageId);
+    $fbGoalImageId = $GoalImageRep->getFbGoalImageId($goalImageId);
+    $goalPath = $FBHelper->downloadImageFromFbId($fbGoalImageId);
+    //$goalPath = 'img/resource_img/ism/miku3.jpg';
+    $goalImagePath = ['path'=>$goalPath, 'id'=>$fbGoalImageId];
 
     # アルバムid取得
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
-    # albumImagePathList[albumId][imageNo]=>[path, id]
-    //$albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
-    // [DEBUG @ datch]
-    $albumImagePathList = [
-        1 => [
-            ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],
-            ['path' => 'img/resource_img/ism/figure002.png', 'id' => 2],
-            ['path' => 'img/resource_img/ism/figure003.png', 'id' => 3],
-            ['path' => 'img/resource_img/ism/figure004.png', 'id' => 4]
-        ],
-        2 => [
-            ['path' => 'img/resource_img/ism/figure005.png', 'id' => 5],
-            ['path' => 'img/resource_img/ism/figure006.png', 'id' => 6]
-        ],
-        3 => [
-            ['path' => 'img/resource_img/ism/figure007.png', 'id' => 7],
-            ['path' => 'img/resource_img/ism/figure008.png', 'id' => 8],
-            ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
-        ]
-    ];
-    
+ 
+    $albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
 
+    /*
+    $albumImagePathList = [
+            1 => [
+                ['path' => 'img/resource_img/ism/figure001.png', 'id' => 1],
+                ['path' => 'img/resource_img/ism/figure002.png', 'id' => 2],
+                ['path' => 'img/resource_img/ism/figure003.png', 'id' => 3],
+                ['path' => 'img/resource_img/ism/figure004.png', 'id' => 4]
+            ],
+            2 => [
+                ['path' => 'img/resource_img/ism/figure005.png', 'id' => 5],
+                ['path' => 'img/resource_img/ism/figure006.png', 'id' => 6]
+            ],
+            3 => [
+                ['path' => 'img/resource_img/ism/figure007.png', 'id' => 7],
+                ['path' => 'img/resource_img/ism/figure008.png', 'id' => 8],
+                ['path' => 'img/resource_img/ism/figure009.png', 'id' => 9]
+            ],
+            4 =>[
+                ['path' => 'img/resource_img/ism/miku1.jpg', 'id' => 10],
+                ['path' => 'img/resource_img/ism/miku2.jpg', 'id' => 11],
+                ['path' => 'img/resource_img/ism/miku3.jpg', 'id' => 12],
+                ['path' => 'img/resource_img/ism/miku4.jpg', 'id' => 13],
+                ['path' => 'img/resource_img/ism/miku5.jpg', 'id' => 14],
+                ['path' => 'img/resource_img/ism/rin1.jpg', 'id' => 15],
+                ['path' => 'img/resource_img/ism/len1.jpg', 'id' => 16]
+    
+            ]
+    ];
+    */
     # 3.process
-    # だっちプログラムにtarget/srcListなげる
     createMosaic($goalImageId, $goalImagePath, $albumImagePathList, $container);
+    
+    // img/resource_img/以下のデータを全て削除
+    deleteDirectoryData('img/resource_img');
 
     # 4.notification
     # モザイク作成されたことをお知らせする
     //createNotif($container);
 
-    $link = '/common/mosaic_viewer';
-    $app->redirect($link);
-
+    //$app->redirect($link);
   })
     ->name('create_mosaic')
     ;
 
   function createMosaic($goalImageId, $goalImagePath, $albumImagePathList, $container){
-    // DEBUG
-    $goalImageId = 1;
-    
-    # だっちのプログラムはここに移植
     $saveFilePath = 'img/mosaic_img/'.'mosaic'.$goalImageId.'.png';
 
     # モザイク処理設定
@@ -120,9 +137,6 @@ CreateMosaic:{
 
     $splitWidth = $goalResizeWidth / $splitX;
     $splitHeight = $goalResizeHeight / $splitY;
-    
-    # 処理用変数
-    // $fbGoalImageId = $goalImagePath['id'];
 
     ########
     # 処理 #
@@ -160,5 +174,27 @@ CreateMosaic:{
     # FBヘルパー使ってお知らせ
     $FBHelper = $container['FBHelper'];
     $FBHelper->notifCreateMosaic();
+  }
+
+  function deleteDirectoryData($dirPath)
+  {
+    if($dirHandle = opendir($dirPath))
+    {
+        while(($underPath = readdir($dirHandle)) !== FALSE)
+        {
+            if($underPath == '.' || $underPath == '..' || $underPath == 'ism') continue;
+            $fullPath = $dirPath.'/'.$underPath;
+            if(is_dir($fullPath) === TRUE)
+            {
+                deleteDirectoryData($fullPath);
+                rmdir($fullPath);
+            }
+            else
+            {
+                unlink($fullPath);
+            }
+        }
+        closedir($dirHandle);
+    }
   }
 }

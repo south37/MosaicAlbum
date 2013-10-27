@@ -88,21 +88,32 @@ class UserRepository
     }
 
     /**
+     * facebookユーザーIDでユーザーIDを検索する
+     * @param $fbUserId
+     * @return $userId
+     */
+    public function getUserIdFromFbUserId($fbUserId)
+    {
+        $sql = "SELECT * FROM user WHERE fb_user_id = :fbUserId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':fbUserId', $fbUserId, \PDO::PARAM_STR);
+        $sth->execute();
+        $data = $sth->fetch(\PDO::FETCH_ASSOC);
+        return $data['id'];
+    }
+
+    /**
      * ユーザーIDでアイコンURLを検索する
      * @param  $userId
      * @return fbIconUrl[]
      */
-    public function getUserIconImgUrlList($userId)
+    public function getUserIconImgUrl($userId)
     {
         $sql = "SELECT * FROM user WHERE id = :userId";
         $sth = $this->db->prepare($sql);
-        $sth->bindValue(':id', $userId, \PDO::PARAM_INT);
+        $sth->bindValue(':userId', $userId, \PDO::PARAM_INT);
         $sth->execute();
-        $fbIconUrls = [];
-        while($data = $sth->fetch(\PDO::FETCH_ASSOC))
-        {
-            array_push($fbIconUrls, $data['fb_icon_url']);
-        }
-        return $fbIconUrls;
+        $data = $sth->fetch(\PDO::FETCH_ASSOC);
+        return $data['fb_icon_url'];
     }
 }

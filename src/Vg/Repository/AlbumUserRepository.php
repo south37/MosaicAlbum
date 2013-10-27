@@ -1,7 +1,7 @@
 <?php
 namespace Vg\Repository;
 
-use Vg\Model\AlbumImage;
+use Vg\Model\AlbumUser;
 
 class AlbumUserRepository
 {
@@ -31,11 +31,11 @@ class AlbumUserRepository
         $userIdList = $albumRepository->getUserIdList($goalImageId);
         foreach ($userIdList as $userId) {
             # ユーザIDでFacebookアイコンURLを取得
-            $fbIconUrl = $userRepository->getUserIconImgUrlList($userId);
+            $fbIconUrl = $userRepository->getUserIconImgUrl($userId);
             # FacebookアイコンURLからFacebookアイコンパスを取得
             $fbIconPath = $fbHelper->downloadImage($fbIconUrl);
             # FacebookアイコンパスをFacebookアイコンパスリストに追加
-            array_push($fbIconPathList, $fbIconPath);
+            $fbIconPathList[$userId] = $fbIconPath;
         }
         return $fbIconPathList;
     }

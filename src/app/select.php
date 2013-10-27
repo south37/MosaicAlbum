@@ -2,16 +2,16 @@
 /**
  * ゴールイメージ選択
  */
-$app->get('/select_goal', function() use ($app, $container) {
-    $app->render('select_goal/select_goal.html.twig');
+$app->get('/select', function() use ($app, $container) {
+    $app->render('select/select.html.twig');
 })
-    ->name('select_goal')
+    ->name('select')
     ;
 
 /**
  * ゴールイメージ submit後
  */
-$app->post('/select_goal', function() use ($app, $container) {
+$app->post('/select', function() use ($app, $container) {
     $input = $app->request()->post();
     $fbGoalImageId = $input['goalImageId'];
 
@@ -20,13 +20,13 @@ $app->post('/select_goal', function() use ($app, $container) {
 
     $app->redirect($app->urlFor('album_viewer', ['goalImageId' => $goalImageId]));
 })
-    ->name('select_goal_post')
+    ->name('select_post')
     ;
 
 /**
  * ゴールイメージの入ったアルバムを選択
  */
-$app->get('/select_goal/modal_album', function () use ($app, $container) {
+$app->get('/select/modal_album', function () use ($app, $container) {
     $fbAlbums = $container['FBHelper']->getAlbums();
     /*
     $fbAlbums = [[ 
@@ -39,7 +39,7 @@ $app->get('/select_goal/modal_album', function () use ($app, $container) {
         "thumbnailPath" => "https://fbcdn-photos-e-a.akamaihd.net/hphotos-ak-ash3/533896_367905493339296_1533302163_s.jpg"    
     ]];
     */
-    $app->render('select_goal/modal_album.html.twig', ['fbAlbums' => $fbAlbums]);
+    $app->render('select/modal_album.html.twig', ['fbAlbums' => $fbAlbums]);
 })
     ->name('select_goal_modal_album')
     ;
@@ -47,7 +47,7 @@ $app->get('/select_goal/modal_album', function () use ($app, $container) {
 /**
  * ゴール写真を選択
  */
-$app->post('/select_goal/modal_image', function () use ($app, $container) {
+$app->post('/select/modal_image', function () use ($app, $container) {
     $input = $app->request()->post();
 
     $images = $container['FBHelper']->getImagesInAlbum($input['albumId']);
@@ -62,7 +62,7 @@ $app->post('/select_goal/modal_image', function () use ($app, $container) {
         "thumbnailPath" => "https://fbcdn-photos-f-a.akamaihd.net/hphotos-ak-prn2/1384302_400192783443900_479273178_s.jpg",
     ]];
     */
-    $app->render('select_goal/modal_image.html.twig', ['images' => $images]);
+    $app->render('select/modal_image.html.twig', ['images' => $images]);
 })
-    ->name('select_goal_modal_image')
+    ->name('select_modal_image')
     ;

@@ -6,13 +6,36 @@ $app->get('/', function() use ($app, $container) {
     $input = $app->request()->get();
     $session = $container['session'];
 
+    // getパラメータとしてcodeを受け取っていれば、facebook認証後のリダイレクトと判定
     if (array_key_exists('code', $input)) {
         $app->redirect($app->urlFor('login_process'));
     }
 
+    // getパラメータとしてgoalImageIdを受け取っていればguest、そうでなければhostと判定
     if (array_key_exists('goalImageId', $input)) {
         $session->set('goalImageId', $input['goalImageId']);
+        $isHost = false;
+    } else {
+        $isHost = true;
     }
+
+    // ログイン判定
+    if ($session->get('isLogin') !== true) {
+        $loginUrl = $container['FBHelper']->getLoginUrl();
+    } else {
+        $loginUrl = '';
+    }
+
+  $app->render('top/index.html.twig', ['loginUrl' => $loginUrl, 'goalImageId' => $session->get('goalImageId'), 'isHost' => $isHost]);
+})
+  ->name('top')
+  ;
+
+/**
+ * facebookに埋め込まれると、最初にpostリクエストが送られるため、このページが見られる
+ */
+$app->post('/', function() use ($app, $container) {
+    $session = $container['session'];
 
     if ($session->get('isLogin') === true) {
         $loginUrl = '';
@@ -22,7 +45,7 @@ $app->get('/', function() use ($app, $container) {
 
   $app->render('top/index.html.twig', ['loginUrl' => $loginUrl, 'goalImageId' => $session->get('goalImageId')]);
 })
-  ->name('top')
+  ->name('top_post')
   ;
 
 /**
@@ -49,14 +72,14 @@ $redirectIfNotLogin = function ( $session ) {
  */
 $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogin) {
     $FBHelper = $container['FBHelper'];
-    $userId = $FBHelper->getUserId();
+    $fbUserId = $FBHelper->getUserId();
     
     $redirect = $redirectIfNotLogin($container['session']);
-    if (!$userId) {
+    if (!$fbUserId) {
         $redirect();
     }
 
-    $user = $container['repository.user']->findByFbId($userId);
+    $user = $container['repository.user']->findByFbId($fbUserId);
 
     if ($user->id == '') {
         $userProfile = $FBHelper->getUserProfileForRegistration();
@@ -69,16 +92,17 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
         $user->setProperties($userProfile);
 
         try {
-            $container['repository.user']->insert($user);
+            $userId = $container['repository.user']->insert($user);
+            $user->setProperties(['id' => $userId]);
         } catch (Exception $e) {
             $app->halt(500, $e->getMessage());
         }
     }
 
     $container['session']->set('isLogin', true);
-    $container['session']->set('userId', $userId);
+    $container['session']->set('userId', $user->id);
 
-    $app->redirect($app->urlFor('select_goal'));
+    $app->redirect($app->urlFor('select'));
 })
     ->name('login_process')
     ;

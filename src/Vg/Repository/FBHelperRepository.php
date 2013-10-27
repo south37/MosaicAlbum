@@ -186,8 +186,13 @@ class FBHelperRepository
     public function downloadImage($imagePath)
     {
         $image = file_get_contents($imagePath);
-        $savePath = __DIR__.'/../../public_html/img/resource_img/'.basename($imagePath);
+        $folderPath = 'img/resource_img/'.$this->session->get('goalImageId');
+        var_dump($folderPath);
+        if ( !is_dir($folderPath) ) {
+            mkdir($folderPath, 0775);
+        }
 
+        $savePath = $folderPath.'/'.basename($imagePath);
         file_put_contents($savePath, $image);
 
         return $savePath;

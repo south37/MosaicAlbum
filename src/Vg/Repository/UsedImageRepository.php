@@ -20,27 +20,20 @@ class UsedImageRepository
     public function getUsedImageList($goalImageId, &$container)
     {
         $albumRepository = $container['repository.album'];
-        $albumImageRepository = $container['repository.albumImage'];
-        $imageRepository = $container['repository.image'];
         $fbHelper = $container['FBHelper'];
         // ゴールイメージIDに関連するアルバムIDのリスト
         $albumIdList = $albumRepository->getAlbumIdList($goalImageId);
         $albumId2imageId_fbImageId = [];
-        $albumImageUrlList = [];
         foreach ($albumIdList as $albumId) {
-            // アルバムIDに関連するイメージURLのリスト
-            $imageUrlList = $fbHelper->getImagesInAlbum($albumId);
-            // アルバムIDに関連するイメージIDのリスト
-            $imageIds = $albumImageRepository->getImageIdList($albumId);
-            // イメージIDとFacebookイメージIDの連想配列
-            $imageId2fbImageId = $imageRepository->getFbImageIdList($imageIds);
-            // アルバムIDと（イメージIDとFacebookイメージIDの連想配列）の連想配列
-            $i = 0;
-            foreach ($imageId2fbImageId as $fbImageId) {
-                $imagePath = $fbHelper->downloadImage($imageUrlList[$i]['imagePath']);
-                echo '$imagePath : ' . var_dump($imagePath) . '<br>';
-                $albumId2imageId_fbImageId[$albumId][] = ["path"=>$imagePath, "id"=>$fbImageId];
-                $i++;
+            // アルバムIDに関連するFacebookアルバムIDを取得
+            $fbAlbumId = $albumRepository->getFbAlbumId($albumId);
+            // FacebookアルバムIDから関連するFacebookイメージリストを取得
+            $fbImageList = $fbHelper->getImagesInAlbum($fbAlbumId);
+            foreach ($fbImageList as $fbImage) {
+                // FacebookイメージIDからイメージPathを取得
+                $imagePath = $fbHelper->downloadImageFromFbId($fbImage['id']);
+                // リストに追加
+                $albumId2imageId_fbImageId[$albumId][] = ["path"=>$imagePath, "id"=>$fbImage['id']];
             }
         }
         return $albumId2imageId_fbImageId;

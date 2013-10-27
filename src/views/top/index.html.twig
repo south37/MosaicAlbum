@@ -5,15 +5,19 @@
     <div class="hero-unit">
       <h1>Mosaic Album</h1>
       <p>みんなの写真を集めてモザイク写真をつくろう！</p>
-      <p><a href="{{ urlFor('doc_top') }}" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
     </div>
 
     {% if loginUrl != '' %}
-    <a href="{{ loginUrl }}" class="btn btn-primary">facebookログイン</a>
-    {% elseif goalImageId == NULL %}
-    <a href="{{ urlFor('select_goal') }}" class="btn btn-primary">スタート</a>
+      <a href="{{ loginUrl }}" class="btn btn-primary">facebookログイン</a>
     {% else %}
-    <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary">スタート</a>
+      {% if goalImageId != NULL %}
+        {% if isHost %}
+          <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary">参加中の作品を見る</a>
+        {% else %}
+          <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary">モザイクアルバムに参加する</a>
+        {% endif %}
+      {% endif %}
+      <a href="{{ urlFor('select') }}" class="btn btn-primary">新しくモザイクアルバムを作る</a>
     {% endif %}
     
 {% endblock %}

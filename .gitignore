@@ -9,3 +9,5 @@ var/cache/*
 vendor/*
 .swp
 *.DS_Store
+public_html/img/resource_img/
+public_html/img/resize_img/

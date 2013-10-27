@@ -14,7 +14,7 @@ $app->get('/album_viewer', function() use ($app, $container) {
 			# DBに登録
 			$imageID = $container['repository.image']->insert($image['id']);
 			# イメージパスリストにイメージパスを保存
-			array_push($imagePathList, $image['imagePath']);
+			array_push($imagePathList, $image['thumbnailPath']);
 		}
 	}
 	$app->render('album_viewer/album_viewer.html.twig', ["imagePathList"=>$imagePathList]);
@@ -37,6 +37,8 @@ $app->post('/album_viewer', function() use ($app, $container) {
         'fb_album_id'   => $fbAlbumId,
     ]);
     $container['repository.album']->insert($album);
+    // アルバムを追加したので、モザイク画を未作成の状態にする
+    $container['repository.goalImage']->setIsMakeMosaic(0, $goalImageId);
 	#アルバムビューアへ戻る
 	$app->redirect($app->urlFor('album_viewer', ['goalImageId' => $goalImageId]));
 })
