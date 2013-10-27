@@ -17,7 +17,7 @@ class UserRepository
      * @param  User
      * @return $userId 
      */
-    public function insert($user, &$container)
+    public function insert($user)
     {
         $sql = "INSERT INTO user
                 SET fb_user_id = :fbUserId,

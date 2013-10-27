@@ -15,7 +15,7 @@ class ImageRegister
     public function __construct()
     {
         $this->validator = v::arr()
-        ->key('fbImageId', v::string()->setName('fbImageId')->notEmpty())
+        ->key('id', v::string()->setName('id')->notEmpty())
         ;
     }
 
@@ -31,7 +31,7 @@ class ImageRegister
             $this->validator->assert($input);
         } catch (\InvalidArgumentException $e) {
             $this->errors = $e->findMessages([
-                'fbImageId.notEmpty' => 'FacebookイメージIDを入力してください',
+                'id.notEmpty' => 'FacebookイメージIDを入力してください',
                 ]);
             return false;
         }
