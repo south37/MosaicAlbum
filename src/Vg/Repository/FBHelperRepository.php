@@ -49,7 +49,7 @@ class FBHelperRepository
     {
         $params = [
             'scope'        => 'user_photos,friends_photos',
-//            'redirect_uri' => 'http://mosaicalbum.com/login_process',
+            'redirect_uri' => 'http://mosaicalbum.com/login_process',
             'display'      => 'popup'
         ];
         $loginUrl = $this->facebook->getLoginUrl($params);
