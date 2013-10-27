@@ -17,18 +17,17 @@
               <div class="caption">
                 <p id="message">画像が選択されていません</p>
                 <div id="selectButton" style="display: none">
-                  <form action="{{ urlFor('select_post') }}" method="post">
-                    <input type="hidden" id="goalImageId" name="goalImageId" value="" />
-                    <button type="submit" class="btn btn-primary">この画像に決定</button>
-                  </form>
+                  <button onclick="showRequestDialog()" class="btn btn-primary">この画像に決定</button>
                 </div>
+                <form action="{{ urlFor('select_post') }}" method="post" id="goal-img-frm">
+                  <input type="hidden" id="goalImageId" name="goalImageId" value="" />
+                </form>
               </div>
             </div>
           </li>
         </ul>
       </div>
     </div>
-    <a href="javascript:;" onclick="sendMessage()" class="btn btn-primary">メッセージを送信</a>
 {% endblock %}
 
 {% block javascript%}

@@ -61,8 +61,19 @@ $app->post('/select/modal_image', function () use ($app, $container) {
         "imagePath"     => "https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-prn2/s720x720/1384302_400192783443900_479273178_n.jpg",
         "thumbnailPath" => "https://fbcdn-photos-f-a.akamaihd.net/hphotos-ak-prn2/1384302_400192783443900_479273178_s.jpg",
     ]];
-    */ 
+    */  
     $app->render('select/modal_image.html.twig', ['images' => $images]);
 })
     ->name('select_modal_image')
     ;
+
+
+/**
+ * 友達を招待
+ */
+$app->get('/select/modal_request', function () use ($app, $container) {
+    $app->render('select/modal_request.html.twig');
+})
+    ->name('select_modal_request')
+    ;
+
