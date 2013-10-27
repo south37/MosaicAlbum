@@ -7,14 +7,22 @@ function selectImage() {
   var options = select.options;
   var selectedOption = options.item(select.selectedIndex);
 
+  var parentDocument = window.opener.document;
+
   var goalImageId  = selectedOption.value;
   var goalImageSrc = selectedOption.getAttribute('data-img-src');
 
-  var input   = window.opener.document.getElementById('goalImageId');
+  var input   = parentDocument.getElementById('goalImageId');
   input.value = goalImageId;
 
-  var goalImage = window.opener.document.getElementById('goalImage');
+  var goalImage = parentDocument.getElementById('goalImage');
   goalImage.src = goalImageSrc;
+
+  var message = parentDocument.getElementById('message');
+  message.innerHTML = 'この写真がモザイク画像の完成形となります。';
+
+  var selectButton = parentDocument.getElementById('selectButton');
+  selectButton.style.display = "block";
 
   window.close();
 }

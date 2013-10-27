@@ -17,11 +17,13 @@
             <div class="thumbnail">
               <img src="http://www.sankou-mw.jp/option/img/pic_no-photo.jpg" alt="ゴール写真" id="goalImage">
               <div class="caption">
-                <p>この写真がモザイク画像の完成形となります。</p>
-                <form action="{{ urlFor('select_post') }}" method="post">
-                  <input type="hidden" id="goalImageId" name="goalImageId" value="" />
-                  <button type="submit" class="btn btn-primary">この画像に決定</button>
-                </form>
+                <p id="message">画像が選択されていません</p>
+                <div id="selectButton" style="display: none">
+                  <form action="{{ urlFor('select_post') }}" method="post">
+                    <input type="hidden" id="goalImageId" name="goalImageId" value="" />
+                    <button type="submit" class="btn btn-primary">この画像に決定</button>
+                  </form>
+                </div>
               </div>
             </div>
           </li>
