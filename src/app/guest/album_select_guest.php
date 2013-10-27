@@ -116,7 +116,7 @@ CreateMosaic:{
     createMosaic($goalImageId, $goalImagePath, $albumImagePathList, $container);
     
     // img/resource_img/以下のデータを全て削除
-    deleteDirectoryData('img/resource_img');
+    //deleteDirectoryData('img/resource_img');
 
     # 4.notification
     # モザイク作成されたことをお知らせする
