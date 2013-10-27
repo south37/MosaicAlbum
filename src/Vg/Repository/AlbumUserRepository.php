@@ -32,10 +32,13 @@ class AlbumUserRepository
         foreach ($userIdList as $userId) {
             # ユーザIDでFacebookアイコンURLを取得
             $fbIconUrl = $userRepository->getUserIconImgUrl($userId);
+            //$fbIconPathList[$userId] = $fbIconUrl;
+          
             # FacebookアイコンURLからFacebookアイコンパスを取得
             $fbIconPath = $fbHelper->downloadImage($fbIconUrl);
             # FacebookアイコンパスをFacebookアイコンパスリストに追加
             $fbIconPathList[$userId] = $fbIconPath;
+            
         }
         return $fbIconPathList;
     }

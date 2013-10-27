@@ -106,9 +106,12 @@ $ ->
 
       # FB-icon
       fbIconMaterials = {}
+      console.log data.userInfo
       for key,val of data.userInfo
         # key:val = userId:iconImgPath
-        tmpTex = new THREE.ImageUtils.loadTexture(val)
+        imgpath = '/' + val + '.jpg'
+        console.log imgpath
+        tmpTex = new THREE.ImageUtils.loadTexture(imgpath)
         fbIconMaterials[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
       
       # mosaic piece
@@ -157,7 +160,7 @@ $ ->
       cnt = 0
       for key,val of fbIconMaterials
         piece = new THREE.Mesh( fbIconGeometry, val)
-        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax,cnt/(userNum-1))
+        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax,(cnt+1)/(userNum + 1))
         piece.position.copy position
         scene.add piece
 
