@@ -72,14 +72,14 @@ $redirectIfNotLogin = function ( $session ) {
  */
 $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogin) {
     $FBHelper = $container['FBHelper'];
-    $userId = $FBHelper->getUserId();
+    $fbUserId = $FBHelper->getUserId();
     
     $redirect = $redirectIfNotLogin($container['session']);
-    if (!$userId) {
+    if (!$fbUserId) {
         $redirect();
     }
 
-    $user = $container['repository.user']->findByFbId($userId);
+    $user = $container['repository.user']->findByFbId($fbUserId);
 
     if ($user->id == '') {
         $userProfile = $FBHelper->getUserProfileForRegistration();
@@ -92,7 +92,8 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
         $user->setProperties($userProfile);
 
         try {
-            $container['repository.user']->insert($user);
+            $userId = $container['repository.user']->insert($user);
+            $user->setProperties(['id' => $userId]);
         } catch (Exception $e) {
             $app->halt(500, $e->getMessage());
         }
