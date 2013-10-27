@@ -4,16 +4,17 @@
     # DBアクセステスト
     print_r($container['session']->get('goalImageId'));
 
-    $userIdList =$container['repository.album']->getUserIdList(1);
-    print_r($userIdList);
-    $userIconPathList = $container['repository.user']->getUserIconImgUrl($userIdList[0]);
-    print_r($userIconPathList);
+    //$userIdList =$container['repository.album']->getUserIdList(1);
+    //print_r($userIdList);
+
+    //$userIconPathList = $container['repository.user']->getUserIconImgUrl($userIdList[0]);
+    //print_r($userIconPathList);
 
     //$mosaicImage = $container['repository.goalImage']->getMosaicImg(1);
     //print_r($mosaicImage);
 
-    
-    print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
+   
+   //print_r($container['repository.albumUser']->getFbIconPathList(1,$container)); 
     //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
 
     $app->render('common/mosaic_viewer.html.twig');
@@ -75,7 +76,6 @@ ajax_mosaic画像リスト取得:{
     $FBRep = $container['FBHelper'];
 
     //$goalImageId = 1;
-    #TODO:goalimageidをsessionから取得
     $goalImageId = $container['session']->get('goalImageId');
 
     $mosaicPieceRep = $container['repository.mosaicPiece'];
@@ -85,13 +85,14 @@ ajax_mosaic画像リスト取得:{
     # 2.参加ユーザの画像リスト取得
     # 参加ユーザリスト作成
     $userInfo = [
-      '2147483647'=>'/img/test/miku1.jpg',
-      '456'=>'/img/test/miku2.jpg',
-      '1'=>'/img/test/miku3.jpg'
+      '2147483647'=>'img/test/miku1.jpg',
+      '3'=>'img/test/miku2.jpg',
+      '1'=>'img/resource_img/1/picture.jpg'
+     
       ];
 
     #TODO:userInfoの取得
-    //$userInfo = $AlbumUserRep->getFbIconPathList($goalImageId,$container);
+    $userInfo = $AlbumUserRep->getFbIconPathList($goalImageId,$container);
 
     # 参加ユーザ数取得
     $userNum = count($userInfo);
@@ -113,7 +114,6 @@ ajax_mosaic画像リスト取得:{
       "userNum" => $userNum,
       "splitX" => 80,
       "splitY" => 60
-
       ];
 
     # 5.ajax_return
@@ -151,8 +151,9 @@ ajaxでFB_Image_DLしてリンク取得:{
 
 
 ajaxのてすと:{
-  $app->get('/common/mosaic_viewer/ajax', function() use ($app){
+  $app->get('/common/mosaic_viewer/ajax', function() use ($app,$container){
     $res = ["hogehoge"=>"var","bar"=>"yes"];
+   
 
     echo json_encode($res);
   })

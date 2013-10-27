@@ -141,6 +141,9 @@ class FBHelperRepository
         return $images;
     }
 
+    public function getRequestUrl()
+    {
+    }
 
 //    public function getFriends()
 //    {
@@ -187,7 +190,8 @@ class FBHelperRepository
     {
         $image = file_get_contents($imagePath);
         $folderPath = 'img/resource_img/'.$this->session->get('goalImageId');
-        var_dump($folderPath);
+    
+        //var_dump($folderPath);
         if ( !is_dir($folderPath) ) {
             //mkdir($folderPath, 0775);
             mkdir($folderPath, 0777);

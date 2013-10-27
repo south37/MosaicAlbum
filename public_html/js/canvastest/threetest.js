@@ -29,7 +29,7 @@ $(function() {
       return alert("shareしたよ");
     });
     return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
-      var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, isTweenInitiaized, key, lookTarget, mosaicHeight, mosaicLeft, mosaicLeftPct, mosaicPieceGeometry, mosaicPieceMaterials, mosaicRight, mosaicRightPct, mosaicWidth, moveTImeMax, moveTime, moveTimeMin, nearClip, offsetTime, offsetTimeMax, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn_target, twn_zoom, userNum, userPosList, userPosMax, userPosMin, val, width, zoomVector, zoompos, _i, _len, _ref, _ref1, _ref2;
+      var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, imgpath, isTweenInitiaized, key, lookTarget, mosaicHeight, mosaicLeft, mosaicLeftPct, mosaicPieceGeometry, mosaicPieceMaterials, mosaicRight, mosaicRightPct, mosaicWidth, moveTImeMax, moveTime, moveTimeMin, nearClip, offsetTime, offsetTimeMax, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn_target, twn_zoom, userNum, userPosList, userPosMax, userPosMin, val, width, zoomVector, zoompos, _i, _len, _ref, _ref1, _ref2;
       console.log(data);
       mosaicImagePath = data.mosaicInfo.mosaicPath;
       width = window.innerWidth;
@@ -55,10 +55,13 @@ $(function() {
       directioalLight.position.z = 300;
       scene.add(directioalLight);
       fbIconMaterials = {};
+      console.log(data.userInfo);
       _ref = data.userInfo;
       for (key in _ref) {
         val = _ref[key];
-        tmpTex = new THREE.ImageUtils.loadTexture(val);
+        imgpath = '/' + val;
+        console.log(imgpath);
+        tmpTex = new THREE.ImageUtils.loadTexture(imgpath);
         fbIconMaterials[key] = new THREE.MeshBasicMaterial({
           map: tmpTex,
           side: THREE.DoubleSide
@@ -89,7 +92,7 @@ $(function() {
       for (key in fbIconMaterials) {
         val = fbIconMaterials[key];
         piece = new THREE.Mesh(fbIconGeometry, val);
-        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax, cnt / (userNum - 1));
+        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax, (cnt + 1) / (userNum + 1));
         piece.position.copy(position);
         scene.add(piece);
         userPosList[key] = position;
