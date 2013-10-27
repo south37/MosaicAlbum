@@ -28,9 +28,8 @@ window.fbAsyncInit = function() {
 function sendMessage() {
   var input       = document.getElementById('goalImageId');
   var fbGoalImageId = input.value;
-  alert(fbGoalImageId);
   
-  url = 'http://mosaicalbum.com/?fbGoalImageId=' + fbGoalImageId;
+  url = 'http://mosaicalbum.me/guest/' + fbGoalImageId;
   FB.ui({
     method: 'send',
     link:   'http://mosaicalbum.me/',
