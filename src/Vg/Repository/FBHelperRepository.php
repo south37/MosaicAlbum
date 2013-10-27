@@ -189,7 +189,8 @@ class FBHelperRepository
         $folderPath = 'img/resource_img/'.$this->session->get('goalImageId');
         var_dump($folderPath);
         if ( !is_dir($folderPath) ) {
-            mkdir($folderPath, 0775);
+            //mkdir($folderPath, 0775);
+            mkdir($folderPath, 0777);
         }
 
         $savePath = $folderPath.'/'.basename($imagePath);
