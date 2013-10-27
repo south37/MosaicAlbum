@@ -51,7 +51,6 @@ function sendMessage() {
     to:     '100003595468082',
     name:   'minami',
     link:   'http://yahoo.co.jp',
-    redirect_uri: 'http://mosaicalbum.com/'
   });
 }
 

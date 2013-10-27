@@ -10,7 +10,7 @@ window.fbAsyncInit = function() {
   // init the FB JS SDK
   FB.init({
     appId      : '638792116141666',                           // App ID from the app dashboard
-    channelUrl : '//mosaicalbum.com/', // Channel file for x-domain comms
+    channelUrl : '//mosaicalbum.me/', // Channel file for x-domain comms
     status     : true,                                        // Check Facebook Login status
     cookie     : true,
     xfbml      : true                                         // Look for social plugins on the page
