@@ -11,6 +11,8 @@
 
     $mosaicImage = $container['repository.goalImage']->getMosaicImg(1);
     print_r($mosaicImage);
+
+    print_r("session_user_id:",$container['session']->get('userId'));
     //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
     //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
 
@@ -72,9 +74,9 @@ ajax_mosaic画像リスト取得:{
     # 1.リポジトリ，必要変数の確保 
     $FBRep = $container['FBHelper'];
 
-    $goalImageId = 1;
+    //$goalImageId = 1;
     #TODO:goalimageidをsessionから取得
-    //$goalImageId = $container['session']->get('goalImageId');
+    $goalImageId = $container['session']->get('goalImageId');
 
     $mosaicPieceRep = $container['repository.mosaicPiece'];
     $AlbumUserRep   = $container['repository.albumUser'];
