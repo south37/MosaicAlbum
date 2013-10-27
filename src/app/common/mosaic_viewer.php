@@ -138,6 +138,7 @@ ajaxでFB_Image_DLしてリンク取得:{
     # 2.オリジナル画像パス取得
     # TODO:fb_image_idから対応パスを取得しましょう
     $fb_image_path = "/img/miku.jpg";
+    $fb_image_path = $FBHelper->getImagePath($fb_image_id);
 
     # 3.ajax_return
     $response = [
