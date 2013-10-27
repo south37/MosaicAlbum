@@ -92,20 +92,25 @@ class GoalImageRepository
      * @param  $goalImageId
      * @return $mosaicPath
      */
-    public function getMosaicImg($goalImageId)
+    public function getMosaicImg($goalImageId, &$container)
     {
+        $albumRepository = $container['repository.album'];
+        $fbHelper = $container['FBHelper'];
         $sql = "SELECT * FROM goal_image WHERE id = :goalImageId";
         $sth = $this->db->prepare($sql);
         $sth->bindValue(':goalImageId', $goalImageId, \PDO::PARAM_INT);
         $sth->execute();
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
         return [
-            'path'=>$data['mosaic_path'],
-            'id'=>$data['fb_goal_image_id'],
-            'tate_division' => $data['tate_division'],
-            'yoko_division' => $data['yoko_division'],
-            'split_width' => 640 / $data['tate_division'],
-            'split_height' => 640 / $data['yoko_division']
+            'mosaicPath' => $data['mosaic_path'],
+            'splitX' => $data['yoko_division'],
+            'splitY' => $data['tate_division'],
+            'splitWidth' => 640 / $data['yoko_division'],
+            'splitHeight' => 480 / $data['tate_division'],
+            'resizeWidth' => 640,
+            'resizeHeight' => 480,
+            'originalPath' => $fbHelper->downloadImageFromFbId($data['fb_goal_image_id']),
+            'originalUserCount' => count($albumRepository->getUserIdList($goalImageId))
         ];
     }
 
