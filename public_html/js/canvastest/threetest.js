@@ -59,7 +59,7 @@ $(function() {
       _ref = data.userInfo;
       for (key in _ref) {
         val = _ref[key];
-        imgpath = '/' + val + '.jpg';
+        imgpath = '/' + val;
         console.log(imgpath);
         tmpTex = new THREE.ImageUtils.loadTexture(imgpath);
         fbIconMaterials[key] = new THREE.MeshBasicMaterial({

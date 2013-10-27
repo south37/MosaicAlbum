@@ -109,7 +109,7 @@ $ ->
       console.log data.userInfo
       for key,val of data.userInfo
         # key:val = userId:iconImgPath
-        imgpath = '/' + val + '.jpg'
+        imgpath = '/' + val
         console.log imgpath
         tmpTex = new THREE.ImageUtils.loadTexture(imgpath)
         fbIconMaterials[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
