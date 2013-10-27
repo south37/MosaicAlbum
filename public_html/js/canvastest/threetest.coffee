@@ -21,8 +21,9 @@ $ ->
 
     # クリックイベント
     # html
-    mosaicImagePath = ""
+    mosaicImagePath   = ""
     selectedImagePath = ""
+    originalImagePath = ""
 
     $('#showMosaic').click ->
       $('#modal1 .modal-body')
@@ -37,6 +38,14 @@ $ ->
         .append("<img src=#{selectedImagePath} alt='selectedImg'></img>")
       $('#modal1').modal('toggle')
       console.log selectedImagePath
+
+    $('#showOriginal').click ->
+      $('#modal1 .modal-body')
+        .empty()
+        .append("<img src=#{originalImagePath} alt='originalImg'></img>")
+      $('#modal1').modal('toggle')
+      console.log originalImagePath
+
 
     # modal
     $('#closeModal').click ->
@@ -54,7 +63,8 @@ $ ->
       console.log data
 
       # goalImgをmodalに追加
-      mosaicImagePath = data.mosaicInfo.mosaicPath
+      mosaicImagePatha  = data.mosaicInfo.mosaicPath
+      originalImagePath = data.mosaicInfo.originalPath
     
       # *************************** 
       # 1.描画ベース(renderer / scene)の作成
