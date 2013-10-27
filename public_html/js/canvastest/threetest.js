@@ -116,7 +116,6 @@ $(function() {
         scene.add(piece);
         target = new THREE.Vector3(piecedata.x * sizeX + mosaicLeft, height - piecedata.y * sizeY, 0);
         zoompos = new THREE.Vector3().copy(piece.position).lerp(target, 0.1).lerp(zoomVector, 0.95 * Math.random());
-        console.log(zoompos);
         moveTime = moveTimeMin + Math.floor(Math.random() * (moveTImeMax - moveTimeMin));
         offsetTime = 100 + 10 * Math.floor(Math.random() * offsetTimeMax);
         twn_zoom = new TWEEN.Tween(piece.position).to(zoompos, moveTime * 5).easing(TWEEN.Easing.Quadratic.Out).delay(offsetTime);
