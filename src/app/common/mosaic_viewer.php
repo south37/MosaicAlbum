@@ -103,7 +103,7 @@ ajax_mosaic画像リスト取得:{
     # 4.mosaiInfoつくる
     #
     # TODO:DBからデータをひろう
-    $mosaicPath    = '/img/mosaic_img/osaic'.$goalImageId.'.png';
+    $mosaicPath    = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
     $mosaicImage   = $goalImageRep->getMosaicImg($goalImageId);
     $originalImage = '/img/test/miku3.jpg';
 

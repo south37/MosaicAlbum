@@ -140,9 +140,9 @@ $(function() {
         if (obj.length > 0) {
           tmp_id = obj[0].object.fb_image_id;
           ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id;
-          return $.getJSON(path, function(ajaxdata) {
-            console.log(data);
-            return selectedImagePath = data.fb_image_path;
+          return $.getJSON(ajaxpath, function(ajaxdata) {
+            console.log(ajaxdata);
+            return selectedImagePath = ajaxdata.fb_image_path;
           });
         } else {
           return console.log("no object");

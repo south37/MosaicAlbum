@@ -246,9 +246,9 @@ $ ->
         if obj.length > 0
           tmp_id = obj[0].object.fb_image_id
           ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
-          $.getJSON path, (ajaxdata)->
-            console.log data
-            selectedImagePath = data.fb_image_path
+          $.getJSON ajaxpath, (ajaxdata)->
+            console.log ajaxdata
+            selectedImagePath = ajaxdata.fb_image_path
         else
           console.log "no object"
       
