@@ -9,15 +9,19 @@
 
     <!-- Le styles -->
     <link href="{{ asset('/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+   
+    <link href="{{ asset('/bootstrap/css/bootstrap-responsive.css') }}" rel="stylesheet">
+    <link href="{{ asset('/css/image-picker.css') }}" rel="stylesheet">
+    <link href="{{ asset('/css/mosaicalbum.css') }}" rel="stylesheet">
+
     <style type="text/css">
       body {
         padding-top: 60px;
         padding-bottom: 40px;
       }
+      {% block style '' %}
     </style>
-    <link href="{{ asset('/bootstrap/css/bootstrap-responsive.css') }}" rel="stylesheet">
-    <link href="{{ asset('/css/image-picker.css') }}" rel="stylesheet">
-    <link href="{{ asset('/css/mosaicalbum.css') }}" rel="stylesheet">
+ 
 
   </head>
 
@@ -46,11 +50,11 @@
 
     <!--modal-->
     <!--debug-->
-    <div id="modal1" class="modal hide fade">
+    <div id="modal1" class="modal hide fade lerge">
       <div class="modal-header">
         <p>header</p>
       </div>
-      <div class="modal-body">
+      <div class="modal-body modal-body">
         <p>modal dayo</p>
       </div>
       <div class="modal-footer">
