@@ -123,7 +123,7 @@ class FBHelperRepository
         $this->setAccessToken();
         
         try {
-            $fbImages = $this->facebook->api('/'.$albumId.'/photos', 'GET')['data'];
+            $fbImages = $this->facebook->api('/'.$albumId.'/photos?limit=100', 'GET')['data'];
         } catch (FacebookApiException $e) {
             return [];
         }
