@@ -10,8 +10,8 @@
     //$userIconPathList = $container['repository.user']->getUserIconImgUrl($userIdList[0]);
     //print_r($userIconPathList);
 
-    //$mosaicImage = $container['repository.goalImage']->getMosaicImg(1);
-    //print_r($mosaicImage);
+    $mosaicImage = $container['repository.goalImage']->getMosaicImg(1,$container);
+    print_r($mosaicImage);
 
    
    //print_r($container['repository.albumUser']->getFbIconPathList(1,$container)); 
