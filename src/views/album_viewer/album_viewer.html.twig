@@ -11,9 +11,19 @@
       </form>
     </div>
    
-    {% for imagePath in imagePathList %}
-         <img src="{{ imagePath }}"></option>
-    {% endfor %}
+    <div class="row">
+      <div class="span10">
+        <ul class="thumbnails">
+          {% for imagePath in imagePathList %}
+          <li class="span2">
+            <div class="thumbnail">
+              <img src="{{ imagePath }}">
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
    
     <div id="buttons">
       <!-- <a href="{{ urlFor('mosaic_viewer') }}" class="btn btn-primary btn-large">モザイクを作成する</a> -->
