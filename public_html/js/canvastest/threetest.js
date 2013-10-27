@@ -127,8 +127,7 @@ $(function() {
       }
       projector = new THREE.Projector();
       $(renderer.domElement).bind('mousedown', function(e) {
-        var mouseX2D, mouseX3D, mouseY2D, mouseY3D, obj, path, ray, tmp_id, vec;
-        console.log("rendererclicked");
+        var ajaxpath, mouseX2D, mouseX3D, mouseY2D, mouseY3D, obj, ray, tmp_id, vec;
         mouseX2D = e.clientX - e.target.offsetLeft;
         mouseY2D = e.clientY - e.target.offsetTop;
         mouseX3D = (mouseX2D / e.target.width) * 2 - 1;
@@ -140,13 +139,13 @@ $(function() {
         obj = ray.intersectObjects(scene.children, true);
         if (obj.length > 0) {
           tmp_id = obj[0].object.fb_image_id;
-          path = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id;
-          return $.getJSON(path, function(data) {
+          ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id;
+          return $.getJSON(path, function(ajaxdata) {
             console.log(data);
             return selectedImagePath = data.fb_image_path;
           });
         } else {
-          return console.log("no clicked object");
+          return console.log("no object");
         }
       });
       isTweenInitiaized = false;
