@@ -15,7 +15,7 @@ class GoalImageRegister
     public function __construct()
     {
         $this->validator = v::arr()
-        ->key('fbGoalImageId', v::string()->setName('fbGoalImageId')->notEmpty())
+        ->key('goalImageId', v::string()->setName('goalImageId')->notEmpty())
         ;
     }
 
@@ -31,7 +31,7 @@ class GoalImageRegister
             $this->validator->assert($input);
         } catch (\InvalidArgumentException $e) {
             $this->errors = $e->findMessages([
-                'fbGoalImageId.notEmpty' => 'FacebookゴールイメージIDを入力してください',
+                'goalImageId.notEmpty' => 'FacebookゴールイメージIDを入力してください',
                 ]);
             return false;
         }
