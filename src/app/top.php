@@ -1,6 +1,6 @@
 <?php
 /**
- * トップページ
+ * トップページ(host)
  */
 $app->get('/', function() use ($app, $container) {
     $input = $app->request()->get();
@@ -11,14 +11,6 @@ $app->get('/', function() use ($app, $container) {
         $app->redirect($app->urlFor('login_process'));
     }
 
-    // getパラメータとしてgoalImageIdを受け取っていればguest、そうでなければhostと判定
-    if (array_key_exists('goalImageId', $input)) {
-        $session->set('goalImageId', $input['goalImageId']);
-        $isHost = false;
-    } else {
-        $isHost = true;
-    }
-
     // ログイン判定
     if ($session->get('isLogin') !== true) {
         $loginUrl = $container['FBHelper']->getLoginUrl();
@@ -26,10 +18,33 @@ $app->get('/', function() use ($app, $container) {
         $loginUrl = '';
     }
 
-  $app->render('top/index.html.twig', ['loginUrl' => $loginUrl, 'goalImageId' => $session->get('goalImageId'), 'isHost' => $isHost]);
+    // guestかどうかの判定
+    if ($container['session']->get('isGuest' == true)) {
+        $isGuest = true;
+    } else {
+        $isGuest = false;
+    }
+
+    $app->render('top/index.html.twig', [
+        'loginUrl'    => $loginUrl, 
+        'goalImageId' => $session->get('goalImageId'),
+        'isGuest'     => $isGuest,
+    ]);
 })
   ->name('top')
   ;
+
+/**
+ *fbGoalImageIdにアクセスされた時は、guestとして処理
+ */
+$app->get('/guest/:fbGoalImageId', function($goalImageId) use ($app, $container) {
+    $container['session']->set('goalImageId', $goalImageId);
+    $container['session']->set('isGuest', true);
+
+    $app->redirect($app->urlFor('top'));
+})
+    ->name('top_guest')
+    ;
 
 /**
  * facebookに埋め込まれると、最初にpostリクエストが送られるため、このページが見られる

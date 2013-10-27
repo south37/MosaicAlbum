@@ -141,8 +141,11 @@ class FBHelperRepository
         return $images;
     }
 
-    public function getRequestUrl()
+    public function getRequestUrl($fbGoalImageId)
     {
+        return 'http://www.facebook.com/dialog/send?app_id='.self::APP_ID.
+            '&link=http://mosaicalbum.me/'.'400192746777237'.
+            '&redirect_uri=http://mosaicalbum.com/album_viewer';
     }
 
 //    public function getFriends()
