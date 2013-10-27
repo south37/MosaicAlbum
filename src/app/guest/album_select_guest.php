@@ -122,7 +122,7 @@ CreateMosaic:{
     # モザイク作成されたことをお知らせする
     //createNotif($container);
 
-    //$app->redirect($link);
+    $app->redirect($link);
   })
     ->name('create_mosaic')
     ;
