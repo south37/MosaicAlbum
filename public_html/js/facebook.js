@@ -32,27 +32,27 @@ window.fbAsyncInit = function() {
 //  }, {scope: 'user_photos,friends_photos'});
 //}
 
-function invite() {
-  FB.ui({
-    method:  'apprequests', 
-    message: '「MosaicAlbum」は友達とモザイクアルバムを作るfacebookアプリです。', 
-    title :  '「MosaicAlbum」に友達を誘おう'
-  }, function(response) {
-    for (var key in response) {
-      console.log(key);
-      console.log(response[key]);
-    }
-  });
-}
-
-function sendMessage() {
-  FB.ui({
-    method: 'send',
-    to:     '100003595468082',
-    name:   'minami',
-    link:   'http://yahoo.co.jp',
-  });
-}
+//function invite() {
+//  FB.ui({
+//    method:  'apprequests', 
+//    message: '「MosaicAlbum」は友達とモザイクアルバムを作るfacebookアプリです。', 
+//    title :  '「MosaicAlbum」に友達を誘おう'
+//  }, function(response) {
+//    for (var key in response) {
+//      console.log(key);
+//      console.log(response[key]);
+//    }
+//  });
+//}
+//
+//function sendMessage() {
+//  FB.ui({
+//    method: 'send',
+//    to:     '100003595468082',
+//    name:   'minami',
+//    link:   'http://yahoo.co.jp',
+//  });
+//}
 
 // このdiv要素の後で読み込む
 //    <div id="fb-root"></div>
