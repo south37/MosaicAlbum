@@ -98,14 +98,21 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
             $redirect();
         }
 
-        $user = new \Vg\Model\User();
-        $user->setProperties($userProfile);
+        // validation
+        $validator = new \Vg\Validator\UserRegister();
+        if ($validator->validate($userProfile)) {
+            $user = new \Vg\Model\User();
+            $user->setProperties($userProfile);
 
-        try {
-            $userId = $container['repository.user']->insert($user);
-            $user->setProperties(['id' => $userId]);
-        } catch (Exception $e) {
-            $app->halt(500, $e->getMessage());
+            try {
+                $userId = $container['repository.user']->insert($user);
+                $user->setProperties(['id' => $userId]);
+            } catch (Exception $e) {
+                $app->halt(500, $e->getMessage());
+            }
+        }
+        else {
+            $app->render('top/index.html.twig', ['errors' => $validator->errors()]);
         }
     }
 
