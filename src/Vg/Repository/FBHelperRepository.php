@@ -198,6 +198,9 @@ class FBHelperRepository
         }
 
         $savePath = $folderPath.'/'.basename($imagePath);
+        if ($imagePath === "picture") {
+            $savePath = $folderPath.'/'.basename($imagePath).$this->userId.'.jpg';
+        }
 
         if(file_exists($savePath)===FALSE) { 
           file_put_contents($savePath, $image);
