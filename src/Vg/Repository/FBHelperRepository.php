@@ -141,6 +141,9 @@ class FBHelperRepository
         return $images;
     }
 
+    public function getRequestUrl()
+    {
+    }
 
 //    public function getFriends()
 //    {

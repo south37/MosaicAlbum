@@ -19,7 +19,7 @@ function selectImage() {
   goalImage.src = goalImageSrc;
 
   var message = parentDocument.getElementById('message');
-  message.innerHTML = 'この写真がモザイク画像の完成形となります。';
+  message.innerHTML = 'この写真をモザイク画像の完成形にしますか?';
 
   var selectButton = parentDocument.getElementById('selectButton');
   selectButton.style.display = "block";
