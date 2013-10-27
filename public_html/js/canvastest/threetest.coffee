@@ -55,8 +55,11 @@ $ ->
 
       # goalImgをmodalに追加
       mosaicImagePath = data.mosaicInfo.mosaicPath
-
+    
+      # *************************** 
       # 1.描画ベース(renderer / scene)の作成
+      # ***************************
+     
       # レンダラの作成．追加
       width  = window.innerWidth 
       height = window.innerHeight - 180
@@ -92,10 +95,12 @@ $ ->
       directioalLight.position.z = 300
       scene.add directioalLight
 
-
+      # ***********************************
       # 2:描画素材を準備
       # マテリアル + ジオメトリ => メッシュ
-
+      # ***********************************
+  
+      # -------------------------------------
       # 2-1:マテリアル生成
       # process:imgpath取得/texture化/material化
 
@@ -113,7 +118,7 @@ $ ->
         tmpTex = new THREE.ImageUtils.loadTexture('/' + val)
         mosaicPieceMaterials[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
 
-
+      # -----------------------------------------
       # 2-2:ジオメトリ作成
       # process:種類とサイズを指定
 
@@ -133,7 +138,7 @@ $ ->
 
       tweenList = []
       
-     
+      # --------------------------------------
       # 2-3:メッシュ(ジオメトリ＋マテリアル)の生成．これがシーンにaddされる．
       # process:
       # メッシュインスタンス生成
@@ -193,7 +198,7 @@ $ ->
         #TODO:適切な終了位置をDB情報から計算
         target = new THREE.Vector3(piecedata.x * sizeX + mosaicLeft, height - piecedata.y * sizeY, 0)
         zoompos = new THREE.Vector3().copy(piece.position).lerp(target,0.1).lerp(zoomVector,0.95 * Math.random())
-        console.log zoompos
+        #console.log zoompos
 
         moveTime =moveTimeMin + Math.floor(Math.random() * (moveTImeMax-moveTimeMin)) 
         offsetTime = 100 + 10 * Math.floor(Math.random() * offsetTimeMax) 
@@ -213,11 +218,14 @@ $ ->
         tweenList.push twn_zoom
         cnt += 1
 
+      # ***********************************
+      # 3.EVENT
+      # ***********************************
+
+      # ピッキング処理
       # ray
       projector = new THREE.Projector()
       $(renderer.domElement).bind 'mousedown',(e)->
-        console.log "rendererclicked"
-      
         #画面上の位置
         mouseX2D = e.clientX - e.target.offsetLeft
         mouseY2D = e.clientY - e.target.offsetTop
@@ -237,21 +245,24 @@ $ ->
         # クリックされたオブジェクトに対する処理
         if obj.length > 0
           tmp_id = obj[0].object.fb_image_id
-          path = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
-          $.getJSON path, (data)->
-            console.log data
-            selectedImagePath = data.fb_image_path
+          ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
+          $.getJSON ajaxpath, (ajaxdata)->
+            console.log ajaxdata
+            selectedImagePath = ajaxdata.fb_image_path
         else
-          console.log "no clicked object"
+          console.log "no object"
       
-      # マウスイベント：クリック：tweenスタート！
+      # --------------
+      # マウスイベント
       isTweenInitiaized = false
       $('canvas').mouseup ->
         if not isTweenInitiaized
           for twn in tweenList
             twn.start()
           isTweenInitiaized = true
-      
+    
+      # ------------
+      # 画面リサイズ
       $(window).bind 'resize', ->
         console.log "window resize"
         width = $('#container').innerWidth()
@@ -260,13 +271,19 @@ $ ->
         camera.aspect = width / height
         camera.updateProjectionMatrix()
 
-      # animation設定.毎回呼ばれる．
+
+      # ***********************************
+      # 4.animation設定.毎回呼ばれる処理．
+      # ***********************************
       anim = ->
         requestAnimationFrame anim
         trackball.update()
         TWEEN.update()
         renderer.render(scene,camera)
 
-      # main的なあれ
+
+      # **********************
+      # 5.main的なあれ
+      # **********************
       renderer.render(scene,camera)
       anim()

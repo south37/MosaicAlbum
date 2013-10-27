@@ -45,6 +45,11 @@ function create()
         {
             alert('モザイク画が作成されました');
             $("#buttons").append('<a href="{{ urlFor('mosaic_viewer') }}" class="btn btn-primary btn-large">作成されたモザイクを見る</a><br>');
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown)
+        {
+        alert('エラー発生だよ');
+        alert(textStatus);
         }
     });
 }

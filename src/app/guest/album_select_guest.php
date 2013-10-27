@@ -45,6 +45,7 @@ $app->post('/guest/album_select_guest', function() use ($app, $container) {
 CreateMosaic:{
   $app->get('/guest/album_select_guest/create', function() use ($app, $container){
     $link = '/common/mosaic_viewer';
+
     # 1:init
     # repository準備
     $goalImageId   = $container['session']->get('goalImageId');
@@ -55,6 +56,7 @@ CreateMosaic:{
     $UsedImageRep  = $container['repository.usedImage'];
     $FBHelper      = $container['FBHelper'];
 
+    /*
     # 既に現在の状態のモザイク画で作成されているかを調べる
     $isMakedMosaic = $GoalImageRep->isMakeMosaic($goalImageId);
     if($isMakedMosaic == 1)
@@ -67,6 +69,7 @@ CreateMosaic:{
 
     // モザイク画像を作成済みにする
     $GoalImageRep->setIsMakeMosaic(1, $goalImageId);
+    //*/
 
     # 2:prepare target & src
     # ゴールイメージ取得
@@ -79,7 +82,6 @@ CreateMosaic:{
     $albumIdList = $AlbumRep->getAlbumIdList($goalImageId);
  
     $albumImagePathList = $UsedImageRep->getUsedImageList($goalImageId, $container);
-
     /*
     $albumImagePathList = [
             1 => [
@@ -108,18 +110,19 @@ CreateMosaic:{
     
             ]
     ];
-    */
+     */
+
     # 3.process
     createMosaic($goalImageId, $goalImagePath, $albumImagePathList, $container);
     
     // img/resource_img/以下のデータを全て削除
-    deleteDirectoryData('img/resource_img');
+    //deleteDirectoryData('img/resource_img');
 
     # 4.notification
     # モザイク作成されたことをお知らせする
     //createNotif($container);
 
-    //$app->redirect($link);
+    $app->redirect($link);
   })
     ->name('create_mosaic')
     ;
