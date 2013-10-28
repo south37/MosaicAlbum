@@ -5,7 +5,6 @@
     $goalImageId = $container['session']->get('goalImageId');
     print_r($goalImageId);
 
-    print_r($container['FBHelper']->getImagePath());
 
     //$userIdList =$container['repository.album']->getUserIdList(1);
     //print_r($userIdList);
@@ -13,7 +12,7 @@
     //$userIconPathList = $container['repository.user']->getUserIconImgUrl($userIdList[0]);
     //print_r($userIconPathList);
 
-    $mosaicImage = $container['repository.goalImage']->getMosaicImg(1,$container);
+    $mosaicImage = $container['repository.goalImage']->getMosaicImg($goalImageId,$container);
     print_r($mosaicImage);
 
    
@@ -109,7 +108,9 @@ ajax_mosaic画像リスト取得:{
     # TODO:DBからデータをひろう
     $mosaicPath    = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
     //$mosaicImage   = $goalImageRep->getMosaicImg($goalImageId,$container);
+ 
     $originalImage = '/img/test/miku3.jpg';
+    //$originalImage = $mosaicImage.originalPath;
 
     $mosaicInfo = [
       "mosaicPath"   => $mosaicPath,
