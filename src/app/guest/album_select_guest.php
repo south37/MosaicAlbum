@@ -6,14 +6,7 @@ include('../src/mosaic/Image.php');
 include('../src/mosaic/gd_bmp_util.php');
 
 // スクリプトの実行時間を300秒に設定
-set_time_limit(300);
-
-// アルバムセレクト＿ゲスト：使うアルバムを選択
-$app->get('/guest/album_select_guest/mailtest', function() use ($app, $container) {
-    sendMail('wega315@gmail.com', 'http://mosaicalbum.me', 1);
-})
-  ->name('album_select_guest')
-  ;
+set_time_limit(0);
 
 // アルバムセレクト＿ゲスト：使うアルバムを選択
 $app->get('/guest/album_select_guest', function() use ($app, $container) {
@@ -65,6 +58,7 @@ CreateMosaic:{
     $GoalImageRep  = $container['repository.goalImage'];
     $AlbumRep      = $container['repository.album'];
     $AlbumImageRep = $container['repository.albumImage'];
+    $AlbumUserRep  = $container['repository.albumUser'];
     $UsedImageRep  = $container['repository.usedImage'];
     $FBHelper      = $container['FBHelper'];
 
@@ -129,6 +123,13 @@ CreateMosaic:{
     
     // img/resource_img/以下のデータを全て削除
     //deleteDirectoryData('img/resource_img');
+
+    $mailList = $AlbumUserRep->getMailAddressList($goalImageId, $container);
+    foreach($mailList as $mail)
+    {
+        if(isset($mail) === FALSE || strlen($mail) === 0) continue;
+        sendMail($mail, 'http://mosaicalbum.me', $goalImageId);
+    }
 
     # 4.notification
     # モザイク作成されたことをお知らせする
