@@ -2,7 +2,7 @@
 
 {% block contents %}
     <!-- Main hero unit for a primary marketing message or call to action -->
-    <div class="hero-unit">
+    <div id="buttons" class="hero-unit">
       <h1>Album</h1>
       <p>現在登録されている写真の一覧です。</p>
       <a href="javascript:;" onclick="showAlbums()" class="btn btn-primary">アルバムを追加する</a>
@@ -39,7 +39,7 @@ function create()
         success: function(arr)
         {
             alert('モザイク画が作成されました');
-            $("#buttons").append('<a href="{{ urlFor('mosaic_viewer') }}" class="btn btn-primary btn-large">作成されたモザイクを見る</a><br>');
+            $("#buttons").append('<a href="{{ urlFor('mosaic_viewer') }}" class="btn btn-primary btn-large">作成されたモザイクを見る</a>');
         },
         error: function(XMLHttpRequest, textStatus, errorThrown)
         {
