@@ -169,7 +169,7 @@ $(function() {
           $("#selectedThumnail").attr("src", $(obj[0].object.material.map.image.outerHTML).attr("src"));
           $("#selectedThumnail").attr("opacity", 0.5);
           tmp_id = obj[0].object.fb_image_id;
-          return ajaxpath = '/common/mosaic_viewer//ajax/fb_image/' + tmp_id;
+          return ajaxpath = '/common/mosaic_viewer/ajax/fb_image/' + tmp_id;
         } else {
           return console.log("no object");
         }

@@ -283,7 +283,7 @@ $ ->
           tmp_id = obj[0].object.fb_image_id
 
           #ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
-          ajaxpath = '/common/mosaic_viewer//ajax/fb_image/' + tmp_id
+          ajaxpath = '/common/mosaic_viewer/ajax/fb_image/' + tmp_id
           #$.getJSON ajaxpath, (ajaxdata)->
             #console.log ajaxdata
             #selectedImagePath = ajaxdata.fb_image_path
