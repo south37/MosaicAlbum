@@ -35,7 +35,7 @@ class AlbumUserRepository
             //$fbIconPathList[$userId] = $fbIconUrl;
           
             # FacebookアイコンURLからFacebookアイコンパスを取得
-            $fbIconPath = $fbHelper->downloadImage($fbIconUrl);
+            $fbIconPath = $fbHelper->downloadImageWithUserId($fbIconUrl, $userId);
             # FacebookアイコンパスをFacebookアイコンパスリストに追加
             $fbIconPathList[$userId] = $fbIconPath;
             
