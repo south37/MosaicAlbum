@@ -1,5 +1,5 @@
 <?php
-require_once 'Mail.php';
+//require_once 'Mail.php';
 $container = include __DIR__ .'/../src/bootstrap.php';
 
 use Slim\Slim;
