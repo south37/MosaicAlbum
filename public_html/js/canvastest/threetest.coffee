@@ -27,7 +27,7 @@ $ ->
     $('#modal1 .modal-footer')
       .empty()
       .append('右クリックで保存できます ')
-      .append('<button id="fb_share" class="btni btn-primary">facebookでshare</button>')
+      #.append('<button id="fb_share" class="btni btn-primary">facebookでshare</button>')
 
     $("#link_howToUse").hide()
 
