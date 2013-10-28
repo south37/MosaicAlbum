@@ -6,7 +6,7 @@ include('../src/mosaic/Image.php');
 include('../src/mosaic/gd_bmp_util.php');
 
 // スクリプトの実行時間を300秒に設定
-set_time_limit(300);
+set_time_limit(0);
 
 // アルバムセレクト＿ゲスト：使うアルバムを選択
 $app->get('/guest/album_select_guest', function() use ($app, $container) {
@@ -58,6 +58,7 @@ CreateMosaic:{
     $GoalImageRep  = $container['repository.goalImage'];
     $AlbumRep      = $container['repository.album'];
     $AlbumImageRep = $container['repository.albumImage'];
+    $AlbumUserRep  = $container['repository.albumUser'];
     $UsedImageRep  = $container['repository.usedImage'];
     $FBHelper      = $container['FBHelper'];
 
@@ -122,6 +123,13 @@ CreateMosaic:{
     
     // img/resource_img/以下のデータを全て削除
     //deleteDirectoryData('img/resource_img');
+
+    $mailList = $AlbumUserRep->getMailAddressList($goalImageId, $container);
+    foreach($mailList as $mail)
+    {
+        if(isset($mail) === FALSE || strlen($mail) === 0) continue;
+        sendMail($mail, 'http://mosaicalbum.me/common/mosaic_viewer', $goalImageId);
+    }
 
     # 4.notification
     # モザイク作成されたことをお知らせする
@@ -204,5 +212,43 @@ CreateMosaic:{
         }
         closedir($dirHandle);
     }
+  }
+
+  function sendMail($to, $url, $goalImageId)
+  {
+   //言語設定、内部エンコーディングを指定する
+   mb_language("japanese");
+   mb_internal_encoding("UTF-8");
+   //日本語添付メールを送る
+   $params = [
+        'host' => 'smtp.gmail.com',
+        'port' => '587',
+        'auth' => true,
+        'username' => 'notification.mosaic@gmail.com',
+        'password' => 'MashUp_2013'
+   ];
+   $subject = "モザイク画が作成されました"; //題名
+   $body = "あなたが参加したモザイク画が完成しました。\n以下のURLにアクセスすることで完成したモザイクアルバムを見ることが出来ます。\n" . $url . '/' . $goalImageId; //本文
+   $from = "notification.mosaic@gmail.com"; //差出人
+   $fromname = "MosaicAlbum"; //差し出し人名
+   $mail = @Mail::factory("smtp", $params);
+   $body = mb_convert_encoding($body,"JIS","UTF-8");
+
+   //添付ファイル追加
+   $body_encode = [
+          "head_charset" => "ISO-2022-JP",
+          "text_charset" => "ISO-2022-JP"
+         ];
+   $headers = [
+       "To" => $to, //宛先
+       "From" => mb_encode_mimeheader(mb_convert_encoding($fromname,"JIS","UTF-8"))."<".$from.">",
+       "Subject" => mb_encode_mimeheader(mb_convert_encoding($subject,"JIS","UTF-8"))
+   ];
+   $return = @$mail->send($to,$headers,$body);
+   if (@PEAR::isError($return))
+   {
+       echo 'メールが送信できませんでした エラー：' .$return->getMessage(). '<br>';
+   }
+   echo 'Exit send Mail<br>';
   }
 }

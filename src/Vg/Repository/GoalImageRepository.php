@@ -109,7 +109,8 @@ class GoalImageRepository
             'splitHeight' => 480 / $data['tate_division'],
             'resizeWidth' => 640,
             'resizeHeight' => 480,
-            'originalPath' => $fbHelper->downloadImageFromFbId($data['fb_goal_image_id']),
+            //'originalPath' => $fbHelper->downloadImageFromFbId($data['fb_goal_image_id']),
+            'originalPath' => $fbHelper->getImagePath($data['fb_goal_image_id']), 
             'originalUserCount' => count($albumRepository->getUserIdList($goalImageId))
         ];
     }

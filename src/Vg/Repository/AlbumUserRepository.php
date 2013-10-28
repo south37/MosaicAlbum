@@ -42,4 +42,29 @@ class AlbumUserRepository
         }
         return $fbIconPathList;
     }
+
+    /**
+     * ゴールイメージIDで関連するユーザのメールアドレスを検索する
+     * @param  $goalImageId
+     * @return mailAddress[]
+     */
+    public function getMailAddressList($goalImageId, &$container)
+    {
+        # メールアドレスリスト
+        $mailAddressList = [];
+
+        # Repository
+        $albumRepository = $container['repository.album'];
+        $userRepository = $container['repository.user'];
+
+        # ゴールイメージIDでユーザIDリストを取得
+        $userIdList = $albumRepository->getUserIdList($goalImageId);
+        foreach ($userIdList as $userId) {
+            # ユーザIDでメールアドレスを取得
+            $mailAddress = $userRepository->getMailAddress($userId);
+            # メールアドレスをメールアドレスリストに追加
+            $mailAddressList[$userId] = $mailAddress;
+        }
+        return $mailAddressList;
+    }
 }
