@@ -11,10 +11,17 @@ $app->get('/album_viewer', function() use ($app, $container) {
 		# FacebookアルバムIDを渡してFBHelperからFacebookイメージIDとイメージパスのリストを取得
 		$images = $container['FBHelper']->getImagesInAlbum($fbAlbumId);
 		foreach ($images as $image) {
-			# DBに登録
-			$imageID = $container['repository.image']->insert($image['id']);
-			# イメージパスリストにイメージパスを保存
-			array_push($imagePathList, $image['thumbnailPath']);
+			// validation
+			$validator = new \Vg\Validator\ImageRegister();
+			if ($validator->validate($image)) {
+				# DBに登録
+				$imageID = $container['repository.image']->insert($image['id']);
+				# イメージパスリストにイメージパスを保存
+				array_push($imagePathList, $image['thumbnailPath']);
+			}
+			else {
+				$app->render('album_viewer/album_viewer.html.twig', ['errors' => $validator->errors()]);
+			}
 		}
 	}
 	$app->render('album_viewer/album_viewer.html.twig', ["imagePathList"=>$imagePathList]);

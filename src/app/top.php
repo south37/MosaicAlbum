@@ -97,7 +97,8 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
         if ($userProfile === []) {
             $redirect();
         }
-
+        
+        // validation未実装
         $user = new \Vg\Model\User();
         $user->setProperties($userProfile);
 
@@ -107,6 +108,7 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
         } catch (Exception $e) {
             $app->halt(500, $e->getMessage());
         }
+
     }
 
     $container['session']->set('isLogin', true);
