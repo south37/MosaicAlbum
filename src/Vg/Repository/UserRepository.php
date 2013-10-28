@@ -105,7 +105,7 @@ class UserRepository
     /**
      * ユーザーIDでアイコンURLを検索する
      * @param  $userId
-     * @return fbIconUrl[]
+     * @return $fbIconUrl
      */
     public function getUserIconImgUrl($userId)
     {
@@ -115,5 +115,20 @@ class UserRepository
         $sth->execute();
         $data = $sth->fetch(\PDO::FETCH_ASSOC);
         return $data['fb_icon_url'];
+    }
+
+    /**
+     * ユーザーIDでメールアドレスを検索する
+     * @param  $userId
+     * @return $mailAddress
+     */
+    public function getMailAddress($userId)
+    {
+        $sql = "SELECT * FROM user WHERE id = :userId";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue(':userId', $userId, \PDO::PARAM_INT);
+        $sth->execute();
+        $data = $sth->fetch(\PDO::FETCH_ASSOC);
+        return $data['mail_address'];
     }
 }
