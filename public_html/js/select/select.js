@@ -19,8 +19,8 @@ function showRequestDialog() {
         this,
        "dialogWidth=800px; dialogHeight=480px;"
       );
+      document.getElementById('goal-img-frm').submit();
     }
   });
-  document.getElementById('goal-img-frm').submit();
 }
 
