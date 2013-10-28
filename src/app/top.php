@@ -32,7 +32,7 @@ $app->get('/', function() use ($app, $container) {
 /**
  *fbGoalImageIdにアクセスされた時は、guestとして処理
  */
-$app->get('/guest/participation/:fbGoalImageId', function($goalImageId) use ($app, $container) {
+$app->get('/guest/:fbGoalImageId', function($goalImageId) use ($app, $container) {
     $container['session']->set('goalImageId', $goalImageId);
     $container['session']->set('isGuest', true);
 
