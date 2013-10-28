@@ -9,6 +9,13 @@ include('../src/mosaic/gd_bmp_util.php');
 set_time_limit(300);
 
 // アルバムセレクト＿ゲスト：使うアルバムを選択
+$app->get('/guest/album_select_guest/mailtest', function() use ($app, $container) {
+    sendMail('wega315@gmail.com', 'http://mosaicalbum.me', 1);
+})
+  ->name('album_select_guest')
+  ;
+
+// アルバムセレクト＿ゲスト：使うアルバムを選択
 $app->get('/guest/album_select_guest', function() use ($app, $container) {
   $albumList = [];
   # 自分のFacebookアルバムのリストを取得
@@ -199,5 +206,43 @@ CreateMosaic:{
         }
         closedir($dirHandle);
     }
+  }
+
+  function sendMail($to, $url, $goalId)
+  {
+   //言語設定、内部エンコーディングを指定する
+   mb_language("japanese");
+   mb_internal_encoding("UTF-8");
+   //日本語添付メールを送る
+   $params = [
+        'host' => 'smtp.gmail.com',
+        'port' => '587',
+        'auth' => true,
+        'username' => 'notification.mosaic@gmail.com',
+        'password' => 'MashUp_2013'
+   ];
+   $subject = "モザイク画が作成されました"; //題名
+   $body = "あなたが参加したモザイク画が完成しました。\n以下のURLにアクセスすることで完成したモザイクアルバムを見ることが出来ます。\n" . $url; //本文
+   $from = "notification.mosaic@gmail.com"; //差出人
+   $fromname = "MosaicAlbum"; //差し出し人名
+   $mail = @Mail::factory("smtp", $params);
+   $body = mb_convert_encoding($body,"JIS","UTF-8");
+
+   //添付ファイル追加
+   $body_encode = [
+          "head_charset" => "ISO-2022-JP",
+          "text_charset" => "ISO-2022-JP"
+         ];
+   $headers = [
+       "To" => $to, //宛先
+       "From" => mb_encode_mimeheader(mb_convert_encoding($fromname,"JIS","UTF-8"))."<".$from.">",
+       "Subject" => mb_encode_mimeheader(mb_convert_encoding($subject,"JIS","UTF-8"))
+   ];
+   $return = @$mail->send($to,$headers,$body);
+   if (@PEAR::isError($return))
+   {
+       echo 'メールが送信できませんでした エラー：' .$return->getMessage(). '<br>';
+   }
+   echo 'Exit send Mail<br>';
   }
 }
