@@ -16,7 +16,7 @@
     print_r($mosaicImage);
 
    
-   //print_r($container['repository.albumUser']->getFbIconPathList(1,$container)); 
+    //print_r($container['repository.albumUser']->getFbIconPathList(1,$container)); 
     //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
 
     $app->render('common/mosaic_viewer.html.twig');
@@ -107,10 +107,10 @@ ajax_mosaic画像リスト取得:{
     #
     # TODO:DBからデータをひろう
     $mosaicPath    = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
-    //$mosaicImage   = $goalImageRep->getMosaicImg($goalImageId,$container);
+    $mosaicImage   = $goalImageRep->getMosaicImg($goalImageId, $container);
  
     $originalImage = '/img/test/miku3.jpg';
-    //$originalImage = $mosaicImage.originalPath;
+    $originalImage = $mosaicImage["originalPath"];
 
     $mosaicInfo = [
       "mosaicPath"   => $mosaicPath,

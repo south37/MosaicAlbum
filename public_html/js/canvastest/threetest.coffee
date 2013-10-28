@@ -26,6 +26,8 @@ $ ->
     mosaicImagePath   = ""
     selectedImagePath = ""
     originalImagePath = ""
+    ajaxpath = ""
+
 
     $('#showMosaic').click ->
       $('#modal1 .modal-body')
@@ -35,11 +37,16 @@ $ ->
       console.log mosaicImagePath
 
     $('#showSelect').click ->
-      $('#modal1 .modal-body')
-        .empty()
-        .append("<img src=#{selectedImagePath} alt='selectedImg'></img>")
-      $('#modal1').modal('toggle')
-      console.log selectedImagePath
+      console.log "selected click:",ajaxpath
+      $.getJSON ajaxpath, (ajaxdata)->
+        console.log ajaxdata
+        selectedImagePath = ajaxdata.fb_image_path
+        $("#selectedThumnail").attr("opacity",1.0)
+        $('#modal1 .modal-body')
+          .empty()
+          .append("<img src=#{selectedImagePath} alt='selectedImg'></img>")
+        $('#modal1').modal('toggle')
+        console.log selectedImagePath
 
     $('#showOriginal').click ->
       $('#modal1 .modal-body')
@@ -65,7 +72,7 @@ $ ->
       console.log data
 
       # goalImgをmodalに追加
-      mosaicImagePatha  = data.mosaicInfo.mosaicPath
+      mosaicImagePath   = data.mosaicInfo.mosaicPath
       originalImagePath = data.mosaicInfo.originalPath
     
       # *************************** 
@@ -262,12 +269,14 @@ $ ->
           $("#selectedThumnail").attr("src",$(obj[0].object.material.map.image.outerHTML).attr("src"))
           $("#selectedThumnail").attr("opacity",0.5)
           tmp_id = obj[0].object.fb_image_id
-          ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
-          $.getJSON ajaxpath, (ajaxdata)->
-            console.log ajaxdata
-            selectedImagePath = ajaxdata.fb_image_path
-            $("#selectedThumnail").attr("opacity",1.0)
 
+          ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
+          
+          #$.getJSON ajaxpath, (ajaxdata)->
+            #console.log ajaxdata
+            #selectedImagePath = ajaxdata.fb_image_path
+            #$("#selectedThumnail").attr("opacity",1.0)
+          
         else
           console.log "no object"
       
