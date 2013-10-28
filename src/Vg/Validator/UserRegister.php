@@ -15,14 +15,11 @@ class UserRegister
     public function __construct()
     {
         $this->validator = v::arr()
-        ->key('name', v::string()->setName('name')->notEmpty()->length(4,255))
-        ->key('email', v::email()->setName('mailaddress')->notEmpty()->length(1,255))
-        ->key('password', v::string()->setName('password')->notEmpty()->length(6,64)->regex('/\A[0-9a-zA-Z&%$#!?_]{6,64}\z/'))
-        ->key('birthday', v::oneOf(
-                  v::regex('/\A[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\z/'),
-                  v::equals('')
-                  )->setName('birthday')
-            )
+        ->key('fbUserId', v::string()->setName('fbUserId')->notEmpty())
+        ->key('token', v::string()->setName('token')->notEmpty())
+        ->key('name', v::string()->setName('name')->notEmpty()->length(1, 255))
+        ->key('fbIconUrl', v::string()->setName('fbIconUrl')->notEmpty())
+        ->key('mailAddress', v::email()->setName('mailAddress')->notEmpty()->length(1, 255))
         ;
     }
 
@@ -38,19 +35,16 @@ class UserRegister
             $this->validator->assert($input);
         } catch (\InvalidArgumentException $e) {
             $this->errors = $e->findMessages([
-                                                 'name.notEmpty' => '名前を入力してください',
-                                                 'name.length' => '名前は{{minValue}}〜{{maxValue}}文字内で入力してください',
-                                                 'mailaddress.notEmpty' => 'メールアドレスを入力してください',
-                                                 'mailaddress.email' => 'メールアドレスの形式を確認してください',
-                                                 'mailaddress.length' => 'メールアドレスは{{minValue}}〜{{maxValue}}文字内で入力してください',
-                                                 'password.notEmpty' => 'パスワードを入力してください',
-                                                 'password.regex' => 'パスワードは半角英数&%$#!?_の組み合わせで登録してください',
-                                                 'birthday.regex' => '誕生日はyyyy-mm-dd形式で登録してください',
-                                                 ]);
-
+                'fbUserId.notEmpty' => 'FacebookユーザーIDを入力してください',
+                'token.notEmpty' => 'トークンを入力してください',
+                'name.notEmpty' => '名前を入力してください',
+                'name.length' => '名前は{{minValue}}〜{{maxValue}}文字で入力してください',
+                'fbIconUrl.notEmpty' => 'FacebookアイコンURLを入力してください',
+                'mailAddress.notEmpty' => 'メールアドレスを入力してください',
+                'mailAddress.length' => 'メールアドレスは{{minValue}}〜{{maxValue}}文字で入力してください',
+                ]);
             return false;
         }
-
         return true;
     }
 

@@ -61,9 +61,8 @@ $ ->
       # ***************************
      
       # レンダラの作成．追加
-      width  = window.innerWidth 
-      height = window.innerHeight - 180
-      width  = $('#container').innerWidth()
+      height = window.innerHeight - 150
+      width  = $('#canvasField').innerWidth()
       #height = $('#container').innerHeight()
       renderer = new THREE.WebGLRenderer()
       renderer.setSize(width,height)
@@ -106,9 +105,12 @@ $ ->
 
       # FB-icon
       fbIconMaterials = {}
+      console.log data.userInfo
       for key,val of data.userInfo
         # key:val = userId:iconImgPath
-        tmpTex = new THREE.ImageUtils.loadTexture(val)
+        imgpath = '/' + val
+        console.log imgpath
+        tmpTex = new THREE.ImageUtils.loadTexture(imgpath)
         fbIconMaterials[key] = new THREE.MeshBasicMaterial {map:tmpTex, side:THREE.DoubleSide}
       
       # mosaic piece
@@ -157,7 +159,7 @@ $ ->
       cnt = 0
       for key,val of fbIconMaterials
         piece = new THREE.Mesh( fbIconGeometry, val)
-        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax,cnt/(userNum-1))
+        position = new THREE.Vector3().copy(userPosMin).lerp(userPosMax,(cnt+1)/(userNum + 1))
         piece.position.copy position
         scene.add piece
 
@@ -244,11 +246,16 @@ $ ->
         
         # クリックされたオブジェクトに対する処理
         if obj.length > 0
+          console.log obj[0].object.material.map.image.outerHTML 
+          $("#selectedThumnail").attr("src",$(obj[0].object.material.map.image.outerHTML).attr("src"))
+          $("#selectedThumnail").attr("opacity",0.5)
           tmp_id = obj[0].object.fb_image_id
           ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
           $.getJSON ajaxpath, (ajaxdata)->
             console.log ajaxdata
             selectedImagePath = ajaxdata.fb_image_path
+            $("#selectedThumnail").attr("opacity",1.0)
+
         else
           console.log "no object"
       
@@ -264,9 +271,8 @@ $ ->
       # ------------
       # 画面リサイズ
       $(window).bind 'resize', ->
-        console.log "window resize"
-        width = $('#container').innerWidth()
-        height = window.innerHeight - 100
+        width = $('#canvasField').innerWidth()
+        height = window.innerHeight - 150
         renderer.setSize width,height
         camera.aspect = width / height
         camera.updateProjectionMatrix()

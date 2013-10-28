@@ -3,8 +3,8 @@
 {% block contents %}
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="hero-unit">
-      <h1>Album view</h1>
-      <p>現在登録されている画像の一覧です。</p>
+      <h1>Album</h1>
+      <p>現在登録されている写真の一覧です。</p>
       <a href="javascript:;" onclick="showAlbums()" class="btn btn-primary">アルバムを追加する</a>
       <button id="createMosaic" onclick="create();" class="btn btn-danger">モザイクを作成する</button><br>
       <form action="{{ urlFor('album_viewer_post') }}" method="post" id="album-frm">
@@ -23,10 +23,6 @@
           {% endfor %}
         </ul>
       </div>
-    </div>
-   
-    <div id="buttons">
-      <button id="createMosaic" onclick="create();" class="btn btn-danger">モザイクを作成する</button><br>
     </div>
 {% endblock %}
 

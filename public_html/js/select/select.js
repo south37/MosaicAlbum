@@ -5,3 +5,12 @@ function showAlbums() {
         "dialogWidth=800px; dialogHeight=480px;"
     );
 }
+
+function showRequestDialog() {
+    window.showModalDialog(
+         '/select/modal_request',
+         this,
+        "dialogWidth=800px; dialogHeight=480px;"
+    );
+    document.getElementById('goal-img-frm').submit();
+}

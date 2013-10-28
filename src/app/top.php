@@ -1,23 +1,10 @@
 <?php
 /**
- * トップページ
+ * トップページ(host)
  */
 $app->get('/', function() use ($app, $container) {
     $input = $app->request()->get();
     $session = $container['session'];
-
-    // getパラメータとしてcodeを受け取っていれば、facebook認証後のリダイレクトと判定
-    if (array_key_exists('code', $input)) {
-        $app->redirect($app->urlFor('login_process'));
-    }
-
-    // getパラメータとしてgoalImageIdを受け取っていればguest、そうでなければhostと判定
-    if (array_key_exists('goalImageId', $input)) {
-        $session->set('goalImageId', $input['goalImageId']);
-        $isHost = false;
-    } else {
-        $isHost = true;
-    }
 
     // ログイン判定
     if ($session->get('isLogin') !== true) {
@@ -26,10 +13,33 @@ $app->get('/', function() use ($app, $container) {
         $loginUrl = '';
     }
 
-  $app->render('top/index.html.twig', ['loginUrl' => $loginUrl, 'goalImageId' => $session->get('goalImageId'), 'isHost' => $isHost]);
+    // guestかどうかの判定
+    if ($container['session']->get('isGuest' == true)) {
+        $isGuest = true;
+    } else {
+        $isGuest = false;
+    }
+
+    $app->render('top/index.html.twig', [
+        'loginUrl'    => $loginUrl, 
+        'goalImageId' => $session->get('goalImageId'),
+        'isGuest'     => $isGuest,
+    ]);
 })
   ->name('top')
   ;
+
+/**
+ *fbGoalImageIdにアクセスされた時は、guestとして処理
+ */
+$app->get('/guest/:fbGoalImageId', function($goalImageId) use ($app, $container) {
+    $container['session']->set('goalImageId', $goalImageId);
+    $container['session']->set('isGuest', true);
+
+    $app->redirect($app->urlFor('top'));
+})
+    ->name('top_guest')
+    ;
 
 /**
  * facebookに埋め込まれると、最初にpostリクエストが送られるため、このページが見られる
@@ -87,7 +97,8 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
         if ($userProfile === []) {
             $redirect();
         }
-
+        
+        // validation未実装
         $user = new \Vg\Model\User();
         $user->setProperties($userProfile);
 
@@ -97,6 +108,7 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
         } catch (Exception $e) {
             $app->halt(500, $e->getMessage());
         }
+
     }
 
     $container['session']->set('isLogin', true);
