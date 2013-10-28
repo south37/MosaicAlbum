@@ -1,11 +1,21 @@
 $ ->
   window.addEventListener "DOMContentLoaded", ->
     #tooltip test
+    ###
     $('#showMosaic')
       .tooltip
         placement:'top'
         title:'くりっくしてね'
         triger:'hover'
+
+    $("#showOriginal")
+      .popover
+        title:"hoge"
+        html:true
+        trigger:"hover"
+        placement:'bottom'
+        content:"<img src='/img/miku.jpg'></img>" 
+    ###
 
     # modal画面のinit
     $('#modal1 .modal-header')
@@ -20,6 +30,8 @@ $ ->
       .append('<button id="fb_share" class="btni btn-primary">facebookでshare</button>')
 
     $("#link_howToUse").hide()
+
+
 
     # クリックイベント
     # html
