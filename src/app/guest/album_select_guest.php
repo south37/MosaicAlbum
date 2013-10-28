@@ -128,7 +128,7 @@ CreateMosaic:{
     foreach($mailList as $mail)
     {
         if(isset($mail) === FALSE || strlen($mail) === 0) continue;
-        sendMail($mail, 'http://mosaicalbum.me', $goalImageId);
+        sendMail($mail, 'http://mosaicalbum.me/common/mosaic_viewer', $goalImageId);
     }
 
     # 4.notification
@@ -214,7 +214,7 @@ CreateMosaic:{
     }
   }
 
-  function sendMail($to, $url, $goalId)
+  function sendMail($to, $url, $goalImageId)
   {
    //言語設定、内部エンコーディングを指定する
    mb_language("japanese");
@@ -228,7 +228,7 @@ CreateMosaic:{
         'password' => 'MashUp_2013'
    ];
    $subject = "モザイク画が作成されました"; //題名
-   $body = "あなたが参加したモザイク画が完成しました。\n以下のURLにアクセスすることで完成したモザイクアルバムを見ることが出来ます。\n" . $url; //本文
+   $body = "あなたが参加したモザイク画が完成しました。\n以下のURLにアクセスすることで完成したモザイクアルバムを見ることが出来ます。\n" . $url . '/' . $goalImageId; //本文
    $from = "notification.mosaic@gmail.com"; //差出人
    $fromname = "MosaicAlbum"; //差し出し人名
    $mail = @Mail::factory("smtp", $params);
