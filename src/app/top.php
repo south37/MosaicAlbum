@@ -14,7 +14,7 @@ $app->get('/', function() use ($app, $container) {
     }
 
     // guestかどうかの判定
-    if ($container['session']->get('isGuest' == true)) {
+    if ($container['session']->get('isGuest') == true) {
         $isGuest = true;
     } else {
         $isGuest = false;
@@ -35,6 +35,7 @@ $app->get('/', function() use ($app, $container) {
 $app->get('/guest/:fbGoalImageId', function($goalImageId) use ($app, $container) {
     $container['session']->set('goalImageId', $goalImageId);
     $container['session']->set('isGuest', true);
+    
 
     $app->redirect($app->urlFor('top'));
 })
@@ -114,7 +115,11 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
     $container['session']->set('isLogin', true);
     $container['session']->set('userId', $user->id);
 
-    $app->redirect($app->urlFor('select'));
+    if ($container['session']->get('isGuest') == true) {
+        $app->redirect($app->urlFor('album_viewer'));
+    } else {
+        $app->redirect($app->urlFor('select'));
+    }
 })
     ->name('login_process')
     ;
