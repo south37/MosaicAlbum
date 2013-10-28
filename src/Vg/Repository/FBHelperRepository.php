@@ -201,8 +201,30 @@ class FBHelperRepository
         }
 
         $savePath = $folderPath.'/'.basename($imagePath);
-        if ($imagePath === "picture") {
+        if (basename($imagePath) === "picture") {
             $savePath = $folderPath.'/'.basename($imagePath).$this->userId.'.jpg';
+        }
+
+        if(file_exists($savePath)===FALSE) { 
+          file_put_contents($savePath, $image);
+        }
+        return $savePath;
+    }
+    
+    public function downloadImageWithUserId($imagePath, $userId)
+    {
+        $image = file_get_contents($imagePath);
+        $folderPath = 'img/resource_img/'.$this->session->get('goalImageId');
+    
+        //var_dump($folderPath);
+        if ( !is_dir($folderPath) ) {
+            //mkdir($folderPath, 0775);
+            mkdir($folderPath, 0777);
+        }
+
+        $savePath = $folderPath.'/'.basename($imagePath);
+        if (basename($imagePath) === "picture") {
+            $savePath = $folderPath.'/'.basename($imagePath).$userId.'.jpg';
         }
 
         if(file_exists($savePath)===FALSE) { 
