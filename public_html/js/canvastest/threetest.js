@@ -20,7 +20,7 @@ $(function() {
     var ajaxpath, mosaicImagePath, originalImagePath, selectedImagePath;
     $('#modal1 .modal-header').empty().append("画像の詳細  ").append('<button id="closeModal" class="btn">x</button>');
     $('#modal1 .modal-body').empty();
-    $('#modal1 .modal-footer').empty().append('右クリックで保存できます ').append('<button id="fb_share" class="btni btn-primary">facebookでshare</button>');
+    $('#modal1 .modal-footer').empty().append('右クリックで保存できます ');
     $("#link_howToUse").hide();
     mosaicImagePath = "";
     selectedImagePath = "";
