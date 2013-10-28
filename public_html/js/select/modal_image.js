@@ -10,7 +10,7 @@ function selectImage() {
   var parentDocument = window.opener.document;
 
   var goalImageId  = selectedOption.value;
-  var goalImageSrc = selectedOption.getAttribute('data-img-src');
+  var goalImageSrc = selectedOption.getAttribute('data-img-large-src');
 
   var input   = parentDocument.getElementById('goalImageId');
   input.value = goalImageId;

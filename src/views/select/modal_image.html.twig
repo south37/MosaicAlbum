@@ -5,7 +5,7 @@
 
     <select name="imageId" class="images">
         {% for i, image in images %}
-        <option data-img-src="{{ image['thumbnailPath'] }}" value="{{ image['id'] }}">No.{{ i+1 }}</option>
+        <option data-img-large-src="{{ image['imagePath'] }}" data-img-src="{{ image['thumbnailPath'] }}" value="{{ image['id'] }}">No.{{ i+1 }}</option>
         {% endfor %}
     </select>
     <a href="javascript:;" onclick="selectImage()" class="btn btn-primary">この写真を選ぶ</a>
