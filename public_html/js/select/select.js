@@ -7,10 +7,21 @@ function showAlbums() {
 }
 
 function showRequestDialog() {
-    window.showModalDialog(
-         '/select/modal_request',
-         this,
-        "dialogWidth=800px; dialogHeight=480px;"
-    );
-    document.getElementById('goal-img-frm').submit();
+  var fbGoalImageId = document.getElementById('goalImageId').value;
+  $.ajax({
+    type: "GET", 
+    url: "/select/insertGoalImage/"+fbGoalImageId,
+    async: false,
+    success: function(goalImageId){
+      document.getElementById('goalImageId').value = goalImageId;
+      window.showModalDialog(
+        '/select/modal_request',
+        this,
+       "dialogWidth=800px; dialogHeight=480px;"
+      );
+      document.getElementById('goal-img-frm').submit();
+    }
+  });
+  
 }
+
