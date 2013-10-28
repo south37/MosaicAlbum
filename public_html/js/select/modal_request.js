@@ -3,10 +3,10 @@ function sendMessage() {
   var input          = parentDocument.getElementById('goalImageId');
   var fbGoalImageId  = input.value;
   
-  url = 'http://mosaicalbum.me/guest/' + fbGoalImageId;
+  url = 'http://mosaicalbum.me/guest/participation/' + fbGoalImageId;
   FB.ui({
     method: 'send',
-    link:   'http://mosaicalbum.me/',
+    link:   url,
   }, function () {
     window.close()
   });
