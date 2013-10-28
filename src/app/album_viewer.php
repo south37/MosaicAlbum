@@ -12,7 +12,8 @@ $app->get('/album_viewer', function() use ($app, $container) {
 		$images = $container['FBHelper']->getImagesInAlbum($fbAlbumId);
 		foreach ($images as $image) {
 			# DBに登録
-			$imageID = $container['repository.image']->insert($image['id']);
+                        // 重複したデータを挿入しており、モザイク中にimageを挿入しているので一旦コメントアウト。
+			//$imageID = $container['repository.image']->insert($image['id']);
 			# イメージパスリストにイメージパスを保存
 			array_push($imagePathList, $image['thumbnailPath']);
 		}
