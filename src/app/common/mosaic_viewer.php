@@ -38,6 +38,7 @@
 
   $app->get('/common/mosaic_viewer/:goalImageId', function($goalImageId) use ($app, $container){
     //echo $goalImageId;
+    $container['session']->set("goalImageId",$goalImageId);
     $app->render('common/mosaic_viewer.html.twig', ['goalId' => $goalImageId]); 
   });
 }
