@@ -80,7 +80,7 @@ $ ->
     # ***************************
     
     #ajaxで取得するよ
-    $.getJSON "/common/mosaic_viewer/ajax_list", (data)->
+    $.getJSON "/common/mosaic_viewer/ajax/list", (data)->
       console.log data
 
       # goalImgをmodalに追加
@@ -282,8 +282,8 @@ $ ->
           $("#selectedThumnail").attr("opacity",0.5)
           tmp_id = obj[0].object.fb_image_id
 
-          ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
-          
+          #ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id
+          ajaxpath = '/common/mosaic_viewer//ajax/fb_image/' + tmp_id
           #$.getJSON ajaxpath, (ajaxdata)->
             #console.log ajaxdata
             #selectedImagePath = ajaxdata.fb_image_path

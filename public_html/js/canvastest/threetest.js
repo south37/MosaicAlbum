@@ -53,7 +53,7 @@ $(function() {
     $('#fb_share').click(function() {
       return alert("shareしたよ");
     });
-    return $.getJSON("/common/mosaic_viewer/ajax_list", function(data) {
+    return $.getJSON("/common/mosaic_viewer/ajax/list", function(data) {
       var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, imgpath, isTweenInitiaized, key, lookTarget, mosaicHeight, mosaicLeft, mosaicLeftPct, mosaicPieceGeometry, mosaicPieceMaterials, mosaicRight, mosaicRightPct, mosaicWidth, moveTImeMax, moveTime, moveTimeMin, nearClip, offsetTime, offsetTimeMax, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn_target, twn_zoom, userNum, userPosList, userPosMax, userPosMin, val, width, zoomVector, zoompos, _i, _len, _ref, _ref1, _ref2;
       console.log(data);
       mosaicImagePath = data.mosaicInfo.mosaicPath;
@@ -169,7 +169,7 @@ $(function() {
           $("#selectedThumnail").attr("src", $(obj[0].object.material.map.image.outerHTML).attr("src"));
           $("#selectedThumnail").attr("opacity", 0.5);
           tmp_id = obj[0].object.fb_image_id;
-          return ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id;
+          return ajaxpath = '/common/mosaic_viewer//ajax/fb_image/' + tmp_id;
         } else {
           return console.log("no object");
         }

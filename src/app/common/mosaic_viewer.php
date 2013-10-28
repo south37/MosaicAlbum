@@ -36,14 +36,14 @@
     ->name('mosaic_viewer')
     ;
 
-  //$app->get('/common/mosaic_viewer/:goalImageId', function($goalImageId) use ($app, $container){
+  $app->get('/common/mosaic_viewer/:goalImageId', function($goalImageId) use ($app, $container){
     //echo $goalImageId;
-    //$app->render('common/mosaic_viewer.html.twig', ['goalId' => $goalImageId]); 
-  //});
+    $app->render('common/mosaic_viewer.html.twig', ['goalId' => $goalImageId]); 
+  });
 }
 
 ajax_mosaic画像リスト取得:{
-  $app->get('/common/mosaic_viewer/ajax_list', function() use ($app, $container){
+  $app->get('/common/mosaic_viewer/ajax/list', function() use ($app, $container){
 
     ########################
     # ajax_list:仕様メモ
@@ -140,7 +140,7 @@ ajax_mosaic画像リスト取得:{
 }
 
 ajaxでFB_Image_DLしてリンク取得:{
-  $app->get('/common/mosaic_viewer/ajax_fb_image/:fb_image_id', function($fb_image_id) use ($app,$container){
+  $app->get('/common/mosaic_viewer/ajax/fb_image/:fb_image_id', function($fb_image_id) use ($app,$container){
     # 1.repository用意
     $FBHelper = $container['FBHelper'];
 
