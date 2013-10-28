@@ -6,11 +6,6 @@ $app->get('/', function() use ($app, $container) {
     $input = $app->request()->get();
     $session = $container['session'];
 
-    // getパラメータとしてcodeを受け取っていれば、facebook認証後のリダイレクトと判定
-    if (array_key_exists('code', $input)) {
-        $app->redirect($app->urlFor('login_process'));
-    }
-
     // ログイン判定
     if ($session->get('isLogin') !== true) {
         $loginUrl = $container['FBHelper']->getLoginUrl();
@@ -102,7 +97,8 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
         if ($userProfile === []) {
             $redirect();
         }
-
+        
+        // validation未実装
         $user = new \Vg\Model\User();
         $user->setProperties($userProfile);
 
@@ -112,6 +108,7 @@ $app->get('/login_process', function() use ($app, $container, $redirectIfNotLogi
         } catch (Exception $e) {
             $app->halt(500, $e->getMessage());
         }
+
     }
 
     $container['session']->set('isLogin', true);

@@ -1,0 +1,10 @@
+{% extends 'layout.html.twig' %}
+
+{% block contents %}
+    <p>友達を誘って一緒にモザイクアルバムを作りましょう</p>
+    <a href="javascript:;" onclick="sendMessage()" class="btn btn-primary">友達に招待メッセージを送る</a>
+{% endblock %}
+
+{% block javascript%}
+<script type="text/javascript" src="{{ asset('/js/select/modal_request.js') }}"></script>
+{% endblock%}

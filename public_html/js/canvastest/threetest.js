@@ -32,9 +32,8 @@ $(function() {
       var anim, aspect, camera, cameraPosition, cnt, directioalLight, farClip, fbIconGeometry, fbIconMaterials, fov, height, imgpath, isTweenInitiaized, key, lookTarget, mosaicHeight, mosaicLeft, mosaicLeftPct, mosaicPieceGeometry, mosaicPieceMaterials, mosaicRight, mosaicRightPct, mosaicWidth, moveTImeMax, moveTime, moveTimeMin, nearClip, offsetTime, offsetTimeMax, piece, piecedata, position, projector, renderer, scene, sizeX, sizeY, target, tmpTex, trackball, tweenList, twn_target, twn_zoom, userNum, userPosList, userPosMax, userPosMin, val, width, zoomVector, zoompos, _i, _len, _ref, _ref1, _ref2;
       console.log(data);
       mosaicImagePath = data.mosaicInfo.mosaicPath;
-      width = window.innerWidth;
-      height = window.innerHeight - 180;
-      width = $('#container').innerWidth();
+      height = window.innerHeight - 150;
+      width = $('#canvasField').innerWidth();
       renderer = new THREE.WebGLRenderer();
       renderer.setSize(width, height);
       $('#forCanvas').append(renderer.domElement);
@@ -140,11 +139,15 @@ $(function() {
         ray = new THREE.Raycaster(camera.position, vec.sub(camera.position).normalize());
         obj = ray.intersectObjects(scene.children, true);
         if (obj.length > 0) {
+          console.log(obj[0].object.material.map.image.outerHTML);
+          $("#selectedThumnail").attr("src", $(obj[0].object.material.map.image.outerHTML).attr("src"));
+          $("#selectedThumnail").attr("opacity", 0.5);
           tmp_id = obj[0].object.fb_image_id;
           ajaxpath = '/common/mosaic_viewer/ajax_fb_image/' + tmp_id;
           return $.getJSON(ajaxpath, function(ajaxdata) {
             console.log(ajaxdata);
-            return selectedImagePath = ajaxdata.fb_image_path;
+            selectedImagePath = ajaxdata.fb_image_path;
+            return $("#selectedThumnail").attr("opacity", 1.0);
           });
         } else {
           return console.log("no object");
@@ -162,9 +165,8 @@ $(function() {
         }
       });
       $(window).bind('resize', function() {
-        console.log("window resize");
-        width = $('#container').innerWidth();
-        height = window.innerHeight - 100;
+        width = $('#canvasField').innerWidth();
+        height = window.innerHeight - 150;
         renderer.setSize(width, height);
         camera.aspect = width / height;
         return camera.updateProjectionMatrix();

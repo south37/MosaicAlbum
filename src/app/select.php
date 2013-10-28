@@ -14,11 +14,14 @@ $app->get('/select', function() use ($app, $container) {
 $app->post('/select', function() use ($app, $container) {
     $input = $app->request()->post();
     $fbGoalImageId = $input['goalImageId'];
-
-    $goalImageId = $container['repository.goalImage']->insert($fbGoalImageId);
-    $container['session']->set('goalImageId', $goalImageId);
-
-    $app->redirect($app->urlFor('album_viewer', ['goalImageId' => $goalImageId]));
+    // validation
+    $validator = new \Vg\Validator\GoalImageRegister();
+    if ($validator->validate($input)) {
+        $goalImageId = $container['repository.goalImage']->insert($fbGoalImageId);
+        $container['session']->set('goalImageId', $goalImageId);
+        $app->redirect($app->urlFor('album_viewer', ['goalImageId' => $goalImageId]));
+    }
+    $app->render('select/select.html.twig', ['errors' => $validator->errors(), 'input' => $input]);
 })
     ->name('select_post')
     ;
@@ -61,8 +64,19 @@ $app->post('/select/modal_image', function () use ($app, $container) {
         "imagePath"     => "https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-prn2/s720x720/1384302_400192783443900_479273178_n.jpg",
         "thumbnailPath" => "https://fbcdn-photos-f-a.akamaihd.net/hphotos-ak-prn2/1384302_400192783443900_479273178_s.jpg",
     ]];
-    */ 
+    */  
     $app->render('select/modal_image.html.twig', ['images' => $images]);
 })
     ->name('select_modal_image')
     ;
+
+
+/**
+ * 友達を招待
+ */
+$app->get('/select/modal_request', function () use ($app, $container) {
+    $app->render('select/modal_request.html.twig');
+})
+    ->name('select_modal_request')
+    ;
+

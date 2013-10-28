@@ -1,26 +1,70 @@
 {% extends 'layout.html.twig' %}
 
+{% block style %}
+.modal.large{
+  width:1200px;
+  height:1000px;
+  margin-left; -600px;
+  margin-top: -100px;
+  }
+
+.modal.large .modal-body{
+  max-height:900px;
+}
+
+{% endblock %}
+
 {% block contents %}
 <!--<div class="hero-unit">-->
   <!--<h1>Mosaic_viewer</h1>-->
   <!--<p>goal id {{goalId}}</p>-->
-<!--</div>-->
+  <!--</div>-->
 
 <!--<div id="canvas_group" class="text-center">-->
   <!--<canvas id ="cvs1" width="800" height="600"></canvas>-->
-<!--</div>-->
+  <!--</div>-->
 <!--<a id="showModal" class="btn" href="#modal1" data-toggle="modal">完成画像をダウンロード</a>-->
 
-<p>画面上をクリックすると，モザイク画像が生成されます．</p>
+<p>画面上をクリックすると，モザイク画像が生成されます．<a href="/">詳しいつかいかた</a></p>
 
-<div id="forCanvas">
+<!--ここにthree.jsによる描画キャンバスが入るよ-->
+<div class="row">
+  <div id="canvasField" class="span9">
+    <div id="forCanvas">
+    </div>
+  </div>
+
+  <!--operationpanel-->
+  <div class="span2 well text-center">
+    <img id="selectedThumnail" src="" alt="no select"></img>
+    <button id="showSelect" class="btn-block btn-primary">選択画像</button>  
+    <button id="showMosaic" class="btn-block btn-primary">モザイク画像DL</button>
+  </div>
+
+
 </div>
 
-<button id="showMosaic" class="btn btn-primary">モザイク画増ダウンロード</button>
-<button id="showSelect" class="btn btn-primary">選択画像表示</button>
+
+<!--<div class="row">-->
+  <!--<div class="span4 text-center">-->
+    <!--<div class="well">-->
+      <!--<button id="showMosaic" class="btn btn-primary">モザイク画像ダウンロード</button>-->
+      <!--<button id="showSelect" class="btn btn-primary">選択画像表示</button> -->
+      <!--<img id="selectedThumnail" src="" alt="no select"></img>-->
+    <!--</div>-->
+  <!--</div>-->
+  <!--<div class="span8">-->
+    <!--<div class="well">-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
+
+
 <!-- FaceBook Share Button -->
-<div id="fb-root"></div>
-<div class="fb-like" data-href="http://mosaicalbum.com" data-width="The pixel width of the plugin" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="true" data-send="false"></div>          
+<div id="fb-root">
+</div>
+<div class="fb-like" data-href="http://mosaicalbum.com" data-width="The pixel width of the plugin" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="true" data-send="false">
+</div>          
 {% endblock %}
 
 
@@ -31,10 +75,10 @@
 <script type="x-shader/x-fragment" src="{{ asset('/shader/test.frag') }}"></script>
 <!-- FaceBook Share Button Script -->
 <script>(function(d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s); js.id = id;
-                js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1&appId=638792116141666";
-                fjs.parentNode.insertBefore(js, fjs);
-                }(document, 'script', 'facebook-jssdk'));</script>
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1&appId=638792116141666";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
 {% endblock%}

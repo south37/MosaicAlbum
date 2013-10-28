@@ -87,4 +87,6 @@ $container['FBHelper'] = $container->share(function($c){
         return new \Vg\Repository\FBHelperRepository($c);
     });
 
+// ローカルのアドレス
+
 return $container;

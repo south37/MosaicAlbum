@@ -39,11 +39,16 @@ $app->post('/guest/album_select_guest', function() use ($app, $container) {
   # DBに登録
   $userId = $container['session']->get('userId');
   $data = array('id' => 0, 'user_id' => $userId, 'goal_image_id' => $goalImageId, 'fb_album_id' => $fbAlbum['id']);
-  $album = new \Vg\Model\Album();
-  $album->setProperties($data);
-  $albumId = $container['repository.album']->insert($album);
-  # アルバムビューアへ
-  $app->redirect($app->urlFor('album_viewer', ['goalImageId'=>$container['session']->get('goalImageId')]));
+  // validation
+  $validator = new \Vg\Validator\AlbumRegister();
+  if ($validator->validate($data)) {
+    $album = new \Vg\Model\Album();
+    $album->setProperties($data);
+    $albumId = $container['repository.album']->insert($album);
+    # アルバムビューアへ
+    $app->redirect($app->urlFor('album_viewer', ['goalImageId'=>$container['session']->get('goalImageId')]));
+  }
+  $app->render('guest/album_select_guest.html.twig', ['errors' => $validator->errors(), 'fbAlbum' => $fbAlbum]);
 })
   ->name('add_album_guest')
   ;
