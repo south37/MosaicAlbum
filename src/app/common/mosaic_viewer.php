@@ -36,10 +36,10 @@
     ->name('mosaic_viewer')
     ;
 
-  $app->get('/common/mosaic_viewer/:goalImageId', function($goalImageId) use ($app, $container){
-    echo $goalImageId;
-    $app->render('common/mosaic_viewer.html.twig', ['goalId' => $goalImageId]); 
-  });
+  //$app->get('/common/mosaic_viewer/:goalImageId', function($goalImageId) use ($app, $container){
+    //echo $goalImageId;
+    //$app->render('common/mosaic_viewer.html.twig', ['goalId' => $goalImageId]); 
+  //});
 }
 
 ajax_mosaic画像リスト取得:{
