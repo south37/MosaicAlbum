@@ -2,7 +2,9 @@
 ページ読み込みテスト:{
   $app->get('/common/mosaic_viewer/test', function() use ($app,$container) {
     # DBアクセステスト
-    print_r($container['session']->get('goalImageId'));
+    $goalImageId = $container['session']->get('goalImageId');
+    print_r($goalImageId);
+
 
     //$userIdList =$container['repository.album']->getUserIdList(1);
     //print_r($userIdList);
@@ -10,11 +12,11 @@
     //$userIconPathList = $container['repository.user']->getUserIconImgUrl($userIdList[0]);
     //print_r($userIconPathList);
 
-    //$mosaicImage = $container['repository.goalImage']->getMosaicImg(1);
-    //print_r($mosaicImage);
+    $mosaicImage = $container['repository.goalImage']->getMosaicImg($goalImageId,$container);
+    print_r($mosaicImage);
 
    
-   //print_r($container['repository.albumUser']->getFbIconPathList(1,$container)); 
+    //print_r($container['repository.albumUser']->getFbIconPathList(1,$container)); 
     //print_r($container['repository.albumUser']->getFbIconPathList(1,$container));
 
     $app->render('common/mosaic_viewer.html.twig');
@@ -105,8 +107,10 @@ ajax_mosaic画像リスト取得:{
     #
     # TODO:DBからデータをひろう
     $mosaicPath    = '/img/mosaic_img/mosaic'.$goalImageId.'.png';
-    //$mosaicImage   = $goalImageRep->getMosaicImg($goalImageId,$container);
+    $mosaicImage   = $goalImageRep->getMosaicImg($goalImageId, $container);
+ 
     $originalImage = '/img/test/miku3.jpg';
+    $originalImage = $mosaicImage["originalPath"];
 
     $mosaicInfo = [
       "mosaicPath"   => $mosaicPath,
@@ -154,8 +158,6 @@ ajaxでFB_Image_DLしてリンク取得:{
 ajaxのてすと:{
   $app->get('/common/mosaic_viewer/ajax', function() use ($app,$container){
     $res = ["hogehoge"=>"var","bar"=>"yes"];
-   
-
     echo json_encode($res);
   })
     ->name('ajaxtest')

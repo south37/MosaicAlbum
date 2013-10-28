@@ -2,14 +2,14 @@
 
 {% block style %}
 .modal.large{
-  width:1200px;
-  height:1000px;
-  margin-left; -600px;
-  margin-top: -100px;
-  }
+width:1200px;
+height:1000px;
+margin-left; -600px;
+margin-top: -100px;
+}
 
 .modal.large .modal-body{
-  max-height:900px;
+max-height:900px;
 }
 
 {% endblock %}
@@ -25,7 +25,7 @@
   <!--</div>-->
 <!--<a id="showModal" class="btn" href="#modal1" data-toggle="modal">完成画像をダウンロード</a>-->
 
-<p>画面上をクリックすると，モザイク画像が生成されます．<a href="/">詳しいつかいかた</a></p>
+<p>画面上をクリックすると，モザイク画像が生成されます．<a id="link_howToUse" href="/">詳しいつかいかた</a></p>
 
 <!--ここにthree.jsによる描画キャンバスが入るよ-->
 <div class="row">
@@ -35,12 +35,24 @@
   </div>
 
   <!--operationpanel-->
-  <div class="span2 well text-center">
-    <img id="selectedThumnail" src="" alt="no select"></img>
-    <button id="showSelect" class="btn-block btn-primary">選択画像</button>  
-    <button id="showMosaic" class="btn-block btn-primary">モザイク画像DL</button>
-  </div>
+  <div class="span2">
+    <div class="well">
+      <img id="selectedThumnail" src="" alt="please select photo" width="200" height="200"></img>
+      <button id="showSelect"   class="btn-block btn-primary">選択画像</button>  
+      <button id="showMosaic"   class="btn-block btn-primary">モザイク画像DL</button> 
+      <button id="showOriginal" class="btn-block btn-primary">オリジナルをみる</button>
+    </div>
 
+
+    <div class="well">
+      操作方法
+      <ul>
+        <li>スクロール：<br>ズーム</li>
+        <li>ドラッグ：<br>視点変更</li>
+        <li>右ドラッグ：<br>カメラ移動</li>
+      </ul>
+    </div>
+  </div>
 
 </div>
 
@@ -51,13 +63,13 @@
       <!--<button id="showMosaic" class="btn btn-primary">モザイク画像ダウンロード</button>-->
       <!--<button id="showSelect" class="btn btn-primary">選択画像表示</button> -->
       <!--<img id="selectedThumnail" src="" alt="no select"></img>-->
+      <!--</div>-->
     <!--</div>-->
-  <!--</div>-->
   <!--<div class="span8">-->
     <!--<div class="well">-->
+      <!--</div>-->
     <!--</div>-->
   <!--</div>-->
-<!--</div>-->
 
 
 <!-- FaceBook Share Button -->
