@@ -136,8 +136,7 @@ class FBHelperRepository
                 'thumbnailPath' => $fbImage['picture'],
             ];
             array_push($images, $image);
-        }
-   
+        }   
         return $images;
     }
 

@@ -1,23 +1,83 @@
 {% extends 'layout.html.twig' %}
 
-{% block contents %}
-    <!-- Main hero unit for a primary marketing message or call to action -->
-    <div class="hero-unit">
-      <h1>Mosaic Album</h1>
-      <p>みんなの写真を集めてモザイク写真をつくろう！</p>
-    </div>
+{% block stylesheets %}
 
+<link href="{{ asset('/css/carousel-customize.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block contents %}
+
+ <!-- Carousel================================================== -->
+
+<link href="{{ asset('/css/carousel-customize.css') }}" rel="stylesheet" />
+    <div id="myCarousel" class="carousel slide">
+      <div class="carousel-inner">
+        <div class="item active">
+          <img src="http://getbootstrap.com/2.3.2/assets/img/examples/slide-01.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Mosaic Albumは友達と楽しむモザイク写真です</h1>
+              <p class="lead">あなたとお友達の写真を１つ１つのピースに使って1枚のモザイク画像をつくります。</p>
     {% if loginUrl != '' %}
-      <a href="{{ loginUrl }}" class="btn btn-primary">facebookログイン</a>
+      <a href="{{ loginUrl }}" class="btn btn-primary btn-large">facebookログイン</a>
     {% else %}
       {% if goalImageId != NULL %}
         {% if isGuest %}
-          <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary">モザイクアルバムに参加する</a>
+          <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary btn-large">モザイクアルバムに参加する</a>
         {% else %}
-          <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary">参加中の作品を見る</a>
+          <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary btn-large">参加中の作品を見る</a>
         {% endif %}
       {% endif %}
-      <a href="{{ urlFor('select') }}" class="btn btn-primary">新しくモザイクアルバムを作る</a>
+      <a href="{{ urlFor('select') }}" class="btn btn-primary btn-large">新しくモザイクアルバムを作る</a>
     {% endif %}
-    
+           </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="http://getbootstrap.com/2.3.2/assets/img/examples/slide-02.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>おそろいのFacebookカバーに</h1>
+              <p class="lead">他とは違うFacebookのカバー画像が欲しい？Mosaic Albumを使って自分と友達の写真でつくったモザイク画像をお揃いのカバー画像にしましょう！</p>
+      {% if loginUrl != '' %}
+      <a href="{{ loginUrl }}" class="btn btn-primary btn-large">facebookログイン</a>
+    {% else %}
+      {% if goalImageId != NULL %}
+        {% if isGuest %}
+          <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary btn-large">モザイクアルバムに参加する</a>
+        {% else %}
+          <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary btn-large">参加中の作品を見る</a>
+        {% endif %}
+      {% endif %}
+      <a href="{{ urlFor('select') }}" class="btn btn-primary btn-large">新しくモザイクアルバムを作る</a>
+    {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="http://getbootstrap.com/2.3.2/assets/img/examples/slide-03.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>誕生日のメッセージに</h1>
+              <p class="lead">大切な友人の誕生日、メッセージだけじゃ味気ない！仲良しメンバーの写真を集めたモザイク画像をそえてみては？きっとよろこぶこと間違いなし！</p>
+      {% if loginUrl != '' %}
+      <a href="{{ loginUrl }}" class="btn btn-primary btn-large">facebookログイン</a>
+    {% else %}
+      {% if goalImageId != NULL %}
+        {% if isGuest %}
+          <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary btn-large">モザイクアルバムに参加する</a>
+        {% else %}
+          <a href="{{ urlFor('album_viewer') }}" class="btn btn-primary btn-large">参加中の作品を見る</a>
+        {% endif %}
+      {% endif %}
+      <a href="{{ urlFor('select') }}" class="btn btn-primary btn-large">新しくモザイクアルバムを作る</a>
+    {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+      <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+    </div><!-- /.carousel -->
+
 {% endblock %}
