@@ -2,7 +2,10 @@
 ページ読み込みテスト:{
   $app->get('/common/mosaic_viewer/test', function() use ($app,$container) {
     # DBアクセステスト
-    print_r($container['session']->get('goalImageId'));
+    $goalImageId = $container['session']->get('goalImageId');
+    print_r($goalImageId);
+
+    print_r($container['FBHelper']->getImagePath());
 
     //$userIdList =$container['repository.album']->getUserIdList(1);
     //print_r($userIdList);
@@ -154,8 +157,6 @@ ajaxでFB_Image_DLしてリンク取得:{
 ajaxのてすと:{
   $app->get('/common/mosaic_viewer/ajax', function() use ($app,$container){
     $res = ["hogehoge"=>"var","bar"=>"yes"];
-   
-
     echo json_encode($res);
   })
     ->name('ajaxtest')
